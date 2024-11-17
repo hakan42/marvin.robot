@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chat with Marvin</title>
+  <script>
+    // Connect to the SSE endpoint and display messages
+    function startSSE() {
+      const messageList = document.getElementById("messages");
+      const eventSource = new EventSource("/stream");
+
+      eventSource.onmessage = (event) => {
+        const newMessage = document.createElement("li");
+        newMessage.textContent = event.data;
+        messageList.appendChild(newMessage);
+      };
+
+      eventSource.onerror = () => {
+        console.error("Error connecting to SSE stream");
+        eventSource.close();
+      };
+    }
+
+    // Send a message via POST request
+    async function sendMessage(event) {
+      event.preventDefault();
+
+      const messageInput = document.getElementById("message");
+      const message = messageInput.value.trim();
+
+      if (message !== "") {
+        try {
+          const response = await fetch("/chat", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/x-www-form-urlencoded",
+            },
+            body: new URLSearchParams({ message }),
+          });
+
+          if (response.ok) {
+            console.log("Message sent:", message);
+            messageInput.value = ""; // Clear the input field
+          } else {
+            console.error("Failed to send message:", response.statusText);
+          }
+        } catch (error) {
+          console.error("Error sending message:", error);
+        }
+      }
+    }
+
+    // Initialize on page load
+    window.onload = () => {
+      startSSE();
+
+      // Allow form submission with Enter key
+      document.getElementById("chatForm").addEventListener("submit", sendMessage);
+    };
+  </script>
+</head>
+<body>
+<h1>Chat with Marvin</h1>
+
+<!-- Form to send messages -->
+<form id="chatForm">
+  <label for="message">Enter your message:</label>
+  <input type="text" id="message" name="message" required>
+  <button type="submit">Send</button>
+</form>
+
+<!-- Display incoming messages -->
+<h2>Messages:</h2>
+<ul id="messages"></ul>
+</body>
+</html>
