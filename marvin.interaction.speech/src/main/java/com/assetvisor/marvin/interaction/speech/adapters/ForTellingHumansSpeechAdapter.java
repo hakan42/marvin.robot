@@ -2,6 +2,7 @@ package com.assetvisor.marvin.interaction.speech.adapters;
 
 import com.assetvisor.marvin.robot.domain.ports.ForTellingHumans;
 import jakarta.annotation.PostConstruct;
+import jakarta.annotation.Resource;
 import java.io.ByteArrayInputStream;
 import java.util.LinkedList;
 import java.util.Queue;
@@ -11,13 +12,11 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
 import org.springframework.ai.openai.OpenAiAudioSpeechOptions;
-import org.springframework.ai.openai.api.OpenAiAudioApi;
 import org.springframework.ai.openai.api.OpenAiAudioApi.SpeechRequest.AudioResponseFormat;
 import org.springframework.ai.openai.api.OpenAiAudioApi.SpeechRequest.Voice;
 import org.springframework.ai.openai.api.OpenAiAudioApi.TtsModel;
 import org.springframework.ai.openai.audio.speech.SpeechPrompt;
 import org.springframework.ai.openai.audio.speech.SpeechResponse;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
 
 @Component("speech")
@@ -25,12 +24,8 @@ public class ForTellingHumansSpeechAdapter implements ForTellingHumans {
 
     private final Log LOG = LogFactory.getLog(getClass());
 
-    @Value("${spring.ai.openai.api.key}")
-    private String openAiApiKey;
-
-    private final OpenAiAudioApi openAiAudioApi = new OpenAiAudioApi(openAiApiKey);
-
-    private final OpenAiAudioSpeechModel openAiAudioSpeechModel = new OpenAiAudioSpeechModel(openAiAudioApi);
+    @Resource
+    private OpenAiAudioSpeechModel openAiAudioSpeechModel;
 
     private final Queue<String> messageQueue = new LinkedList<>();
     private final Object lock = new Object();
