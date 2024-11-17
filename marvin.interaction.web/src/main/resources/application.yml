@@ -1,0 +1,30 @@
+
+spring:
+  application:
+    name: Marvin the Robot
+    version: 0.0.1
+  ai:
+    openai:
+      api-key: OPENAI_KEY # OpenAI API key, get your own at https://platform.openai.com
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        index-type: hnsw
+        distance-type: cosine_distance
+        dimensions: 1536
+        remove-existing-vector-store-table: true
+  datasource:
+    url: jdbc:postgresql://localhost:5555/vectordb
+    username: testuser
+    password: testpwd
+
+server:
+  port: 8080
+
+openhab:
+  url: http://192.168.1.145:8080
+  username: USER # OpenHAB username
+  password: PASSWORD # OpenHAB password
+
+logging:
+  include-application-name: true
