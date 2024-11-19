@@ -95,27 +95,23 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
 
     @Override
     public void invoke(String message, boolean reply) {
-        try {
-            List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
-            String collect = documents.stream().map(Document::getContent).collect(Collectors.joining(System.lineSeparator()));
-            Message createdMessage = new SystemPromptTemplate(getEnrichedRobotDescription()).createMessage(Map.of("documents", collect));
-            UserMessage userMessage = new UserMessage(message);
-            Prompt prompt = new Prompt(List.of(createdMessage, userMessage));
+        List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
+        String collect = documents.stream().map(Document::getContent)
+            .collect(Collectors.joining(System.lineSeparator()));
+        Message createdMessage = new SystemPromptTemplate(getEnrichedRobotDescription()).createMessage(
+            Map.of("documents", collect));
+        UserMessage userMessage = new UserMessage(message);
+        Prompt prompt = new Prompt(List.of(createdMessage, userMessage));
 
-            ChatResponse chatResponse = chatClient.prompt(prompt)
-                .advisors(a -> a
-                    .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, "1")
-                    .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, "10")
-                )
-                .call().chatResponse();
-            if(reply) {
-                speech.tell(chatResponse.getResult().getOutput().getContent());
-                web.tell(chatResponse.getResult().getOutput().getContent());
-            }
-        } catch(Exception e) {
-            LOG.error("Error invoking BrainSpringAiAdapter: " + e.getMessage());
-            web.tell(e.getMessage());
+        ChatResponse chatResponse = chatClient.prompt(prompt)
+            .advisors(a -> a
+                .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, "1")
+                .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, "10")
+            )
+            .call().chatResponse();
+        if (reply) {
+            speech.tell(chatResponse.getResult().getOutput().getContent());
+            web.tell(chatResponse.getResult().getOutput().getContent());
         }
-
     }
 }

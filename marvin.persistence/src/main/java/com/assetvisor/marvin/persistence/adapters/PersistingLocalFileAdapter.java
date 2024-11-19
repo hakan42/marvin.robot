@@ -1,22 +1,27 @@
 package com.assetvisor.marvin.persistence.adapters;
 
+import com.assetvisor.marvin.robot.domain.CalendarNote;
 import com.assetvisor.marvin.robot.domain.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.RobotDescription;
 import com.assetvisor.marvin.robot.domain.ports.ForPersistingEnvironmentDescriptions;
+import com.assetvisor.marvin.robot.domain.ports.ForPersistingNotes;
 import com.assetvisor.marvin.robot.domain.ports.ForPersistingRobotDescription;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
+import java.util.Optional;
 import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
 
 @Component
-public class PersistingLocalFileAdapter implements ForPersistingRobotDescription, ForPersistingEnvironmentDescriptions {
+public class PersistingLocalFileAdapter implements ForPersistingRobotDescription, ForPersistingEnvironmentDescriptions,
+    ForPersistingNotes {
 
     private final Log LOG = LogFactory.getLog(getClass());
 
@@ -61,5 +66,70 @@ public class PersistingLocalFileAdapter implements ForPersistingRobotDescription
         }
 
         return List.of();
+    }
+
+    @Override
+    public void persist(CalendarNote calendarNote) {
+        String userHome = System.getProperty("user.home");
+        Path filePath = Paths.get(userHome, "marvin-notes.txt");
+
+        try {
+            String note = calendarNote.noteDate() + " - " + calendarNote.note();
+            Files.writeString(filePath, note + System.lineSeparator());
+            LOG.info("Persisted note to file: " + filePath);
+        } catch (IOException e) {
+            LOG.error("Error writing note to file: " + e.getMessage());
+        }
+    }
+
+
+
+    @Override
+    public List<CalendarNote> all() {
+        String userHome = System.getProperty("user.home");
+        Path filePath = Paths.get(userHome, "marvin-notes.txt");
+
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+            LOG.info("Read notes from file: " + filePath);
+
+            return lines.stream()
+                .map(line -> line.split(" - "))
+                .filter(parts -> parts.length == 2)
+                .map(parts -> new CalendarNote(LocalDateTime.parse(parts[0]), parts[1]))
+                .filter(calendarNote -> calendarNote.noteDate().isBefore(LocalDateTime.now()))
+                .collect(Collectors.toList());
+
+        } catch (IOException e) {
+            LOG.error("Error reading notes file: " + e.getMessage());
+        }
+        return List.of();
+    }
+
+    @Override
+    public void delete(CalendarNote calendarNote) {
+        String userHome = System.getProperty("user.home");
+        Path filePath = Paths.get(userHome, "marvin-notes.txt");
+
+        try {
+            List<String> lines = Files.readAllLines(filePath);
+
+            Optional<String> note = lines.stream()
+                .filter(line -> line.startsWith(calendarNote.noteDate().toString()))
+                .findFirst();
+
+            note.ifPresent(line -> {
+                lines.remove(line);
+                try {
+                    Files.write(filePath, lines);
+                } catch (IOException e) {
+                    throw new RuntimeException(e);
+                }
+                LOG.info("Deleted note: " + line);
+            });
+
+        } catch (IOException e) {
+            LOG.error("Error deleting note from file: " + e.getMessage());
+        }
     }
 }
