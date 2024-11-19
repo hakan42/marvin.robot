@@ -19,7 +19,9 @@ public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGetti
     @Override
     public List<EnvironmentDescription> getEnvironmentDescriptions() {
         List<EnvironmentDescription> environmentDescriptions = forPersistingEnvironmentDescriptions.load();
-        environmentDescriptions.add(new EnvironmentDescription(openhabAiItemsService.asJson()));
+        openhabAiItemsService.asMaps().forEach(item -> {
+            environmentDescriptions.add(new EnvironmentDescription(item.toString()));
+        });
         return environmentDescriptions;
     }
 }
