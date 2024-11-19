@@ -16,18 +16,18 @@ public class OpenhabAiItemsService {
     @Resource
     private RestClient restClient;
 
-    public String asJson() {
+    public List<Map<String, Object>> asMaps() {
         LOG.info("Getting all items tagged Marvin");
         try {
-            String body = restClient.get()
+            List<Map<String, Object>> body = restClient.get()
                 .uri("items?tags=Marvin&staticDataOnly=true")
                 .retrieve()
-                .body(String.class);
+                .body(List.class);
             return body;
         } catch (HttpClientErrorException e) {
             LOG.error("Error: " + e.getMessage());
         }
-        return "[]";
+        return List.of();
     }
 
     public List<String> asIds() {
