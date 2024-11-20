@@ -1,15 +1,16 @@
 package com.assetvisor.marvin.persistence.adapters;
 
-import com.assetvisor.marvin.robot.domain.notebook.CalendarNote;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
-import com.assetvisor.marvin.robot.domain.notebook.ForPersistingNotes;
 import com.assetvisor.marvin.robot.domain.jobdescription.ForPersistingRobotDescription;
+import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
+import com.assetvisor.marvin.robot.domain.notebook.CalendarNote;
+import com.assetvisor.marvin.robot.domain.notebook.ForPersistingNotes;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.nio.file.StandardOpenOption;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Objects;
@@ -75,7 +76,7 @@ public class PersistingLocalFileAdapter implements ForPersistingRobotDescription
 
         try {
             String note = calendarNote.noteDate() + " - " + calendarNote.note();
-            Files.writeString(filePath, note + System.lineSeparator());
+            Files.writeString(filePath, note + System.lineSeparator(), StandardOpenOption.APPEND);
             LOG.info("Persisted note to file: " + filePath);
         } catch (IOException e) {
             LOG.error("Error writing note to file: " + e.getMessage());
