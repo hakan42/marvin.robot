@@ -1,10 +1,8 @@
-package com.assetvisor.marvin.robot.domain.functions;
+package com.assetvisor.marvin.robot.domain.notebook;
 
-import com.assetvisor.marvin.robot.domain.CalendarNote;
-import com.assetvisor.marvin.robot.domain.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.NoteBook;
-import com.assetvisor.marvin.robot.domain.functions.WriteInNoteBook.Request;
-import com.assetvisor.marvin.robot.domain.functions.WriteInNoteBook.Response;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.notebook.WriteInNoteBook.Request;
+import com.assetvisor.marvin.robot.domain.notebook.WriteInNoteBook.Response;
 import java.time.LocalDateTime;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

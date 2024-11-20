@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.interaction.speech.adapters;
 
-import com.assetvisor.marvin.robot.domain.ports.ForTellingHumans;
+import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.io.ByteArrayInputStream;
@@ -66,7 +66,7 @@ public class ForTellingHumansSpeechAdapter implements ForTellingHumans {
             .withResponseFormat(AudioResponseFormat.MP3)
             .withSpeed(1.0f)
             .withModel(TtsModel.TTS_1.value)
-            .withVoice(Voice.FABLE)
+            .withVoice(Voice.ALLOY)
             .build();
 
         var speechPrompt = new SpeechPrompt(message, speechOptions);

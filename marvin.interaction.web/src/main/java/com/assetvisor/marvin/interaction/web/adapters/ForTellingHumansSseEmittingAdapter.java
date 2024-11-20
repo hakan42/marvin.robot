@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
-import com.assetvisor.marvin.robot.domain.ports.ForTellingHumans;
+import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;

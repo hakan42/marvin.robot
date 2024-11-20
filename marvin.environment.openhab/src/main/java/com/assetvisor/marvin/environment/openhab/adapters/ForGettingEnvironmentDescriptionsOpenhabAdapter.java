@@ -1,9 +1,9 @@
 package com.assetvisor.marvin.environment.openhab.adapters;
 
 import com.assetvisor.marvin.environment.openhab.restclient.OpenhabAiItemsService;
-import com.assetvisor.marvin.robot.domain.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.ports.ForGettingEnvironmentDescriptions;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingEnvironmentDescriptions;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
+import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
+import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
 import jakarta.annotation.Resource;
 import java.util.List;
 import org.springframework.stereotype.Component;

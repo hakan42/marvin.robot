@@ -1,11 +1,11 @@
 package com.assetvisor.marvin.persistence.adapters;
 
-import com.assetvisor.marvin.robot.domain.CalendarNote;
-import com.assetvisor.marvin.robot.domain.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.RobotDescription;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingEnvironmentDescriptions;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingNotes;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingRobotDescription;
+import com.assetvisor.marvin.robot.domain.notebook.CalendarNote;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
+import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
+import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
+import com.assetvisor.marvin.robot.domain.notebook.ForPersistingNotes;
+import com.assetvisor.marvin.robot.domain.jobdescription.ForPersistingRobotDescription;
 import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
@@ -97,7 +97,6 @@ public class PersistingLocalFileAdapter implements ForPersistingRobotDescription
                 .map(line -> line.split(" - "))
                 .filter(parts -> parts.length == 2)
                 .map(parts -> new CalendarNote(LocalDateTime.parse(parts[0]), parts[1]))
-                .filter(calendarNote -> calendarNote.noteDate().isBefore(LocalDateTime.now()))
                 .collect(Collectors.toList());
 
         } catch (IOException e) {

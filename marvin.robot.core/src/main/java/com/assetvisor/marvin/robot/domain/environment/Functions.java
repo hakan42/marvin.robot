@@ -1,9 +1,9 @@
-package com.assetvisor.marvin.robot.domain.functions;
+package com.assetvisor.marvin.robot.domain.environment;
 
-import com.assetvisor.marvin.robot.domain.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.NoteBook;
-import com.assetvisor.marvin.robot.domain.ports.ForGettingEnvironmentFunctions;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingNotes;
+import com.assetvisor.marvin.robot.domain.watch.LookAtWatch;
+import com.assetvisor.marvin.robot.domain.notebook.NoteBook;
+import com.assetvisor.marvin.robot.domain.notebook.WriteInNoteBook;
+import com.assetvisor.marvin.robot.domain.notebook.ForPersistingNotes;
 import java.util.List;
 
 public class Functions {

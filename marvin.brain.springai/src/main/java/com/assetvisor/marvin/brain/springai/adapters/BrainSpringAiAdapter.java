@@ -1,10 +1,10 @@
 package com.assetvisor.marvin.brain.springai.adapters;
 
-import com.assetvisor.marvin.robot.domain.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.RobotDescription;
-import com.assetvisor.marvin.robot.domain.ports.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.ports.ForTellingHumans;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;

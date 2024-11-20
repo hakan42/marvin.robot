@@ -1,6 +1,5 @@
-package com.assetvisor.marvin.robot.domain.ports;
+package com.assetvisor.marvin.robot.domain.notebook;
 
-import com.assetvisor.marvin.robot.domain.CalendarNote;
 import java.util.List;
 
 public interface ForPersistingNotes {

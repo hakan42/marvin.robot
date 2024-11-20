@@ -1,12 +1,12 @@
 package com.assetvisor.marvin.robot.application.services;
 
-import com.assetvisor.marvin.robot.domain.NoteBook;
-import com.assetvisor.marvin.robot.domain.functions.Functions;
-import com.assetvisor.marvin.robot.domain.ports.ForGettingEnvironmentDescriptions;
-import com.assetvisor.marvin.robot.domain.ports.ForGettingEnvironmentFunctions;
-import com.assetvisor.marvin.robot.domain.ports.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingNotes;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingRobotDescription;
+import com.assetvisor.marvin.robot.domain.notebook.NoteBook;
+import com.assetvisor.marvin.robot.domain.environment.Functions;
+import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
+import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentFunctions;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.notebook.ForPersistingNotes;
+import com.assetvisor.marvin.robot.domain.jobdescription.ForPersistingRobotDescription;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Scheduled;

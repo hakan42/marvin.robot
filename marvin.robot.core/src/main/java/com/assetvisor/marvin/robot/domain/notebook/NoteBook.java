@@ -1,7 +1,6 @@
-package com.assetvisor.marvin.robot.domain;
+package com.assetvisor.marvin.robot.domain.notebook;
 
-import com.assetvisor.marvin.robot.domain.ports.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.ports.ForPersistingNotes;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import java.time.LocalDateTime;
 
 public class NoteBook {

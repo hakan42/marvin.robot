@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.robot.application.services;
 
 import com.assetvisor.marvin.robot.application.RobotListensUseCase;
-import com.assetvisor.marvin.robot.domain.ports.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import jakarta.annotation.Resource;
 import org.springframework.stereotype.Service;
 

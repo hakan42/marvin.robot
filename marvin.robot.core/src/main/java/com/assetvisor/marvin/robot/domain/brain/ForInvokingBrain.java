@@ -1,8 +1,8 @@
-package com.assetvisor.marvin.robot.domain.ports;
+package com.assetvisor.marvin.robot.domain.brain;
 
-import com.assetvisor.marvin.robot.domain.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.RobotDescription;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import java.util.List;
 
 public interface ForInvokingBrain {

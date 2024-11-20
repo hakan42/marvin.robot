@@ -2,7 +2,7 @@ package com.assetvisor.marvin.environment.openhab.restclient;
 
 import com.assetvisor.marvin.environment.openhab.restclient.OpenhabCommandService.Request;
 import com.assetvisor.marvin.environment.openhab.restclient.OpenhabCommandService.Response;
-import com.assetvisor.marvin.robot.domain.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
