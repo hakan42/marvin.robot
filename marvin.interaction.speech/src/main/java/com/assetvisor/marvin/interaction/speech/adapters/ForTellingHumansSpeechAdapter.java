@@ -66,7 +66,7 @@ public class ForTellingHumansSpeechAdapter implements ForTellingHumans {
             .withResponseFormat(AudioResponseFormat.MP3)
             .withSpeed(1.0f)
             .withModel(TtsModel.TTS_1.value)
-            .withVoice(Voice.ALLOY)
+            .withVoice(Voice.FABLE)
             .build();
 
         var speechPrompt = new SpeechPrompt(message, speechOptions);
