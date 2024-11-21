@@ -34,6 +34,11 @@ public class OpenhabCommandService implements EnvironmentFunction<Command, Respo
     }
 
     @Override
+    public Class<?> inputType() {
+        return Command.class;
+    }
+
+    @Override
     public Response apply(Command command) {
         LOG.info("Command: " + command);
         try {

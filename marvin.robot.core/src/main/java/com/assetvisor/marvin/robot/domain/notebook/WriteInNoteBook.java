@@ -1,13 +1,11 @@
 package com.assetvisor.marvin.robot.domain.notebook;
 
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.notebook.WriteInNoteBook.Request;
 import com.assetvisor.marvin.robot.domain.notebook.WriteInNoteBook.Response;
-import java.time.LocalDateTime;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class WriteInNoteBook implements EnvironmentFunction<Request, Response> {
+public class WriteInNoteBook implements EnvironmentFunction<CalendarNote, Response> {
 
     private final Log LOG = LogFactory.getLog(getClass());
     private final NoteBook noteBook;
@@ -27,16 +25,17 @@ public class WriteInNoteBook implements EnvironmentFunction<Request, Response> {
     }
 
     @Override
-    public Response apply(Request request) {
-        noteBook.takeNote(new CalendarNote(
-            request.noteDate(),
-            request.note()
-        ));
-        LOG.info("Written in notebook: " + request);
+    public Class<?> inputType() {
+        return CalendarNote.class;
+    }
+
+    @Override
+    public Response apply(CalendarNote calendarNote) {
+        noteBook.takeNote(calendarNote);
+        LOG.info("Written in notebook: " + calendarNote);
         return new Response(1);
     }
 
-    public record Request(LocalDateTime noteDate, String note) {}
     public record Response(Integer noteCount) {}
 
 }

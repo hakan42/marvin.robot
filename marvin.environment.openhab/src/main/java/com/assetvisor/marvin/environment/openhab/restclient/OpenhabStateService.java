@@ -29,6 +29,11 @@ public class OpenhabStateService implements EnvironmentFunction<Request, Respons
     }
 
     @Override
+    public Class<?> inputType() {
+        return Request.class;
+    }
+
+    @Override
     public Response apply(Request request) {
         LOG.info("Request: " + request);
         try {

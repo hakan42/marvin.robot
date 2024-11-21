@@ -22,6 +22,11 @@ public class LookAtWatch implements EnvironmentFunction<Request, Response> {
     }
 
     @Override
+    public Class<?> inputType() {
+        return Request.class;
+    }
+
+    @Override
     public Response apply(Request request) {
         LocalDateTime now = LocalDateTime.now();
         LOG.info("Watch looked at: " + now);
