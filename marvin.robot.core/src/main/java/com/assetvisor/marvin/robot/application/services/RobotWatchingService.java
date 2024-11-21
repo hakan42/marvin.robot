@@ -19,8 +19,7 @@ public class RobotWatchingService implements RobotWatchesUseCase {
 
     @Override
     public void observe(Observation observation) {
-        String message = "Observed that item with the id " + observation.itemId() + " " + observation.description();
-        LOG.info(message);
-        forInvokingBrain.invoke(message, true);
+        LOG.info(observation);
+        forInvokingBrain.invoke(observation, true);
     }
 }

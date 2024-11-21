@@ -2,6 +2,7 @@ package com.assetvisor.marvin.brain.springai.adapters;
 
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
@@ -71,6 +72,15 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
                 .collect(Collectors.toList())
         );
         LOG.info("BrainSpringAiAdapter initialised.");
+    }
+
+    @Override
+    public void invoke(Observation observation, boolean reply) {
+        invoke(map(observation), reply);
+    }
+
+    private String map(Observation observation) {
+        return observation.toString(); //TODO proper mapping
     }
 
     private FunctionCallback map(EnvironmentFunction<?, ?> environmentFunction) {
