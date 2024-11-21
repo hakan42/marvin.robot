@@ -77,7 +77,7 @@ public class PersistingLocalFileAdapter implements ForPersistingRobotDescription
         try {
             String note = calendarNote.noteDate() + " - " + calendarNote.note();
             Files.writeString(filePath, note + System.lineSeparator(), StandardOpenOption.APPEND);
-            LOG.info("Persisted note to file: " + filePath);
+            LOG.debug("Persisted note to file: " + calendarNote);
         } catch (IOException e) {
             LOG.error("Error writing note to file: " + e.getMessage());
         }
@@ -92,13 +92,16 @@ public class PersistingLocalFileAdapter implements ForPersistingRobotDescription
 
         try {
             List<String> lines = Files.readAllLines(filePath);
-            LOG.info("Read notes from file: " + filePath);
 
-            return lines.stream()
+            List<CalendarNote> notes = lines.stream()
                 .map(line -> line.split(" - "))
                 .filter(parts -> parts.length == 2)
                 .map(parts -> new CalendarNote(LocalDateTime.parse(parts[0]), parts[1]))
                 .collect(Collectors.toList());
+
+            LOG.debug("Read notes from file: " + notes);
+
+            return notes;
 
         } catch (IOException e) {
             LOG.error("Error reading notes file: " + e.getMessage());
@@ -125,7 +128,7 @@ public class PersistingLocalFileAdapter implements ForPersistingRobotDescription
                 } catch (IOException e) {
                     throw new RuntimeException(e);
                 }
-                LOG.info("Deleted note: " + line);
+                LOG.debug("Deleted note: " + calendarNote);
             });
 
         } catch (IOException e) {

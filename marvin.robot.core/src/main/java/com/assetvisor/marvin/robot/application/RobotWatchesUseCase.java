@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.robot.application;
 
-import java.util.Map;
+import com.assetvisor.marvin.robot.domain.environment.Observation;
 
 public interface RobotWatchesUseCase {
-    void observe(Map<?, ?> event);
+    void observe(Observation observation);
 }
