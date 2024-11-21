@@ -15,6 +15,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -84,11 +85,13 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     }
 
     private FunctionCallback map(EnvironmentFunction<?, ?> environmentFunction) {
-        return new FunctionCallbackWrapper.Builder<>(environmentFunction)
-            .withName(environmentFunction.name())
-            .withDescription(environmentFunction.description())
+        return FunctionCallback.builder()
+            .description(environmentFunction.description())
+            .function(environmentFunction.name(), environmentFunction)
+            .inputType(environmentFunction.inputType())
             .build();
     }
+
     private Document map(EnvironmentDescription environmentDescription) {
         return new Document(environmentDescription.text());
     }
