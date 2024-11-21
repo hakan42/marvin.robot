@@ -27,6 +27,8 @@ public class OpenhabSseEventReceiver {
     private WebClient webClient;
     @Resource
     private OpenhabAiItemsService openhabAiItemsService;
+    @Resource
+    private SentCommands sentCommands;
 
     @PostConstruct
     public void listenForSseEvents() {
@@ -53,7 +55,18 @@ public class OpenhabSseEventReceiver {
         // Custom logic to process each event
         if(event.get("type").equals("ALIVE")) return;
         if(event.get("type").equals("ItemStateChangedEvent")) {
-            robotWatchesUseCase.observe(toObservation(event));
+            Observation observation = toObservation(event);
+            sentCommands.relatedCommand(observation)
+                .ifPresentOrElse(
+                    command -> {
+                        LOG.debug("Command found for observation: " + observation);
+                        sentCommands.markAsNotRelevant(command);
+                    },
+                    () -> {
+                        LOG.debug("No command found for observation: " + observation);
+                        robotWatchesUseCase.observe(observation);
+                    }
+                );
         }
     }
 
@@ -76,7 +89,9 @@ public class OpenhabSseEventReceiver {
         String oldValue = (String) payloadMap.get("oldValue");
         return new Observation(
             itemId,
-            "Changed from " + oldValue + " to " + value
+            value,
+            oldValue,
+            "state changed "
         );
     }
 }
