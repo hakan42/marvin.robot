@@ -59,11 +59,11 @@ public class OpenhabSseEventReceiver {
             sentCommands.relatedCommand(observation)
                 .ifPresentOrElse(
                     command -> {
-                        LOG.info("Command found for observation: " + observation);
+                        LOG.debug("Command found for observation: " + observation);
                         sentCommands.markAsNotRelevant(command);
                     },
                     () -> {
-                        LOG.info("No command found for observation: " + observation);
+                        LOG.debug("No command found for observation: " + observation);
                         robotWatchesUseCase.observe(observation);
                     }
                 );
