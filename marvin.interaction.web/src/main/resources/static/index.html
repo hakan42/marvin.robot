@@ -8,6 +8,7 @@
     // Connect to the SSE endpoint and display messages
     function startSSE() {
       const messageList = document.getElementById("messages");
+      const audioPlayer = document.getElementById("audioPlayer");
       const eventSource = new EventSource("/stream");
 
       eventSource.onmessage = (event) => {
@@ -15,6 +16,31 @@
         newMessage.textContent = event.data;
         messageList.appendChild(newMessage);
       };
+
+      // Listen for a custom event indicating chat audio is ready
+      eventSource.addEventListener("chatReady", async () => {
+        console.log("Chat audio ready! Fetching...");
+
+        // Fetch the chat audio
+        try {
+          const response = await fetch("/chat");
+          if (!response.ok) {
+            throw new Error("Failed to fetch audio");
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+
+          // Play the audio
+          audioPlayer.src = url;
+          audioPlayer.style.display = "block";
+          audioPlayer.play();
+
+          console.log("Playing chat audio");
+        } catch (error) {
+          console.error("Error fetching or playing audio:", error);
+        }
+      });
 
       eventSource.onerror = () => {
         console.error("Error connecting to SSE stream");
@@ -73,5 +99,9 @@
 <!-- Display incoming messages -->
 <h2>Messages:</h2>
 <ul id="messages"></ul>
+
+<!-- Audio player for chat -->
+<h2>Chat Audio:</h2>
+<audio id="audioPlayer" controls style="display: none;"></audio>
 </body>
 </html>

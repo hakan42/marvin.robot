@@ -17,6 +17,7 @@ import org.springframework.ai.openai.api.OpenAiAudioApi.SpeechRequest.Voice;
 import org.springframework.ai.openai.api.OpenAiAudioApi.TtsModel;
 import org.springframework.ai.openai.audio.speech.SpeechPrompt;
 import org.springframework.ai.openai.audio.speech.SpeechResponse;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 @Component("speech")
@@ -26,9 +27,13 @@ public class ForTellingHumansSpeechAdapter implements ForTellingHumans {
 
     @Resource
     private OpenAiAudioSpeechModel openAiAudioSpeechModel;
+    @Resource
+    private ForTellingHumans talkToWeb;
 
     private final Queue<String> messageQueue = new LinkedList<>();
     private final Object lock = new Object();
+    @Autowired
+    private ForTellingHumans forTellingHumans;
 
     @PostConstruct
     public void start() {
@@ -60,6 +65,11 @@ public class ForTellingHumansSpeechAdapter implements ForTellingHumans {
         }
     }
 
+    @Override
+    public void tell(byte[] message) {
+
+    }
+
     private void say(String message) {
         LOG.debug("Saying: " + message);
         OpenAiAudioSpeechOptions speechOptions = OpenAiAudioSpeechOptions.builder()
@@ -72,16 +82,17 @@ public class ForTellingHumansSpeechAdapter implements ForTellingHumans {
         var speechPrompt = new SpeechPrompt(message, speechOptions);
         SpeechResponse response = openAiAudioSpeechModel.call(speechPrompt);
         byte[] output = response.getResult().getOutput();
+        forTellingHumans.tell(output);
 
-        Player player = null;
-        try {
-            player = new Player(new ByteArrayInputStream(output));
-            player.play();
-        } catch (JavaLayerException e) {
-            throw new RuntimeException(e);
-        } finally {
-            assert player != null;
-            player.close();
-        }
+//        Player player = null;
+//        try {
+//            player = new Player(new ByteArrayInputStream(output));
+//            player.play();
+//        } catch (JavaLayerException e) {
+//            throw new RuntimeException(e);
+//        } finally {
+//            assert player != null;
+//            player.close();
+//        }
     }
 }

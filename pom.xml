@@ -12,7 +12,7 @@
     <module>marvin.environment.openhab</module>
     <module>marvin.interaction.web</module>
     <module>marvin.robot.core</module>
-    <module>marvin.interaction.speech</module>
+    <module>marvin.interaction.speech.local</module>
     <module>marvin.persistence</module>
   </modules>
 

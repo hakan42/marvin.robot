@@ -1,6 +1,8 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
+import com.assetvisor.marvin.interaction.web.AudioBuffer;
 import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
+import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -13,6 +15,9 @@ import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 public class ForTellingHumansSseEmittingAdapter implements ForTellingHumans {
 
     private final Log LOG = LogFactory.getLog(getClass());
+
+    @Resource
+    private AudioBuffer audioBuffer;
 
     private final List<SseEmitter> emitters = new CopyOnWriteArrayList<>();
 
@@ -39,6 +44,19 @@ public class ForTellingHumansSseEmittingAdapter implements ForTellingHumans {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(message);
+            } catch (IOException e) {
+                emitter.complete();
+                emitters.remove(emitter);
+            }
+        }
+    }
+
+    @Override
+    public void tell(byte[] audio) {
+        audioBuffer.set(audio);
+        for (SseEmitter emitter : emitters) {
+            try {
+                emitter.send(SseEmitter.event().name("chatReady").data("audio").build());
             } catch (IOException e) {
                 emitter.complete();
                 emitters.remove(emitter);
