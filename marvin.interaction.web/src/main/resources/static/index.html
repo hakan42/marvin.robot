@@ -8,13 +8,45 @@
     // Connect to the SSE endpoint and display messages
     function startSSE() {
       const messageList = document.getElementById("messages");
+      const audioPlayer = document.getElementById("audioPlayer");
       const eventSource = new EventSource("/stream");
+      const maxMessages = 10; // Maximum number of messages to display
 
       eventSource.onmessage = (event) => {
         const newMessage = document.createElement("li");
         newMessage.textContent = event.data;
         messageList.appendChild(newMessage);
+
+        // Limit to the last 10 messages
+        while (messageList.children.length > maxMessages) {
+          messageList.removeChild(messageList.firstChild);
+        }
       };
+
+      // Listen for a custom event indicating chat audio is ready
+      eventSource.addEventListener("chatReady", async () => {
+        showToast("Chat audio ready! Fetching...");
+
+        // Fetch the chat audio
+        try {
+          const response = await fetch("/chat");
+          if (!response.ok) {
+            throw new Error("Failed to fetch audio");
+          }
+
+          const blob = await response.blob();
+          const url = URL.createObjectURL(blob);
+
+          // Play the audio
+          audioPlayer.src = url;
+          audioPlayer.style.display = "block";
+          audioPlayer.play();
+
+          showToast("Playing chat audio...");
+        } catch (error) {
+          console.error("Error fetching or playing audio:", error);
+        }
+      });
 
       eventSource.onerror = () => {
         console.error("Error connecting to SSE stream");
@@ -40,7 +72,7 @@
           });
 
           if (response.ok) {
-            console.log("Message sent:", message);
+            showToast("Message sent: " + message);
             messageInput.value = ""; // Clear the input field
           } else {
             console.error("Failed to send message:", response.statusText);
@@ -49,6 +81,22 @@
           console.error("Error sending message:", error);
         }
       }
+    }
+
+    // Function to show a toast message
+    function showToast(message) {
+      const toast = document.getElementById("toast");
+      toast.textContent = message;
+      toast.style.visibility = "visible";
+      toast.style.opacity = "1";
+
+      // Hide the toast after 3 seconds
+      setTimeout(() => {
+        toast.style.opacity = "0";
+        setTimeout(() => {
+          toast.style.visibility = "hidden";
+        }, 500); // Wait for fade-out transition
+      }, 10000);
     }
 
     // Initialize on page load
@@ -73,5 +121,31 @@
 <!-- Display incoming messages -->
 <h2>Messages:</h2>
 <ul id="messages"></ul>
+
+<!-- Audio player for chat -->
+<h2>Chat Audio:</h2>
+<audio id="audioPlayer" controls style="display: none;"></audio>
+
+<!-- Toast notification -->
+<div id="toast"></div>
 </body>
-</html>
+
+<style>
+  #toast {
+    visibility: hidden;
+    min-width: 250px;
+    margin: 0 auto;
+    background-color: #005500;
+    color: #fff;
+    text-align: center;
+    border-radius: 4px;
+    padding: 16px;
+    position: fixed;
+    bottom: 20px;
+    left: 50%;
+    transform: translateX(-50%);
+    z-index: 1000;
+    opacity: 0;
+    transition: opacity 0.5s, visibility 0.5s;
+  }
+</style></html>
