@@ -72,7 +72,7 @@
           });
 
           if (response.ok) {
-            showToast("Message sent:", message);
+            showToast("Message sent: " + message);
             messageInput.value = ""; // Clear the input field
           } else {
             console.error("Failed to send message:", response.statusText);
