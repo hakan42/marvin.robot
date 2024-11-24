@@ -1,7 +1,8 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.interaction.web.AudioBuffer;
-import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
+import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
+import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
 import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
@@ -12,7 +13,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Component("web")
-public class ForTellingHumansSseEmittingAdapter implements ForTellingHumans {
+public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessaging {
 
     private final Log LOG = LogFactory.getLog(getClass());
 
@@ -40,7 +41,7 @@ public class ForTellingHumansSseEmittingAdapter implements ForTellingHumans {
 
 
     @Override
-    public void tell(String message) {
+    public void message(String message) {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(message);
@@ -52,7 +53,7 @@ public class ForTellingHumansSseEmittingAdapter implements ForTellingHumans {
     }
 
     @Override
-    public void tell(byte[] audio) {
+    public void say(byte[] audio) {
         audioBuffer.set(audio);
         for (SseEmitter emitter : emitters) {
             try {

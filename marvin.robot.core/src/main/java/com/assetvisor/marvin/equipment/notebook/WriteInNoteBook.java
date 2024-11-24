@@ -1,7 +1,7 @@
-package com.assetvisor.marvin.robot.domain.notebook;
+package com.assetvisor.marvin.equipment.notebook;
 
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.notebook.WriteInNoteBook.Response;
+import com.assetvisor.marvin.equipment.notebook.WriteInNoteBook.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 

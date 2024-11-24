@@ -1,8 +1,8 @@
-package com.assetvisor.marvin.robot.domain.watch;
+package com.assetvisor.marvin.equipment.watch;
 
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.watch.LookAtWatch.Request;
-import com.assetvisor.marvin.robot.domain.watch.LookAtWatch.Response;
+import com.assetvisor.marvin.equipment.watch.LookAtWatch.Request;
+import com.assetvisor.marvin.equipment.watch.LookAtWatch.Response;
 import java.time.LocalDateTime;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

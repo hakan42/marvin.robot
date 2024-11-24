@@ -12,6 +12,6 @@ public interface ForInvokingBrain {
         List<EnvironmentDescription> environmentDescriptions,
         List<EnvironmentFunction<?,?>> environmentFunctions
     );
-    void invoke(Observation observation, boolean reply);
-    void invoke(String message, boolean reply);
+    void invoke(Observation observation, boolean reply, BrainResponder responder);
+    void invoke(String message, boolean reply, BrainResponder responder);
 }

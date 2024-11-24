@@ -1,11 +1,12 @@
 package com.assetvisor.marvin.brain.springai.adapters;
 
+import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.communication.ForTellingHumans;
+import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -15,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -24,7 +24,6 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.model.function.FunctionCallback;
-import org.springframework.ai.model.function.FunctionCallbackWrapper;
 import org.springframework.ai.vectorstore.PgVectorStore;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.stereotype.Component;
@@ -37,9 +36,9 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     @Resource
     private PgVectorStore vectorStore;
     @Resource
-    private ForTellingHumans speech;
+    private ForSpeaking speech;
     @Resource
-    private ForTellingHumans web;
+    private ForSpeaking web;
     @Resource
     private ChatClient.Builder chatClientBuilder;
     @Resource
@@ -76,8 +75,8 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     }
 
     @Override
-    public void invoke(Observation observation, boolean reply) {
-        invoke(map(observation), reply);
+    public void invoke(Observation observation, boolean reply, BrainResponder responder) {
+        invoke(map(observation), reply, responder);
     }
 
     private String map(Observation observation) {
@@ -107,7 +106,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     }
 
     @Override
-    public void invoke(String message, boolean reply) {
+    public void invoke(String message, boolean reply, BrainResponder responder) {
         List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
         String collect = documents.stream().map(Document::getContent)
             .collect(Collectors.joining(System.lineSeparator()));
@@ -123,8 +122,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
             )
             .call().chatResponse();
         if (reply) {
-            speech.tell(chatResponse.getResult().getOutput().getContent());
-            web.tell(chatResponse.getResult().getOutput().getContent());
+            responder.respond(chatResponse.getResult().getOutput().getContent());
         }
     }
 }
