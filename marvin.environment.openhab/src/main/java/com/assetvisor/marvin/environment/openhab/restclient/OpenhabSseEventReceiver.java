@@ -10,13 +10,14 @@ import jakarta.annotation.Resource;
 import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
-import org.apache.logging.log4j.util.Strings;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 @Component
+@Profile("openhab")
 public class OpenhabSseEventReceiver {
 
     Log LOG = LogFactory.getLog(getClass());

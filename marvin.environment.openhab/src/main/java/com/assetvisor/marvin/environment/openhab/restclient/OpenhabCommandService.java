@@ -6,6 +6,7 @@ import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -14,6 +15,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Component
+@Profile("openhab")
 public class OpenhabCommandService implements EnvironmentFunction<Command, Response> {
 
     Log LOG = LogFactory.getLog(getClass());

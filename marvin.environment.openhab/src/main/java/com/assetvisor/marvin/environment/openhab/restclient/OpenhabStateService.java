@@ -6,11 +6,13 @@ import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Component
+@Profile("openhab")
 public class OpenhabStateService implements EnvironmentFunction<Request, Response> {
 
     Log LOG = LogFactory.getLog(getClass());

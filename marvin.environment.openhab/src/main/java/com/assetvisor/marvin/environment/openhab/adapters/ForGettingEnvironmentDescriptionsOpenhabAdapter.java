@@ -6,9 +6,11 @@ import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescr
 import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
 import jakarta.annotation.Resource;
 import java.util.List;
+import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
+@Profile("openhab")
 public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGettingEnvironmentDescriptions {
 
     @Resource
