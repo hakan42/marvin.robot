@@ -1,12 +1,11 @@
 package com.assetvisor.marvin.brain.springai.adapters;
 
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
-import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -35,10 +34,6 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
 
     @Resource
     private PgVectorStore vectorStore;
-    @Resource
-    private ForSpeaking speech;
-    @Resource
-    private ForSpeaking web;
     @Resource
     private ChatClient.Builder chatClientBuilder;
     @Resource
