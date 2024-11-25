@@ -1,5 +1,6 @@
 package com.assetvisor.marvin.brain.springai.adapters;
 
+import com.assetvisor.marvin.robot.domain.brain.AsleepException;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
@@ -14,8 +15,7 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.memory.ChatMemory;
+import org.springframework.ai.chat.client.advisor.VectorStoreChatMemoryAdvisor;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -36,29 +36,16 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     private PgVectorStore vectorStore;
     @Resource
     private ChatClient.Builder chatClientBuilder;
-    @Resource
-    private ChatMemory chatMemory;
 
     private ChatClient chatClient;
     private RobotDescription robotDescription;
 
     @Override
-    public void initialise(
+    public void born(
         RobotDescription robotDescription,
-        List<EnvironmentDescription> environmentDescriptions,
-        List<EnvironmentFunction<?,?>> environmentFunctions
+        List<EnvironmentDescription> environmentDescriptions
     ) {
-        LOG.info("Initialising BrainSpringAiAdapter...");
-        this.chatClient = chatClientBuilder
-            .defaultAdvisors(
-                new MessageChatMemoryAdvisor(chatMemory)
-            )
-            .defaultFunctions(environmentFunctions
-                    .stream()
-                    .map(this::map)
-                    .toArray(FunctionCallback[]::new)
-            )
-            .build();
+        LOG.info("Initialising Brain with instincts...");
 
         this.robotDescription = robotDescription;
         this.vectorStore.add(
@@ -66,7 +53,34 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
                 .map(this::map)
                 .collect(Collectors.toList())
         );
-        LOG.info("BrainSpringAiAdapter initialised.");
+        LOG.info("Brain initialised.");
+    }
+
+    @Override
+    public void wokenUp(
+        RobotDescription robotDescription,
+        List<EnvironmentFunction<?,?>> environmentFunctions
+    ) {
+        LOG.info("Waking up Brain with new functions...");
+
+        this.robotDescription = robotDescription;
+
+        var chatMemoryAdvisor = VectorStoreChatMemoryAdvisor.builder(vectorStore)
+            .withConversationId("1")
+            .withChatMemoryRetrieveSize(10)
+            .build();
+
+        this.chatClient = chatClientBuilder
+            .defaultAdvisors(
+                chatMemoryAdvisor
+            )
+            .defaultFunctions(environmentFunctions
+                .stream()
+                .map(this::map)
+                .toArray(FunctionCallback[]::new)
+            )
+            .build();
+        LOG.info("Brain woken up.");
     }
 
     @Override
@@ -102,6 +116,9 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
 
     @Override
     public void invoke(String message, boolean reply, BrainResponder responder) {
+        if(chatClient == null) {
+            throw new AsleepException("Brain is asleep, please wake it up first.");
+        }
         List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
         String collect = documents.stream().map(Document::getContent)
             .collect(Collectors.joining(System.lineSeparator()));

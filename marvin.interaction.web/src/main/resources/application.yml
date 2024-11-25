@@ -14,7 +14,7 @@ spring:
         index-type: hnsw
         distance-type: cosine_distance
         dimensions: 1536
-        remove-existing-vector-store-table: true
+        remove-existing-vector-store-table: false
   datasource:
     url: jdbc:postgresql://localhost:5555/vectordb
     username: testuser

@@ -12,11 +12,13 @@ import jakarta.annotation.PostConstruct;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
+import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
 public class RobotLifecycleService {
-
+    @Resource
+    private Environment environment;
     @Resource
     private ForInvokingBrain forInvokingBrain;
     @Resource
@@ -33,19 +35,33 @@ public class RobotLifecycleService {
     private InteractionService interactionService;
 
     @PostConstruct
+    public void init() {
+        if (environment.getProperty("spring.ai.vectorstore.pgvector.remove-existing-vector-store-table", Boolean.class, true)) {
+            born();
+            wakeUp();
+        } else {
+            wakeUp();
+        }
+    }
+
     public void born() {
         List<EnvironmentDescription> environmentDescriptions = new ArrayList<>(forPersistingEnvironmentDescriptions.load());
         environmentDescriptions.addAll(forGettingEnvironmentDescriptions.getEnvironmentDescriptions());
+        forInvokingBrain.born(
+            forPersistingRobotDescription.read(),
+            environmentDescriptions
+        );
+    }
+
+    public void wakeUp() {
         Functions functions = new Functions(
             forGettingEnvironmentFunctions,
             noteBook
         );
-        forInvokingBrain.initialise(
+        forInvokingBrain.wokenUp(
             forPersistingRobotDescription.read(),
-            environmentDescriptions,
             functions.all()
         );
-        interactionService.listenTo("You are born!");
-        interactionService.listenTo("Check the current time");
+        interactionService.listenTo("You were just woken up, check the current time");
     }
 }

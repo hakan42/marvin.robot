@@ -1,7 +1,5 @@
 package com.assetvisor.marvin.brain.springai.config;
 
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
 import org.springframework.ai.openai.api.OpenAiAudioApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,11 +13,6 @@ public class SpringAiConfig {
 
     @Value("${spring.ai.openai.api-key}")
     private String openAiApiKey;
-
-    @Bean
-    public ChatMemory chatMemory() {
-        return new InMemoryChatMemory();
-    }
 
     @Bean
     public OpenAiAudioSpeechModel openAiAudioSpeechModel() {
