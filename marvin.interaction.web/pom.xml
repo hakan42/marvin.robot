@@ -13,9 +13,6 @@
   <packaging>jar</packaging>
 
   <properties>
-    <maven.compiler.source>22</maven.compiler.source>
-    <maven.compiler.target>22</maven.compiler.target>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <start-class>com.assetvisor.marvin.Application</start-class>
   </properties>
 
@@ -75,6 +72,5 @@
       <scope>provided</scope>
     </dependency>
   </dependencies>
-
 
 </project>
