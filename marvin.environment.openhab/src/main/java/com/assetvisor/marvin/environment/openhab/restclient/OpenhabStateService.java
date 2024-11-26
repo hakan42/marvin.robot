@@ -43,6 +43,7 @@ public class OpenhabStateService implements EnvironmentFunction<Request, Respons
                 .uri("items/" + request.itemId + "/state")
                 .retrieve()
                 .body(String.class);
+            LOG.info("Response: " + body);
             return new Response(body);
         } catch (HttpClientErrorException e) {
             return new Response("Error: " + e.getMessage());

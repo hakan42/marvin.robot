@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.environment.openhab.restclient;
 
-import com.assetvisor.marvin.robot.application.RobotWatchesUseCase;
+import com.assetvisor.marvin.robot.application.ObserveUseCase;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -23,7 +23,7 @@ public class OpenhabSseEventReceiver {
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private RobotWatchesUseCase robotWatchesUseCase;
+    private ObserveUseCase observeUseCase;
     @Resource
     private WebClient webClient;
     @Resource
@@ -65,7 +65,7 @@ public class OpenhabSseEventReceiver {
                     },
                     () -> {
                         LOG.debug("No command found for observation: " + observation);
-                        robotWatchesUseCase.observe(observation);
+                        observeUseCase.observe(observation);
                     }
                 );
         }

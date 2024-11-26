@@ -16,7 +16,7 @@ import org.springframework.core.env.Environment;
 import org.springframework.stereotype.Service;
 
 @Service
-public class RobotLifecycleService {
+public class LifecycleService {
     @Resource
     private Environment environment;
     @Resource

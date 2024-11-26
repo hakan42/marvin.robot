@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.equipment.notebook;
 
-import com.assetvisor.marvin.robot.application.RobotListensUseCase;
+import com.assetvisor.marvin.robot.application.ListenUseCase;
 import jakarta.annotation.Resource;
 import java.time.LocalDateTime;
 import org.springframework.scheduling.annotation.Scheduled;
@@ -11,7 +11,7 @@ public class NoteBook {
     @Resource
     private ForPersistingNotes forPersistingNotes;
     @Resource
-    private RobotListensUseCase robotListensUseCase;
+    private ListenUseCase listenUseCase;
 
     public void takeNote(CalendarNote note) {
         forPersistingNotes.persist(note);
@@ -21,7 +21,7 @@ public class NoteBook {
         forPersistingNotes.all().stream()
             .filter(note -> note.noteDate().isBefore(LocalDateTime.now()))
             .forEach(note -> {
-                robotListensUseCase.listenTo("Note read from notebook, act on it: " + note.note());
+                listenUseCase.listenTo("Note read from notebook, act on it: " + note.note());
                 forPersistingNotes.delete(note);
             });
     }

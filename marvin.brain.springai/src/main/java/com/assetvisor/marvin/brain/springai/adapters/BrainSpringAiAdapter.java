@@ -15,7 +15,9 @@ import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.VectorStoreChatMemoryAdvisor;
+import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
@@ -34,6 +36,8 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
 
     @Resource
     private PgVectorStore vectorStore;
+    @Resource
+    private ChatMemory chatMemory;
     @Resource
     private ChatClient.Builder chatClientBuilder;
 
@@ -72,7 +76,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
 
         this.chatClient = chatClientBuilder
             .defaultAdvisors(
-                chatMemoryAdvisor
+                new MessageChatMemoryAdvisor(chatMemory)
             )
             .defaultFunctions(environmentFunctions
                 .stream()
@@ -119,6 +123,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
         if(chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
+        vectorStore.add(List.of(new Document(message)));
         List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
         String collect = documents.stream().map(Document::getContent)
             .collect(Collectors.joining(System.lineSeparator()));
@@ -133,8 +138,11 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, "10")
             )
             .call().chatResponse();
+
+        String responseString = chatResponse.getResult().getOutput().getContent();
+        vectorStore.add(List.of(new Document(responseString)));
         if (reply) {
-            responder.respond(chatResponse.getResult().getOutput().getContent());
+            responder.respond(responseString);
         }
     }
 }

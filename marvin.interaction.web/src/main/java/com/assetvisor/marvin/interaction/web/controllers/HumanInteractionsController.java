@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.interaction.web.controllers;
 
 import com.assetvisor.marvin.interaction.web.AudioBuffer;
-import com.assetvisor.marvin.robot.application.RobotListensUseCase;
+import com.assetvisor.marvin.robot.application.ListenUseCase;
 import jakarta.annotation.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -15,13 +15,13 @@ import org.springframework.web.bind.annotation.RestController;
 public class HumanInteractionsController {
 
     @Resource
-    private RobotListensUseCase robotListensUseCase;
+    private ListenUseCase listenUseCase;
     @Resource
     private AudioBuffer audioBuffer;
 
     @PostMapping("/chat")
     public void chat(@RequestParam(value = "message") String message) {
-        robotListensUseCase.listenTo(message);
+        listenUseCase.listenTo(message);
     }
 
     @GetMapping("/chat")

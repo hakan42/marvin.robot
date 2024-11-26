@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.robot.application.services;
 
-import com.assetvisor.marvin.robot.application.RobotListensUseCase;
-import com.assetvisor.marvin.robot.application.RobotWatchesUseCase;
+import com.assetvisor.marvin.robot.application.ListenUseCase;
+import com.assetvisor.marvin.robot.application.ObserveUseCase;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
@@ -14,7 +14,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InteractionService implements RobotWatchesUseCase, RobotListensUseCase {
+public class InteractionService implements ObserveUseCase, ListenUseCase {
 
     Log LOG = LogFactory.getLog(getClass());
 
