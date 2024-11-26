@@ -10,11 +10,11 @@ spring:
       api-key: OPENAI_KEY # OpenAI API key, get your own at https://platform.openai.com
     vectorstore:
       pgvector:
-        initialize-schema: false # Set to true if the robot is just born
+        initialize-schema: true # Set to true if the robot is just born
         index-type: hnsw
         distance-type: cosine_distance
         dimensions: 1536
-        remove-existing-vector-store-table: false # Set to true if the robot is just born
+        remove-existing-vector-store-table: true # Set to true if the robot is just born
   datasource:
     url: jdbc:postgresql://localhost:5555/vectordb
     username: testuser

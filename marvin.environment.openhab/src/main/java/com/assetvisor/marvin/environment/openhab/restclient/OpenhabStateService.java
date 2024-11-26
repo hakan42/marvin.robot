@@ -7,6 +7,7 @@ import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
@@ -41,6 +42,7 @@ public class OpenhabStateService implements EnvironmentFunction<Request, Respons
         try {
             String body = restClient.get()
                 .uri("items/" + request.itemId + "/state")
+                .accept(MediaType.TEXT_PLAIN)
                 .retrieve()
                 .body(String.class);
             Response response = new Response(body);
