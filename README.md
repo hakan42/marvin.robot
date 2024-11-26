@@ -28,4 +28,7 @@ When the application has started, open localhost:8080 in your browser. You can a
 
 Maven is used to build Marvin.
 
-```
+## Cool things to try
+* Notify me about dinner in 5 minutes
+* Turn on the lights in the living room
+* What is the temperature in the living room?
