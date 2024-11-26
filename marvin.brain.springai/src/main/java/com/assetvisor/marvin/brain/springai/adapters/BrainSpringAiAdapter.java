@@ -63,7 +63,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     @Override
     public void wokenUp(
         RobotDescription robotDescription,
-        List<EnvironmentFunction<?,?>> environmentFunctions
+        List<EnvironmentFunction<?, ?>> environmentFunctions
     ) {
         LOG.info("Waking up Brain with new functions...");
 
@@ -110,18 +110,18 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
 
     private String getEnrichedRobotDescription() {
         String documentEnrichment = """
-	        \r\nUse the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
-	        If unsure, simply state that you don't know.
-            Take a deep breath and relax. Solve your tasks step by step");
-	        DOCUMENTS:
-	        {documents}
-         """;
+            \r\nUse the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
+            If unsure, simply state that you don't know.
+               Take a deep breath and relax. Solve your tasks step by step;
+            DOCUMENTS:
+            {documents}
+            """;
         return robotDescription.text() + documentEnrichment;
     }
 
     @Override
     public void invoke(String message, boolean reply, BrainResponder responder) {
-        if(chatClient == null) {
+        if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
         vectorStore.add(List.of(new Document(message)));
