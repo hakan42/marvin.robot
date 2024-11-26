@@ -10,12 +10,13 @@
   </parent>
 
   <artifactId>marvin.interaction.web</artifactId>
-  <packaging>war</packaging>
+  <packaging>jar</packaging>
 
   <properties>
     <maven.compiler.source>22</maven.compiler.source>
     <maven.compiler.target>22</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+    <start-class>com.assetvisor.marvin.Application</start-class>
   </properties>
 
   <build>
@@ -25,19 +26,16 @@
         <artifactId>spring-boot-maven-plugin</artifactId>
         <configuration>
           <mainClass>com.assetvisor.marvin.Application</mainClass>
+          <executable>true</executable>
+          <layout>JAR</layout>
         </configuration>
-      </plugin>
-      <plugin>
-        <groupId>org.apache.maven.plugins</groupId>
-        <artifactId>maven-war-plugin</artifactId>
-        <version>3.4.0</version>
-        <configuration>
-          <archive>
-            <manifest>
-              <mainClass>com.assetvisor.marvin.Application</mainClass> <!-- Replace with your main class -->
-            </manifest>
-          </archive>
-        </configuration>
+        <executions>
+          <execution>
+            <goals>
+              <goal>repackage</goal>
+            </goals>
+          </execution>
+        </executions>
       </plugin>
     </plugins>
   </build>
