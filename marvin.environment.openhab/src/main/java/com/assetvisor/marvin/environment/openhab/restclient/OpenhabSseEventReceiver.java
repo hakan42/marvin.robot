@@ -27,13 +27,13 @@ public class OpenhabSseEventReceiver {
     @Resource
     private WebClient webClient;
     @Resource
-    private OpenhabAiItemsService openhabAiItemsService;
+    private OpenhabEventPublishingItemsService openhabEventPublishingItemsService;
     @Resource
     private SentCommands sentCommands;
 
     @PostConstruct
     public void listenForSseEvents() {
-        openhabAiItemsService.asIds().forEach(this::connect);
+        openhabEventPublishingItemsService.asIds().forEach(this::connect);
     }
 
     private void connect(String itemId) {

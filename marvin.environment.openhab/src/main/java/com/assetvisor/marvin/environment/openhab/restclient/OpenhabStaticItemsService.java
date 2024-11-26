@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class OpenhabAiItemsService {
+public class OpenhabStaticItemsService {
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
@@ -31,19 +31,4 @@ public class OpenhabAiItemsService {
         }
         return List.of();
     }
-
-    public List<String> asIds() {
-        LOG.info("Getting all item ids tagged Marvin");
-        try {
-            List<Map> body = restClient.get()
-                .uri("items?tags=Marvin&fields=name")
-                .retrieve()
-                .body(List.class);
-            return body.stream().map(item -> (String) item.get("name")).toList();
-        } catch (HttpClientErrorException e) {
-            LOG.error("Error: " + e.getMessage());
-        }
-        return List.of();
-    }
-
 }
