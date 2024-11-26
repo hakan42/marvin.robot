@@ -28,7 +28,7 @@ import java.util.concurrent.TimeUnit;
 public class OpenhabSseEventReceiver {
 
     private static final Log LOG = LogFactory.getLog(OpenhabSseEventReceiver.class);
-    private static final int DEBOUNCE_TIME_MS = 500; // Debounce time in milliseconds
+    private static final int DEBOUNCE_TIME_MS = 2000; // Debounce time in milliseconds
 
     @Resource
     private ObserveUseCase observeUseCase;
