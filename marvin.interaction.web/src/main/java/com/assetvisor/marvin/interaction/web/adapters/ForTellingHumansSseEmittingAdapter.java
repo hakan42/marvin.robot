@@ -35,7 +35,7 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessa
         });
         emitter.onError((e) -> {
             emitters.remove(emitter);
-            LOG.error("Error in SSE connection: " + e.getMessage());
+            LOG.error("Error in SSE connection, removed emitter: " + emitter);
         });
     }
 
