@@ -124,7 +124,6 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
-        vectorStore.add(List.of(new Document(message)));
         List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
         String collect = documents.stream().map(Document::getContent)
             .collect(Collectors.joining(System.lineSeparator()));
@@ -141,7 +140,6 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
             .call().chatResponse();
 
         String responseString = chatResponse.getResult().getOutput().getContent();
-        vectorStore.add(List.of(new Document(responseString)));
         if (reply) {
             responder.respond(responseString);
         }
