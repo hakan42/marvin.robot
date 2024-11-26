@@ -11,6 +11,7 @@ Put a text file called marvin-environment in your home directory.
 There are example files in the descriptions folder
 
 Marvin will also read item descriptions from OpenHAB and learn about them. To enable items, add the tag Marvin to the item in OpenHAB.
+Marvin will in addition receive events from OpenHAB. To enable events, add the tag Events to the item in OpenHAB.
 
 ## How to run Marvin
 
