@@ -62,6 +62,6 @@ public class LifecycleService {
             forPersistingRobotDescription.read(),
             functions.all()
         );
-        interactionService.listenTo("You were just woken up, check the current time");
+        interactionService.listenTo("You were just woken up, check the current time.");
     }
 }

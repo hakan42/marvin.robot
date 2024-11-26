@@ -37,14 +37,15 @@ public class OpenhabStateService implements EnvironmentFunction<Request, Respons
 
     @Override
     public Response apply(Request request) {
-        LOG.info("Request: " + request);
+        LOG.info(request);
         try {
             String body = restClient.get()
                 .uri("items/" + request.itemId + "/state")
                 .retrieve()
                 .body(String.class);
-            LOG.info("Response: " + body);
-            return new Response(body);
+            Response response = new Response(body);
+            LOG.info(response);
+            return response;
         } catch (HttpClientErrorException e) {
             return new Response("Error: " + e.getMessage());
         }

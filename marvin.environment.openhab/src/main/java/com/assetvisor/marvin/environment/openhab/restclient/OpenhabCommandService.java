@@ -42,16 +42,18 @@ public class OpenhabCommandService implements EnvironmentFunction<Command, Respo
 
     @Override
     public Response apply(Command command) {
-        LOG.info("Command: " + command);
+        LOG.info(command);
         try {
-            ResponseEntity<Void> response = restClient.post()
+            ResponseEntity<Void> responseEntity = restClient.post()
                 .uri("items/" + command.itemId)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(command.command)
                 .retrieve()
                 .toBodilessEntity();
             sentCommands.markAsSent(command);
-            return response.getStatusCode() == HttpStatus.OK ? new Response("OK") : new Response("Error: " + response.getStatusCode());
+            Response response = responseEntity.getStatusCode() == HttpStatus.OK ? new Response("OK") : new Response("Error: " + responseEntity.getStatusCode());
+            LOG.info(response);
+            return response;
         } catch (HttpClientErrorException e) {
             LOG.error(e.getMessage(), e);
             return new Response("Error: " + e.getMessage());
