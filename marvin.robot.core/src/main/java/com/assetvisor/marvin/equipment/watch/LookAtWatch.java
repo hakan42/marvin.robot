@@ -9,7 +9,7 @@ import org.apache.commons.logging.LogFactory;
 
 public class LookAtWatch implements EnvironmentFunction<Request, Response> {
 
-    private final Log LOG = LogFactory.getLog(getClass());
+    private static final Log LOG = LogFactory.getLog(LookAtWatch.class);
 
     @Override
     public String name() {
@@ -35,5 +35,4 @@ public class LookAtWatch implements EnvironmentFunction<Request, Response> {
 
     public record Request(String input) {}
     public record Response(LocalDateTime localDateTime) {}
-
 }

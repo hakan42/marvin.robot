@@ -3,6 +3,7 @@ package com.assetvisor.marvin.robot.domain.environment;
 import com.assetvisor.marvin.equipment.notebook.NoteBook;
 import com.assetvisor.marvin.equipment.notebook.WriteInNoteBook;
 import com.assetvisor.marvin.equipment.watch.LookAtWatch;
+import java.util.ArrayList;
 import java.util.List;
 
 public class Functions {
@@ -16,12 +17,13 @@ public class Functions {
     }
 
     public List<EnvironmentFunction<?,?>> all() {
-        List<EnvironmentFunction<?, ?>> environmentFunctions = forGettingEnvironmentFunctions.getEnvironmentFunctions();
-        environmentFunctions.addAll(builtInFunctions());
+        List<EnvironmentFunction<?, ?>> environmentFunctions = new ArrayList<>();
+        environmentFunctions.addAll(forGettingEnvironmentFunctions.getEnvironmentFunctions());
+        environmentFunctions.addAll(equipmentFunctions());
         return environmentFunctions;
     }
 
-    private List<EnvironmentFunction<?,?>> builtInFunctions() {
+    private List<EnvironmentFunction<?,?>> equipmentFunctions() {
         return List.of(
             new LookAtWatch(),
             new WriteInNoteBook(noteBook)
