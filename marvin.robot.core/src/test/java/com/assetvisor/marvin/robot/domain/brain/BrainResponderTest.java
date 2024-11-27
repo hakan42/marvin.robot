@@ -7,11 +7,8 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
-import java.util.List;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
-import org.mockito.ArgumentCaptor;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
 import org.mockito.Spy;
@@ -28,7 +25,6 @@ public class BrainResponderTest {
     @InjectMocks
     private BrainResponder brainResponder;
 
-    @SuppressWarnings("unchecked")
     @Test
     public void shouldRespond() {
         // Given
@@ -38,7 +34,6 @@ public class BrainResponderTest {
         given(forConvertingTextToSpeech.convert(message)).willReturn(bytes);
 
         // When
-        ArgumentCaptor<List<EnvironmentDescription>> captor = ArgumentCaptor.forClass(List.class);
         brainResponder.respond(message);
         // Then
         verify(forConvertingTextToSpeech).convert(message);
