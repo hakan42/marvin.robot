@@ -7,11 +7,10 @@ import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import java.util.List;
 
 public interface ForInvokingBrain {
-    void born(
-        RobotDescription robotDescription,
+    void teach(
         List<EnvironmentDescription> environmentDescriptions
     );
-    void wokenUp(
+    void wakeUp(
         RobotDescription robotDescription,
         List<EnvironmentFunction<?,?>> environmentFunctions
     );

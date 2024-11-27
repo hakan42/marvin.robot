@@ -16,7 +16,6 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
-import org.springframework.ai.chat.client.advisor.VectorStoreChatMemoryAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.messages.Message;
 import org.springframework.ai.chat.messages.UserMessage;
@@ -45,34 +44,24 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
     private RobotDescription robotDescription;
 
     @Override
-    public void born(
-        RobotDescription robotDescription,
+    public void teach(
         List<EnvironmentDescription> environmentDescriptions
     ) {
-        LOG.info("Initialising Brain with instincts...");
-
-        this.robotDescription = robotDescription;
         this.vectorStore.add(
             environmentDescriptions.stream()
                 .map(this::map)
                 .collect(Collectors.toList())
         );
-        LOG.info("Brain initialised.");
     }
 
     @Override
-    public void wokenUp(
+    public void wakeUp(
         RobotDescription robotDescription,
         List<EnvironmentFunction<?, ?>> environmentFunctions
     ) {
-        LOG.info("Waking up Brain with new functions...");
+        LOG.info("Waking up Brain...");
 
         this.robotDescription = robotDescription;
-
-        var chatMemoryAdvisor = VectorStoreChatMemoryAdvisor.builder(vectorStore)
-            .withConversationId("1")
-            .withChatMemoryRetrieveSize(10)
-            .build();
 
         this.chatClient = chatClientBuilder
             .defaultAdvisors(

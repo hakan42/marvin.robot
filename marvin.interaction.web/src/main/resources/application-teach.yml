@@ -1,0 +1,6 @@
+spring:
+  ai:
+    vectorstore:
+      pgvector:
+        initialize-schema: true
+        remove-existing-vector-store-table: true

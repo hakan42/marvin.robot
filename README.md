@@ -21,7 +21,13 @@ The main module that brings Marvin to life is marvin.interaction.web. It is a Sp
 that contains the application.yml configuration file. You need to set some parameters there.
 
 The Spring AI implemented brain is in the marvin.brain.springai module. It needs a vector store to work.
+
 Use a docker container to run the vector store. There is a docker compose file in the marvin.brain.springai docker folder.
+
+If you use intellij, there are two run configs bundled with the project. One for runtime and one that includes populating the vector store.
+
+If not, to trigger the vector store population, include the Spring profile 'teach' when starting the application.
+
 
 When the application has started, open localhost:8080 in your browser. You can ask Marvin questions and give commands in natural language.
 ## How to build Marvin
