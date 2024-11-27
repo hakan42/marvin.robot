@@ -1,7 +1,5 @@
-package com.assetvisor.marvin.brain.springai.config;
+package com.assetvisor.marvin.speech.springai.config;
 
-import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.memory.InMemoryChatMemory;
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
 import org.springframework.ai.openai.api.OpenAiAudioApi;
 import org.springframework.beans.factory.annotation.Value;
@@ -11,15 +9,10 @@ import org.springframework.scheduling.annotation.EnableScheduling;
 
 @Configuration
 @EnableScheduling
-public class SpringAiConfig {
+public class SpringAiSpeechConfig {
 
     @Value("${spring.ai.openai.api-key}")
     private String openAiApiKey;
-
-    @Bean
-    public ChatMemory chatMemory() {
-        return new InMemoryChatMemory();
-    }
 
     @Bean
     public OpenAiAudioSpeechModel openAiAudioSpeechModel() {
