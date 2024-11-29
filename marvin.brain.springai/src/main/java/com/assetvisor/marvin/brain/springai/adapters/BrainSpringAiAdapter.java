@@ -3,6 +3,7 @@ package com.assetvisor.marvin.brain.springai.adapters;
 import com.assetvisor.marvin.robot.domain.brain.AsleepException;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
@@ -29,7 +30,7 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BrainSpringAiAdapter implements ForInvokingBrain {
+public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
 
     private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
 
@@ -132,5 +133,10 @@ public class BrainSpringAiAdapter implements ForInvokingBrain {
         if (reply) {
             responder.respond(responseString);
         }
+    }
+
+    @Override
+    public void remember(String thought) {
+        vectorStore.add(List.of(new Document(thought)));
     }
 }

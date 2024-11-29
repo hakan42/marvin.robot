@@ -28,7 +28,6 @@ public class SentCommands {
     }
 
     private boolean match(Command command, Observation observation) {
-        return command.itemId().equals(observation.itemId())
-            && command.command().equals(observation.value());
+        return command.itemId().equals(observation.itemId());
     }
 }

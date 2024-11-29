@@ -3,6 +3,7 @@ package com.assetvisor.marvin.robot.application.services;
 import com.assetvisor.marvin.equipment.notebook.NoteBook;
 import com.assetvisor.marvin.robot.application.ListenUseCase;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentFunctions;
 import com.assetvisor.marvin.robot.domain.environment.Functions;
 import com.assetvisor.marvin.robot.domain.jobdescription.ForPersistingRobotDescription;
@@ -14,6 +15,8 @@ import org.springframework.stereotype.Service;
 public class LifecycleService {
     @Resource
     private ForInvokingBrain forInvokingBrain;
+    @Resource
+    private ForRemembering forRemembering;
     @Resource
     private ForPersistingRobotDescription forPersistingRobotDescription;
     @Resource
@@ -27,7 +30,8 @@ public class LifecycleService {
     public void wakeUp() {
         Functions functions = new Functions(
             forGettingEnvironmentFunctions,
-            noteBook
+            noteBook,
+            forRemembering
         );
         forInvokingBrain.wakeUp(
             forPersistingRobotDescription.read(),
