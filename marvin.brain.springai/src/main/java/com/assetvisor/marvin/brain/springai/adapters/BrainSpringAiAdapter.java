@@ -102,7 +102,6 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         String documentEnrichment = """
             \r\nUse the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
             If unsure, simply state that you don't know.
-            Take a deep breath and relax. Solve your tasks step by step
             DOCUMENTS:
             {documents}
             """;
