@@ -16,12 +16,12 @@ public class OpenhabStaticItemsService {
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private RestClient restClient;
+    private RestClient openhabRestClient;
 
     public List<Map<String, Object>> asMaps() {
         LOG.info("Getting all items tagged Marvin");
         try {
-            List<Map<String, Object>> body = restClient.get()
+            List<Map<String, Object>> body = openhabRestClient.get()
                 .uri("items?tags=Marvin&staticDataOnly=true")
                 .retrieve()
                 .body(List.class);

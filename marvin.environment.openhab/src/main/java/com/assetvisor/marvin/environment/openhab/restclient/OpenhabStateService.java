@@ -19,7 +19,7 @@ public class OpenhabStateService implements EnvironmentFunction<Request, Respons
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private RestClient restClient;
+    private RestClient openhabRestClient;
 
     @Override
     public String name() {
@@ -40,7 +40,7 @@ public class OpenhabStateService implements EnvironmentFunction<Request, Respons
     public Response apply(Request request) {
         LOG.info(request);
         try {
-            String body = restClient.get()
+            String body = openhabRestClient.get()
                 .uri("items/" + request.itemId + "/state")
                 .accept(MediaType.TEXT_PLAIN)
                 .retrieve()

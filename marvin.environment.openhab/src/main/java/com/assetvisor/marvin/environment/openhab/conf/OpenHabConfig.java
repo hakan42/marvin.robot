@@ -20,7 +20,7 @@ public class OpenHabConfig {
     private String url;
 
     @Bean
-    public RestClient restClient() {
+    public RestClient openhabRestClient() {
          return RestClient.builder()
             .baseUrl(url + "/rest/")
             .defaultHeader("Authorization", "Basic " + Base64.getEncoder().encodeToString((userName + ":" + password).getBytes()))

@@ -21,7 +21,7 @@ public class OpenhabCommandService implements EnvironmentFunction<Command, Respo
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private RestClient restClient;
+    private RestClient openhabRestClient;
     @Resource
     private SentCommands sentCommands;
 
@@ -44,7 +44,7 @@ public class OpenhabCommandService implements EnvironmentFunction<Command, Respo
     public Response apply(Command command) {
         LOG.info(command);
         try {
-            ResponseEntity<Void> responseEntity = restClient.post()
+            ResponseEntity<Void> responseEntity = openhabRestClient.post()
                 .uri("items/" + command.itemId)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(command.command)

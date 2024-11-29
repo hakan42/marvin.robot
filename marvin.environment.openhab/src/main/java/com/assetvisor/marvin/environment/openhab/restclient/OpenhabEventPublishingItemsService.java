@@ -16,12 +16,12 @@ public class OpenhabEventPublishingItemsService {
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private RestClient restClient;
+    private RestClient openhabRestClient;
 
     public List<String> asIds() {
         LOG.info("Getting all item ids tagged 'Marvin' and 'Events'");
         try {
-            List<Map> body = restClient.get()
+            List<Map> body = openhabRestClient.get()
                 .uri("items?tags=Marvin,Events&fields=name")
                 .retrieve()
                 .body(List.class);

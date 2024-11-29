@@ -14,6 +14,7 @@
     <module>marvin.robot.core</module>
     <module>marvin.persistence</module>
     <module>marvin.speech.openai</module>
+    <module>marvin.internet.google</module>
   </modules>
 
   <properties>

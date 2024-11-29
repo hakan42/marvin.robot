@@ -1,5 +1,6 @@
 package com.assetvisor.marvin.robot.application.services;
 
+import com.assetvisor.marvin.equipment.internet.ForSearchingInternet;
 import com.assetvisor.marvin.equipment.notebook.NoteBook;
 import com.assetvisor.marvin.robot.application.ListenUseCase;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
@@ -18,6 +19,8 @@ public class LifecycleService {
     @Resource
     private ForRemembering forRemembering;
     @Resource
+    private ForSearchingInternet forSearchingInternet;
+    @Resource
     private ForPersistingRobotDescription forPersistingRobotDescription;
     @Resource
     private NoteBook noteBook;
@@ -31,7 +34,8 @@ public class LifecycleService {
         Functions functions = new Functions(
             forGettingEnvironmentFunctions,
             noteBook,
-            forRemembering
+            forRemembering,
+            forSearchingInternet
         );
         forInvokingBrain.wakeUp(
             forPersistingRobotDescription.read(),

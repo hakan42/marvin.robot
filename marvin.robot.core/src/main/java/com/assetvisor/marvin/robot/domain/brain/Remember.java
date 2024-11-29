@@ -22,7 +22,7 @@ public class Remember implements EnvironmentFunction<Thought, Void> {
 
     @Override
     public String description() {
-        return "This function is used for remembering. Thoughts will be added to your context.";
+        return "This function is used for remembering thoughts that will be added to your context.";
     }
 
     @Override
