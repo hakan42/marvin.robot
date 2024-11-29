@@ -31,7 +31,7 @@ public class Functions {
     private List<EnvironmentFunction<?,?>> equipmentFunctions() {
         return List.of(
             new LookAtWatch(),
-            new WriteInNoteBook(noteBook),
+//            new WriteInNoteBook(noteBook),
             new Remember(forRemembering)
         );
     }
