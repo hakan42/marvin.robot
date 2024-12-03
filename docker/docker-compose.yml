@@ -1,0 +1,82 @@
+services:
+  openhab:
+    image: openhab/openhab:latest
+    container_name: openhab
+    restart: always
+    privileged: true
+    ports:
+      - 8080:8080
+    volumes:
+      - "/etc/localtime:/etc/localtime:ro"
+      - "/etc/timezone:/etc/timezone:ro"
+      - data_openhab_conf:/openhab/conf
+      - data_openhab_addons:/openhab/addons
+      - data_openhab_userdata:/openhab/userdata
+    environment:
+      TZ: CET
+      OPENHAB_HTTP_PORT: 8080
+      CRYPTO_POLICY: "unlimited"
+      EXTRA_JAVA_OPTS: "-Duser.timezone=CET"
+      USER_ID: 999
+      GROUP_ID: 994
+    devices:
+      # Aeotec Z-Wave Stick
+      - /dev/ttyACM0:/dev/ttyACM0
+    networks:
+      app-nw:
+        aliases:
+          - openhab
+  pgvector:
+    hostname: pgvector
+    container_name: pgvector
+    image: ankane/pgvector:latest
+    restart: always
+    environment:
+      - POSTGRES_DB=vectordb
+      - POSTGRES_USER=testuser
+      - POSTGRES_PASSWORD=testpwd
+      - POSTGRES_HOST_AUTH_METHOD=trust
+    volumes:
+      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
+      - data_postgresql:/var/lib/postgresql
+    networks:
+      app-nw:
+        aliases:
+          - pgvector
+  
+  marvin:
+    hostname: marvin
+    container_name: marvin
+    image: geireilertsen2/marvin:latest
+    depends_on:
+      - pgvector
+      - openhab
+    ports:
+      - 9090:9090
+    restart: no
+    environment:
+      OPENHAB_URL: http://openhab:8080
+      OPENHAB_USERNAME: $OPENHAB_USERNAME
+      OPENHAB_PASSWORD: $OPENHAB_PASSWORD
+      GOOGLE_APIKEY: $GOOGLE_APIKEY
+      GOOGLE_CX: $GOOGLE_CX
+      OPENAI_APIKEY: $OPENAI_APIKEY
+      VECTORDB_ADDRESS: pgvector:5432
+    #      SPRING_PROFILES_ACTIVE: teach
+    volumes:
+      - /root:/root
+    networks:
+      app-nw:
+        aliases:
+          - marvin
+volumes:
+  data_openhab_conf:
+  data_openhab_addons:
+  data_openhab_userdata:
+  data_postgresql:
+networks:
+  app-nw:
+    internal: false
+    driver: bridge
+    driver_opts:
+      com.docker.network.bridge.name: app-openhab

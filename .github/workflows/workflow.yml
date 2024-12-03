@@ -28,7 +28,7 @@ jobs:
         uses: docker/build-push-action@v4
         with:
           context: .
-          dockerfile: marvin.interaction.web/docker/Dockerfile
+          dockerfile: docker/Dockerfile
           push: false
           tags: ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:latest
 
