@@ -16,7 +16,7 @@ spring:
         dimensions: 1536
         remove-existing-vector-store-table: false
   datasource:
-    url: jdbc:postgresql://localhost:5555/vectordb
+    url: jdbc:postgresql://${VECTORDB_ADDRESS}:5555/vectordb
     username: testuser
     password: testpwd
 
