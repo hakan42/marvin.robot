@@ -15,10 +15,21 @@ Marvin will in addition receive events from OpenHAB. To enable events, add the t
 
 ## How to run Marvin
 
+
 To use Marvin, you need to have a running OpenHAB server.
 
+Add the following environment variables
+
+* OPENHAB_URL http://[openhab ip]:[openhab port]
+* OPENHAB_USERNAME [myopenhabusername]
+* OPENHAB_PASSWORD [myopenhabpassword]
+* GOOGLE_APIKEY (get your own from google)
+* GOOGLE_CX (get your own from google)
+* OPENAI_APIKEY (get your own from openai)
+
+
 The main module that brings Marvin to life is marvin.interaction.web. It is a Spring Boot application
-that contains the application.yml configuration file. You need to set some parameters there.
+that contains the application.yml configuration file.
 
 The Spring AI implemented brain is in the marvin.brain.springai module. It needs a vector store to work.
 

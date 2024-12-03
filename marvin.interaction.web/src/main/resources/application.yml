@@ -7,7 +7,7 @@ spring:
     version: 0.0.1
   ai:
     openai:
-      api-key: OPENAI_KEY # OpenAI API key, get your own at https://platform.openai.com
+      api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
     vectorstore:
       pgvector:
         initialize-schema: false
@@ -21,12 +21,16 @@ spring:
     password: testpwd
 
 server:
-  port: 8080
+  port: 9090
 
 openhab:
-  url: http://192.168.1.145:8080
-  username: USER # OpenHAB username
-  password: PASSWORD # OpenHAB password
+  url: ${OPENHAB_URL}
+  username: ${OPENHAB_USERNAME}
+  password: ${OPENHAB_PASSWORD}
 
 logging:
   include-application-name: true
+
+google:
+  apikey: ${GOOGLE_APIKEY}
+  cx: ${GOOGLE_CX}
