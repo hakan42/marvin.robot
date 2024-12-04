@@ -61,7 +61,7 @@ public class OpenhabSseEventReceiver {
             error -> LOG.error("Error: " + error), // Handle errors
             () -> LOG.info("Stream completed for item: " + itemId) // Handle stream completion
         );
-        LOG.info("Connected to " + itemId);
+        LOG.info("Receiving events for: " + itemId);
     }
 
     private void handleEvent(String itemId, Map<?, ?> event) {
