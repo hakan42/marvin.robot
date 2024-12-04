@@ -34,14 +34,14 @@ that contains the application.yml configuration file.
 
 The Spring AI implemented brain is in the marvin.brain.springai module. It needs a vector store to work.
 
-Use a docker container to run the vector store. There is a docker compose file in the marvin.brain.springai docker folder.
+Use a docker container to run the vector store. There is a docker compose file at project root.
 
 If you use intellij, there are two run configs bundled with the project. One for runtime and one that includes populating the vector store.
 
 If not, to trigger the vector store population, include the Spring profile 'teach' when starting the application.
 
 
-When the application has started, open localhost:8080 in your browser. You can ask Marvin questions and give commands in natural language.
+When the application has started, open localhost:9090 in your browser. You can ask Marvin questions and give commands in natural language.
 ## How to build Marvin
 
 Maven is used to build Marvin.
