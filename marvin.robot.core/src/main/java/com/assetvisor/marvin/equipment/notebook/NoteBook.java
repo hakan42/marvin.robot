@@ -21,7 +21,7 @@ public class NoteBook {
         forPersistingNotes.all().stream()
             .filter(note -> note.noteDate().isBefore(LocalDateTime.now()))
             .forEach(note -> {
-                listenUseCase.listenTo("Note read from notebook, act on it: " + note.note());
+                listenUseCase.listenTo(note.note());
                 forPersistingNotes.delete(note);
             });
     }

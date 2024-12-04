@@ -1,6 +1,7 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.interaction.web.AudioBuffer;
+import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
 import jakarta.annotation.Resource;
@@ -13,7 +14,7 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.servlet.mvc.method.annotation.SseEmitter;
 
 @Component("web")
-public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessaging {
+public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessaging, ForCheckingIfAnybodyIsListening {
 
     private final Log LOG = LogFactory.getLog(getClass());
 
@@ -63,5 +64,10 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessa
                 emitters.remove(emitter);
             }
         }
+    }
+
+    @Override
+    public boolean isAnybodyListening() {
+        return !emitters.isEmpty();
     }
 }

@@ -23,7 +23,7 @@ Add the following environment variables
 * OPENHAB_URL http://[openhab ip]:[openhab port]
 * OPENHAB_USERNAME [myopenhabusername]
 * OPENHAB_PASSWORD [myopenhabpassword]
-* VECTORDB_ADDRESS [vector store address] # ex: localhost:5555
+* VECTORDB_ADDRESS [vector store address] # ex: localhost:5432
 * GOOGLE_APIKEY (get your own from google)
 * GOOGLE_CX (get your own from google)
 * OPENAI_APIKEY (get your own from openai)
