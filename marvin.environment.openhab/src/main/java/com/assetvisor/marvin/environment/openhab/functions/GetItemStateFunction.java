@@ -1,7 +1,7 @@
-package com.assetvisor.marvin.environment.openhab.restclient;
+package com.assetvisor.marvin.environment.openhab.functions;
 
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabStateService.Request;
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabStateService.Response;
+import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction.Request;
+import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction.Response;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class OpenhabStateService implements EnvironmentFunction<Request, Response> {
+public class GetItemStateFunction implements EnvironmentFunction<Request, Response> {
 
     Log LOG = LogFactory.getLog(getClass());
 

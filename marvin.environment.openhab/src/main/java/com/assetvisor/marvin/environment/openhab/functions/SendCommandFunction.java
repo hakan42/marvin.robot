@@ -1,7 +1,8 @@
-package com.assetvisor.marvin.environment.openhab.restclient;
+package com.assetvisor.marvin.environment.openhab.functions;
 
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabCommandService.Command;
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabCommandService.Response;
+import com.assetvisor.marvin.environment.openhab.functions.SendCommandFunction.Command;
+import com.assetvisor.marvin.environment.openhab.functions.SendCommandFunction.Response;
+import com.assetvisor.marvin.environment.openhab.restclient.SentCommands;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
@@ -16,7 +17,7 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class OpenhabCommandService implements EnvironmentFunction<Command, Response> {
+public class SendCommandFunction implements EnvironmentFunction<Command, Response> {
 
     Log LOG = LogFactory.getLog(getClass());
 

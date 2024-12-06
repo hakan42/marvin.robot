@@ -12,7 +12,7 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class OpenhabEventPublishingItemsService {
+public class GetEventPublishingItemsRestClient {
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource

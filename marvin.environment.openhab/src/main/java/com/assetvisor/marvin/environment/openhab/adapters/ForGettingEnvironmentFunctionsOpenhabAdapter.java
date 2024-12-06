@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.environment.openhab.adapters;
 
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabCommandService;
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabStateService;
+import com.assetvisor.marvin.environment.openhab.functions.SendCommandFunction;
+import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentFunctions;
 import jakarta.annotation.Resource;
@@ -15,15 +15,15 @@ import org.springframework.stereotype.Component;
 public class ForGettingEnvironmentFunctionsOpenhabAdapter implements ForGettingEnvironmentFunctions {
 
     @Resource
-    private OpenhabStateService openhabStateService;
+    private GetItemStateFunction getItemStateFunction;
     @Resource
-    private OpenhabCommandService openhabCommandService;
+    private SendCommandFunction sendCommandFunction;
 
     @Override
     public List<EnvironmentFunction<?, ?>> getEnvironmentFunctions() {
         return new ArrayList<>(List.of(
-            openhabStateService,
-            openhabCommandService
+            getItemStateFunction,
+            sendCommandFunction
         ));
     }
 }
