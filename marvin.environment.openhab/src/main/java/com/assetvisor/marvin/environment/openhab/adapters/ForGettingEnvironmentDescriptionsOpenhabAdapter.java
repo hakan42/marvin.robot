@@ -1,5 +1,8 @@
 package com.assetvisor.marvin.environment.openhab.adapters;
 
+import static java.util.stream.Stream.concat;
+
+import com.assetvisor.marvin.environment.openhab.restclient.GetStaticRulesRestClient;
 import com.assetvisor.marvin.environment.openhab.restclient.GetStaticItemsRestClient;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
@@ -14,10 +17,15 @@ public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGetti
 
     @Resource
     private GetStaticItemsRestClient getStaticItemsRestClient;
+    @Resource
+    private GetStaticRulesRestClient getStaticRulesRestClient;
 
     @Override
     public List<EnvironmentDescription> getEnvironmentDescriptions() {
-        return getStaticItemsRestClient.asMaps().stream()
+        return concat(
+            getStaticItemsRestClient.asMaps().stream(),
+            getStaticRulesRestClient.asMaps().stream()
+        )
             .map(Object::toString)
             .map(EnvironmentDescription::new)
             .toList();
