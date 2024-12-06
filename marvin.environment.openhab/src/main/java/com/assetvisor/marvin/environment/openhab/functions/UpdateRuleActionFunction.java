@@ -46,7 +46,7 @@ public class UpdateRuleActionFunction implements EnvironmentFunction<Command, Re
 
     @Override
     public Response apply(Command command) {
-        LOG.info(command);
+        LOG.info("Rule updated: " + command.ruleId());
         Map<String, Object> rule = getRule(command.ruleId());
         Map<String, Object> action = ((List<Map<String, Object>>) rule.get("actions")).get(0);
         Map<String, Object> configuration = ((Map<String, Object>) action.get("configuration"));
