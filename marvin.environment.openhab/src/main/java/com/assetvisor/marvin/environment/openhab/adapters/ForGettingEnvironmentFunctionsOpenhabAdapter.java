@@ -3,6 +3,7 @@ package com.assetvisor.marvin.environment.openhab.adapters;
 import com.assetvisor.marvin.environment.openhab.functions.GetRuleActionsFunction;
 import com.assetvisor.marvin.environment.openhab.functions.SendCommandFunction;
 import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction;
+import com.assetvisor.marvin.environment.openhab.functions.UpdateRuleActionFunction;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentFunctions;
 import jakarta.annotation.Resource;
@@ -21,13 +22,16 @@ public class ForGettingEnvironmentFunctionsOpenhabAdapter implements ForGettingE
     private SendCommandFunction sendCommandFunction;
     @Resource
     private GetRuleActionsFunction getRuleActionsFunction;
+    @Resource
+    private UpdateRuleActionFunction updateRuleActionFunction;
 
     @Override
     public List<EnvironmentFunction<?, ?>> getEnvironmentFunctions() {
         return new ArrayList<>(List.of(
             getItemStateFunction,
             sendCommandFunction,
-            getRuleActionsFunction
+            getRuleActionsFunction,
+            updateRuleActionFunction
         ));
     }
 }
