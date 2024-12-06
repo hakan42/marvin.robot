@@ -10,8 +10,10 @@ Put a text file called marvin-robot.txt in your home directory.
 Put a text file called marvin-environment in your home directory.
 There are example files in the descriptions folder
 
-Marvin will also read item descriptions from OpenHAB and learn about them. To enable items, add the tag Marvin to the item in OpenHAB.
-Marvin will in addition receive events from OpenHAB. To enable events, add the tag Events to the item in OpenHAB.
+* Marvin will read item descriptions from OpenHAB and learn about them. To enable items, add the tag Marvin to the item in OpenHAB.
+* Marvin will receive events from OpenHAB. To enable events, add the tag Events to the item in OpenHAB.
+* Marvin can read OpenHAB rules. To enable rules, add the tag Marvin to the rule in OpenHAB.
+* Marvin can also update rules.
 
 ## How to run Marvin
 
@@ -47,6 +49,7 @@ When the application has started, open localhost:9090 in your browser. You can a
 Maven is used to build Marvin.
 
 ## Cool things to try
+* Change the rule for the lights in the living room to turn on at sunset
 * Notify me about dinner in 5 minutes
 * Turn on the lights in the living room
 * What is the temperature in the living room?
