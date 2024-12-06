@@ -25,11 +25,19 @@ public class GetStaticRulesRestClient {
                 .uri("rules?tags=Marvin&staticDataOnly=true")
                 .retrieve()
                 .body(List.class);
-            return filterByTagMarvin(body);
+            List<Map<String, Object>> maps = filterByTagMarvin(body);
+            appendRuleInfo(maps);
+            return maps;
         } catch (HttpClientErrorException e) {
             LOG.error("Error: " + e.getMessage());
         }
         return List.of();
+    }
+
+    private void appendRuleInfo(List<Map<String, Object>> body) {
+        body.forEach(rule -> {
+            rule.put("type", "rule");
+        });
     }
 
     private List<Map<String, Object>> filterByTagMarvin(List<Map<String, Object>> body) {
