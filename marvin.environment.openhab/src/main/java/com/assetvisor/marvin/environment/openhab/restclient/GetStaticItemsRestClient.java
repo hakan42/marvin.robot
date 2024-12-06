@@ -12,14 +12,14 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class OpenhabStaticItemsService {
+public class GetStaticItemsRestClient {
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
     private RestClient openhabRestClient;
 
     public List<Map<String, Object>> asMaps() {
-        LOG.info("Getting all items tagged Marvin");
+        LOG.info("Getting static information for all items tagged 'Marvin'");
         try {
             List<Map<String, Object>> body = openhabRestClient.get()
                 .uri("items?tags=Marvin&staticDataOnly=true")

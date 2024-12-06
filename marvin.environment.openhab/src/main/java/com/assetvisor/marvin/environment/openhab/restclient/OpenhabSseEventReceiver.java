@@ -35,7 +35,7 @@ public class OpenhabSseEventReceiver {
     @Resource
     private WebClient webClient;
     @Resource
-    private OpenhabEventPublishingItemsService openhabEventPublishingItemsService;
+    private GetEventPublishingItemsRestClient getEventPublishingItemsRestClient;
     @Resource
     private SentCommands sentCommands;
 
@@ -45,7 +45,7 @@ public class OpenhabSseEventReceiver {
 
     @PostConstruct
     public void listenForSseEvents() {
-        openhabEventPublishingItemsService.asIds().forEach(this::connect);
+        getEventPublishingItemsRestClient.asIds().forEach(this::connect);
     }
 
     private void connect(String itemId) {

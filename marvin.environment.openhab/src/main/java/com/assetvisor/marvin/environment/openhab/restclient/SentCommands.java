@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.environment.openhab.restclient;
 
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabCommandService.Command;
+import com.assetvisor.marvin.environment.openhab.functions.SendCommandFunction.Command;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import java.util.ArrayList;
 import java.util.List;

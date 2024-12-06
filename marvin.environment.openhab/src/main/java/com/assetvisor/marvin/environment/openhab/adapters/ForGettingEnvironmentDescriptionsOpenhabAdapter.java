@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.environment.openhab.adapters;
 
-import com.assetvisor.marvin.environment.openhab.restclient.OpenhabStaticItemsService;
+import com.assetvisor.marvin.environment.openhab.restclient.GetStaticItemsRestClient;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
 import jakarta.annotation.Resource;
@@ -13,7 +13,7 @@ import org.springframework.stereotype.Component;
 public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGettingEnvironmentDescriptions {
 
     @Resource
-    private OpenhabStaticItemsService openhabStaticItemsService;
+    private GetStaticItemsRestClient openhabStaticItemsService;
 
     @Override
     public List<EnvironmentDescription> getEnvironmentDescriptions() {

@@ -22,9 +22,9 @@ public class WriteInNoteBook implements EnvironmentFunction<CalendarNote, Respon
     @Override
     public String description() {
         return """
-            This function is used for writing notes in your notebook.
-            When the time arrives, you will be reminded of the note.
-            Check your watch before making a note.
+            This function is used for writing reminders in your notebook.
+            When the time arrives, you will be reminded.
+            Check that you have the correct time before writing a reminder.
             """;
     }
 
