@@ -49,10 +49,8 @@ services:
     container_name: marvin
     image: geireilertsen2/marvin:latest
     depends_on:
-      pgvector:
-        condition: service_healthy
-      openhab:
-        condition: service_healthy
+      - pgvector
+      - openhab
     ports:
       - 9090:9090
     restart: no
