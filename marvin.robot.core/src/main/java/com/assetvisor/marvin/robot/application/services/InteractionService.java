@@ -5,6 +5,7 @@ import com.assetvisor.marvin.robot.application.ObserveUseCase;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
+import com.assetvisor.marvin.robot.domain.communication.ForConvertingSpeechToText;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
@@ -26,6 +27,8 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     @Resource
     private ForConvertingTextToSpeech forConvertingTextToSpeech;
     @Resource
+    private ForConvertingSpeechToText forConvertingSpeechToText;
+    @Resource
     private ForCheckingIfAnybodyIsListening forCheckingIfAnybodyIsListening;
     @Resource
     private SpeechBuffer speechBuffer;
@@ -46,6 +49,21 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
 
     @Override
     public void listenTo(String message) {
+        LOG.info(message);
+        forInvokingBrain.invoke(
+            message,
+            true,
+            new BrainResponder(
+                forMessaging,
+                forConvertingTextToSpeech,
+                forCheckingIfAnybodyIsListening,
+                speechBuffer
+            ));
+    }
+
+    @Override
+    public void listenTo(byte[] audio) {
+        String message = forConvertingSpeechToText.convert(audio);
         LOG.info(message);
         forInvokingBrain.invoke(
             message,

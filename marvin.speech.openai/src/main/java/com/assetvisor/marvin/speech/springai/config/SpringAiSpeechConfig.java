@@ -1,6 +1,7 @@
 package com.assetvisor.marvin.speech.springai.config;
 
 import org.springframework.ai.openai.OpenAiAudioSpeechModel;
+import org.springframework.ai.openai.OpenAiAudioTranscriptionModel;
 import org.springframework.ai.openai.api.OpenAiAudioApi;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
@@ -15,8 +16,17 @@ public class SpringAiSpeechConfig {
     private String openAiApiKey;
 
     @Bean
-    public OpenAiAudioSpeechModel openAiAudioSpeechModel() {
-        OpenAiAudioApi openAiAudioApi = new OpenAiAudioApi(openAiApiKey);
+    public OpenAiAudioApi openAiAudioApi() {
+        return new OpenAiAudioApi(openAiApiKey);
+    }
+
+    @Bean
+    public OpenAiAudioSpeechModel openAiAudioSpeechModel(OpenAiAudioApi openAiAudioApi) {
         return new OpenAiAudioSpeechModel(openAiAudioApi);
+    }
+
+    @Bean
+    public OpenAiAudioTranscriptionModel openAiAudioTranscriptionModel(OpenAiAudioApi openAiAudioApi) {
+        return new OpenAiAudioTranscriptionModel(openAiAudioApi);
     }
 }

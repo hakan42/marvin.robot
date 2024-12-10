@@ -113,7 +113,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
-        List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(20));
+        List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(30));
         String collect = documents.stream().map(Document::getContent)
             .collect(Collectors.joining(System.lineSeparator()));
         Message createdMessage = new SystemPromptTemplate(getEnrichedRobotDescription()).createMessage(
