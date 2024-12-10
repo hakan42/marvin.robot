@@ -29,7 +29,7 @@
 
         // Fetch the chat audio
         try {
-          const response = await fetch("/chat");
+          const response = await fetch("/speech");
           if (!response.ok) {
             throw new Error("Failed to fetch audio");
           }
@@ -63,7 +63,7 @@
 
       if (message !== "") {
         try {
-          const response = await fetch("/chat", {
+          const response = await fetch("/message", {
             method: "POST",
             headers: {
               "Content-Type": "application/x-www-form-urlencoded",

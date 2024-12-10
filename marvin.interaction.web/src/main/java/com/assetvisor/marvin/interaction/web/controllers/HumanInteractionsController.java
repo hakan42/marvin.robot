@@ -8,6 +8,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -19,12 +20,17 @@ public class HumanInteractionsController {
     @Resource
     private AudioBuffer audioBuffer;
 
-    @PostMapping("/chat")
+    @PostMapping("/message")
     public void chat(@RequestParam(value = "message") String message) {
         listenUseCase.listenTo(message);
     }
 
-    @GetMapping("/chat")
+    @PostMapping("/speech")
+    public void chat(@RequestBody byte[] message) {
+        listenUseCase.listenTo(message);
+    }
+
+    @GetMapping("/speech")
     public ResponseEntity<byte[]> chat() {
         byte[] audioData = audioBuffer.get();
 
