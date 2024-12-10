@@ -21,17 +21,17 @@ public class HumanInteractionsController {
     private AudioBuffer audioBuffer;
 
     @PostMapping("/message")
-    public void chat(@RequestParam(value = "message") String message) {
+    public void message(@RequestParam(value = "message") String message) {
         listenUseCase.listenTo(message);
     }
 
-    @PostMapping("/speech")
-    public void chat(@RequestBody byte[] message) {
+    @PostMapping(path = "/speech", consumes = "application/octet-stream")
+    public void speech(@RequestBody byte[] message) {
         listenUseCase.listenTo(message);
     }
 
     @GetMapping("/speech")
-    public ResponseEntity<byte[]> chat() {
+    public ResponseEntity<byte[]> speech() {
         byte[] audioData = audioBuffer.get();
 
         if (audioData == null || audioData.length == 0) {
