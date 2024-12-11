@@ -1,4 +1,3 @@
-
 spring:
   profiles:
     include: openhab
@@ -34,3 +33,6 @@ logging:
 google:
   apikey: ${GOOGLE_APIKEY}
   cx: ${GOOGLE_CX}
+
+marvin:
+  language: 'en'
