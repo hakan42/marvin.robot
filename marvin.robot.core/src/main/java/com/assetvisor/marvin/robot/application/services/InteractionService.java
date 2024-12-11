@@ -50,6 +50,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     @Override
     public void listenTo(String message) {
         LOG.info(message);
+        forMessaging.message(message);
         forInvokingBrain.invoke(
             message,
             true,
@@ -65,6 +66,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     public void listenTo(byte[] audio) {
         String message = forConvertingSpeechToText.convert(audio);
         LOG.info(message);
+        forMessaging.message(message);
         forInvokingBrain.invoke(
             message,
             true,
