@@ -4,109 +4,6 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Chat with Marvin</title>
-  <script>
-    // Connect to the SSE endpoint and display messages
-    function startSSE() {
-      const messageList = document.getElementById("messages");
-      const audioPlayer = document.getElementById("audioPlayer");
-      const eventSource = new EventSource("/stream");
-      const maxMessages = 10; // Maximum number of messages to display
-
-      eventSource.onmessage = (event) => {
-        const newMessage = document.createElement("li");
-        newMessage.textContent = event.data;
-        messageList.appendChild(newMessage);
-
-        // Limit to the last 10 messages
-        while (messageList.children.length > maxMessages) {
-          messageList.removeChild(messageList.firstChild);
-        }
-      };
-
-      // Listen for a custom event indicating chat audio is ready
-      eventSource.addEventListener("chatReady", async () => {
-        showToast("Chat audio ready! Fetching...");
-
-        // Fetch the chat audio
-        try {
-          const response = await fetch("/speech");
-          if (!response.ok) {
-            throw new Error("Failed to fetch audio");
-          }
-
-          const blob = await response.blob();
-          const url = URL.createObjectURL(blob);
-
-          // Play the audio
-          audioPlayer.src = url;
-          audioPlayer.style.display = "block";
-          audioPlayer.play();
-
-          showToast("Playing chat audio...");
-        } catch (error) {
-          console.error("Error fetching or playing audio:", error);
-        }
-      });
-
-      eventSource.onerror = () => {
-        console.error("Error connecting to SSE stream");
-        eventSource.close();
-      };
-    }
-
-    // Send a message via POST request
-    async function sendMessage(event) {
-      event.preventDefault();
-
-      const messageInput = document.getElementById("message");
-      const message = messageInput.value.trim();
-
-      if (message !== "") {
-        try {
-          const response = await fetch("/message", {
-            method: "POST",
-            headers: {
-              "Content-Type": "application/x-www-form-urlencoded",
-            },
-            body: new URLSearchParams({ message }),
-          });
-
-          if (response.ok) {
-            showToast("Message sent: " + message);
-            messageInput.value = ""; // Clear the input field
-          } else {
-            console.error("Failed to send message:", response.statusText);
-          }
-        } catch (error) {
-          console.error("Error sending message:", error);
-        }
-      }
-    }
-
-    // Function to show a toast message
-    function showToast(message) {
-      const toast = document.getElementById("toast");
-      toast.textContent = message;
-      toast.style.visibility = "visible";
-      toast.style.opacity = "1";
-
-      // Hide the toast after 3 seconds
-      setTimeout(() => {
-        toast.style.opacity = "0";
-        setTimeout(() => {
-          toast.style.visibility = "hidden";
-        }, 500); // Wait for fade-out transition
-      }, 10000);
-    }
-
-    // Initialize on page load
-    window.onload = () => {
-      startSSE();
-
-      // Allow form submission with Enter key
-      document.getElementById("chatForm").addEventListener("submit", sendMessage);
-    };
-  </script>
 </head>
 <body>
 <h1>Chat with Marvin</h1>
@@ -115,6 +12,10 @@
 <div style="text-align: left; margin-bottom: 20px;">
   <img src="marvin.jpeg" alt="Marvin the Robot" style="width: 300px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
 </div>
+
+<button id="startBtn">Start Recording</button>
+<button id="stopBtn" disabled>Stop Recording</button>
+<p id="status">Press "Start Recording" to begin.</p>
 
 <!-- Form to send messages -->
 <form id="chatForm">
@@ -133,6 +34,171 @@
 
 <!-- Toast notification -->
 <div id="toast"></div>
+
+<script>
+  let mediaRecorder;
+  let audioChunks = [];
+
+  document.getElementById('startBtn').addEventListener('click', async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      mediaRecorder = new MediaRecorder(stream);
+      audioChunks = [];
+
+      mediaRecorder.ondataavailable = (event) => {
+        if (event.data.size > 0) {
+          audioChunks.push(event.data);
+        }
+      };
+
+      mediaRecorder.onstop = async () => {
+        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
+        const arrayBuffer = await audioBlob.arrayBuffer();
+        const byteArray = new Uint8Array(arrayBuffer);
+
+        document.getElementById('status').innerText = "Uploading audio...";
+
+        // Post the byte array to the server
+        fetch('/speech', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/octet-stream' },
+          body: byteArray
+        })
+        .then((response) => {
+          if (response.ok) {
+            document.getElementById('status').innerText = "Audio uploaded successfully!";
+          } else {
+            document.getElementById('status').innerText = "Failed to upload audio.";
+          }
+        })
+        .catch((error) => {
+          console.error('Error uploading audio:', error);
+          document.getElementById('status').innerText = "An error occurred.";
+        });
+      };
+
+      mediaRecorder.start();
+      document.getElementById('status').innerText = "Recording...";
+      document.getElementById('startBtn').disabled = true;
+      document.getElementById('stopBtn').disabled = false;
+    } catch (error) {
+      console.error('Error accessing microphone:', error);
+      document.getElementById('status').innerText = "Error accessing microphone.";
+    }
+  });
+
+  document.getElementById('stopBtn').addEventListener('click', () => {
+    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
+      mediaRecorder.stop();
+      document.getElementById('status').innerText = "Stopped recording.";
+      document.getElementById('startBtn').disabled = false;
+      document.getElementById('stopBtn').disabled = true;
+    }
+  });
+
+  // Connect to the SSE endpoint and display messages
+  function startSSE() {
+    const messageList = document.getElementById("messages");
+    const audioPlayer = document.getElementById("audioPlayer");
+    const eventSource = new EventSource("/stream");
+    const maxMessages = 10; // Maximum number of messages to display
+
+    eventSource.onmessage = (event) => {
+      const newMessage = document.createElement("li");
+      newMessage.textContent = event.data;
+      messageList.appendChild(newMessage);
+
+      // Limit to the last 10 messages
+      while (messageList.children.length > maxMessages) {
+        messageList.removeChild(messageList.firstChild);
+      }
+    };
+
+    // Listen for a custom event indicating chat audio is ready
+    eventSource.addEventListener("chatReady", async () => {
+      showToast("Chat audio ready! Fetching...");
+
+      // Fetch the chat audio
+      try {
+        const response = await fetch("/speech");
+        if (!response.ok) {
+          throw new Error("Failed to fetch audio");
+        }
+
+        const blob = await response.blob();
+        const url = URL.createObjectURL(blob);
+
+        // Play the audio
+        audioPlayer.src = url;
+        audioPlayer.style.display = "block";
+        audioPlayer.play();
+
+        showToast("Playing chat audio...");
+      } catch (error) {
+        console.error("Error fetching or playing audio:", error);
+      }
+    });
+
+    eventSource.onerror = () => {
+      console.error("Error connecting to SSE stream");
+      eventSource.close();
+    };
+  }
+
+  // Send a message via POST request
+  async function sendMessage(event) {
+    event.preventDefault();
+
+    const messageInput = document.getElementById("message");
+    const message = messageInput.value.trim();
+
+    if (message !== "") {
+      try {
+        const response = await fetch("/message", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/x-www-form-urlencoded",
+          },
+          body: new URLSearchParams({ message }),
+        });
+
+        if (response.ok) {
+          showToast("Message sent: " + message);
+          messageInput.value = ""; // Clear the input field
+        } else {
+          console.error("Failed to send message:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Error sending message:", error);
+      }
+    }
+  }
+
+  // Function to show a toast message
+  function showToast(message) {
+    const toast = document.getElementById("toast");
+    toast.textContent = message;
+    toast.style.visibility = "visible";
+    toast.style.opacity = "1";
+
+    // Hide the toast after 3 seconds
+    setTimeout(() => {
+      toast.style.opacity = "0";
+      setTimeout(() => {
+        toast.style.visibility = "hidden";
+      }, 500); // Wait for fade-out transition
+    }, 10000);
+  }
+
+  // Initialize on page load
+  window.onload = () => {
+    startSSE();
+
+    // Allow form submission with Enter key
+    document.getElementById("chatForm").addEventListener("submit", sendMessage);
+  };
+</script>
+
 </body>
 
 <style>
