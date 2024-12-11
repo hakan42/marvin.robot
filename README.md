@@ -5,10 +5,12 @@ the REST API.
 
 It's brain is implemented in Spring AI.
 
+You can talk to Marvin in natural language and ask him questions about your house. He will talk back to you.
+
 ## Initial learning
-Put a text file called marvin-robot.txt in your home directory.
-Put a text file called marvin-environment in your home directory.
-There are example files in the descriptions folder
+* Put a text file called marvin-robot.txt in your home directory.
+* Put a text file called marvin-environment in your home directory.
+* There are example files in the descriptions folder
 
 * Marvin will read item descriptions from OpenHAB and learn about them. To enable items, add the tag Marvin to the item in OpenHAB.
 * Marvin will receive events from OpenHAB. To enable events, add the tag Events to the item in OpenHAB.
