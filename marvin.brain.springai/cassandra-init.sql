@@ -1,1 +1,1 @@
-CREATE KEYSPACE IF NOT EXISTS marvin WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};
+CREATE KEYSPACE IF NOT EXISTS springframework WITH replication = {'class': 'SimpleStrategy', 'replication_factor': '1'};

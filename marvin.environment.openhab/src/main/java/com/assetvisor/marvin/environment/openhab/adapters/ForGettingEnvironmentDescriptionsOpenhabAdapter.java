@@ -8,6 +8,7 @@ import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
 import jakarta.annotation.Resource;
 import java.util.List;
+import java.util.Map;
 import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
@@ -23,11 +24,19 @@ public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGetti
     @Override
     public List<EnvironmentDescription> getEnvironmentDescriptions() {
         return concat(
-            getStaticItemsRestClient.asMaps().stream(),
+            getStaticItemsRestClient.asMaps().stream().peek(this::simplifyItem),
             getStaticRulesRestClient.asMaps().stream()
         )
             .map(Object::toString)
             .map(EnvironmentDescription::new)
             .toList();
+    }
+
+    private void simplifyItem(Map<String, Object> itemMap) {
+        itemMap.remove("link");
+        itemMap.remove("stateDescription");
+        itemMap.remove("metadata");
+        itemMap.remove("editable");
+        itemMap.remove("category");
     }
 }
