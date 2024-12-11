@@ -9,7 +9,7 @@ spring:
       api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
   cassandra:
     local-datacenter: datacenter1
-    keyspace-name: marvin
+    keyspace-name: springframework
     contact-points: ${VECTORDB_ADDRESS}
     password: admin
     username: admin
