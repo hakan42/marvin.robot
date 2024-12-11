@@ -26,30 +26,28 @@ services:
       app-nw:
         aliases:
           - openhab
-  pgvector:
-    hostname: pgvector
-    container_name: pgvector
-    image: ankane/pgvector:latest
-    restart: always
+
+  cassandra:
+    image: cassandra:latest
+    container_name: cassandra
+    ports:
+      - "9042:9042"
     environment:
-      - POSTGRES_DB=vectordb
-      - POSTGRES_USER=testuser
-      - POSTGRES_PASSWORD=testpwd
-      - POSTGRES_HOST_AUTH_METHOD=trust
+      - CASSANDRA_USER=admin
+      - CASSANDRA_PASSWORD=admin
     volumes:
-      - ./init.sql:/docker-entrypoint-initdb.d/init.sql
-      - data_postgresql:/var/lib/postgresql
+      - data_cassandra:/var/lib/cassandra
     networks:
       app-nw:
         aliases:
-          - pgvector
-  
+          - cassandra
+
   marvin:
     hostname: marvin
     container_name: marvin
     image: geireilertsen2/marvin:latest
     depends_on:
-      - pgvector
+      - cassandra
       - openhab
     ports:
       - 9090:9090
@@ -61,19 +59,22 @@ services:
       GOOGLE_APIKEY: $GOOGLE_APIKEY
       GOOGLE_CX: $GOOGLE_CX
       OPENAI_APIKEY: $OPENAI_APIKEY
-      VECTORDB_ADDRESS: pgvector:5432
-    #      SPRING_PROFILES_ACTIVE: teach
+      VECTORDB_ADDRESS: cassandra:9042
+      SPRING_PROFILES_ACTIVE: teach
     volumes:
       - /root:/root
     networks:
       app-nw:
         aliases:
           - marvin
+
 volumes:
   data_openhab_conf:
   data_openhab_addons:
   data_openhab_userdata:
   data_postgresql:
+  data_cassandra:
+
 networks:
   app-nw:
     internal: false

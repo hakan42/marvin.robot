@@ -25,7 +25,7 @@ import org.springframework.ai.chat.prompt.Prompt;
 import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.model.function.FunctionCallback;
-import org.springframework.ai.vectorstore.PgVectorStore;
+import org.springframework.ai.vectorstore.CassandraVectorStore;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.stereotype.Component;
 
@@ -35,7 +35,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
     private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
 
     @Resource
-    private PgVectorStore vectorStore;
+    private CassandraVectorStore vectorStore;
     @Resource
     private ChatMemory chatMemory;
     @Resource

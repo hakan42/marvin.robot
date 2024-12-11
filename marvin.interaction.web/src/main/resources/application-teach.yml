@@ -1,6 +1,5 @@
 spring:
   ai:
     vectorstore:
-      pgvector:
+      cassandra:
         initialize-schema: true
-        remove-existing-vector-store-table: true

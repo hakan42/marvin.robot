@@ -7,17 +7,12 @@ spring:
   ai:
     openai:
       api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
-    vectorstore:
-      pgvector:
-        initialize-schema: false
-        index-type: hnsw
-        distance-type: cosine_distance
-        dimensions: 1536
-        remove-existing-vector-store-table: false
-  datasource:
-    url: jdbc:postgresql://${VECTORDB_ADDRESS}/vectordb
-    username: testuser
-    password: testpwd
+  cassandra:
+    local-datacenter: datacenter1
+    keyspace-name: marvin
+    contact-points: ${VECTORDB_ADDRESS}
+    password: admin
+    username: admin
 
 server:
   port: 9090
