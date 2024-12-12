@@ -1,10 +1,8 @@
 package com.assetvisor.marvin.equipment.notebook;
 
-import java.util.List;
+import java.util.Optional;
 
 public interface ForPersistingNotes {
-
     void persist(CalendarNote calendarNote);
-    List<CalendarNote> all();
-    void delete(CalendarNote calendarNote);
+    Optional<CalendarNote> getFirstOverdueAndDelete();
 }
