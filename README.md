@@ -31,6 +31,8 @@ Add the following environment variables
 * GOOGLE_APIKEY (get your own from google)
 * GOOGLE_CX (get your own from google)
 * OPENAI_APIKEY (get your own from openai)
+* GITHUB_CLIENT_ID (for oauth, get your own from github)
+* GITHUB_CLIENT_SECRET (for oauth, get your own from github)
 
 
 The main module that brings Marvin to life is marvin.interaction.web. It is a Spring Boot application
