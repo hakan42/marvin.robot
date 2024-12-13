@@ -19,6 +19,7 @@ spring:
       client:
         registration:
           github:
+            redirect-uri: ${EXTERNAL_ADDRESS}/login/oauth2/code/github
             clientId: ${GITHUB_CLIENT_ID}
             clientSecret: ${GITHUB_CLIENT_SECRET}
 server:
