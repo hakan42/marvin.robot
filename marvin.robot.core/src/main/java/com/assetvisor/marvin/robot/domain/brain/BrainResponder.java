@@ -3,6 +3,7 @@ package com.assetvisor.marvin.robot.domain.brain;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
+import com.assetvisor.marvin.robot.domain.communication.Message;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
 
 public class BrainResponder {
@@ -33,6 +34,6 @@ public class BrainResponder {
     }
 
     private void message(String message) {
-        forMessaging.message(message);
+        forMessaging.message(new Message("Marvin", message));
     }
 }

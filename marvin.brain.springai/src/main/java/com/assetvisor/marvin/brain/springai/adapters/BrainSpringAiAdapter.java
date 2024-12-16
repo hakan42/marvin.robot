@@ -10,19 +10,16 @@ import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import jakarta.annotation.Resource;
 import java.util.List;
-import java.util.Map;
 import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
+import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
+import org.springframework.ai.chat.client.advisor.SimpleLoggerAdvisor;
 import org.springframework.ai.chat.memory.ChatMemory;
-import org.springframework.ai.chat.messages.Message;
-import org.springframework.ai.chat.messages.UserMessage;
 import org.springframework.ai.chat.model.ChatResponse;
-import org.springframework.ai.chat.prompt.Prompt;
-import org.springframework.ai.chat.prompt.SystemPromptTemplate;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.model.function.FunctionCallback;
 import org.springframework.ai.vectorstore.CassandraVectorStore;
@@ -65,8 +62,11 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         this.robotDescription = robotDescription;
 
         this.chatClient = chatClientBuilder
+            .defaultSystem(robotDescription.text())
             .defaultAdvisors(
-                new MessageChatMemoryAdvisor(chatMemory)
+                new MessageChatMemoryAdvisor(chatMemory),
+                new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults()),
+                new SimpleLoggerAdvisor()
             )
             .defaultFunctions(environmentFunctions
                 .stream()
@@ -98,30 +98,14 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         return new Document(environmentDescription.text());
     }
 
-    private String getEnrichedRobotDescription() {
-        String documentEnrichment = """
-            \r\nUse the information from the DOCUMENTS section to provide accurate answers but act as if you knew this information innately.
-            If unsure, simply state that you don't know.
-            DOCUMENTS:
-            {documents}
-            """;
-        return robotDescription.text() + documentEnrichment;
-    }
-
     @Override
     public void invoke(String message, boolean reply, BrainResponder responder) {
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
-        List<Document> documents = vectorStore.similaritySearch(SearchRequest.query(message).withTopK(30));
-        String collect = documents.stream().map(Document::getContent)
-            .collect(Collectors.joining(System.lineSeparator()));
-        Message createdMessage = new SystemPromptTemplate(getEnrichedRobotDescription()).createMessage(
-            Map.of("documents", collect));
-        UserMessage userMessage = new UserMessage(message);
-        Prompt prompt = new Prompt(List.of(createdMessage, userMessage));
 
-        ChatResponse chatResponse = chatClient.prompt(prompt)
+        ChatResponse chatResponse = chatClient.prompt()
+            .user(message)
             .advisors(a -> a
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, "1")
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, "10")

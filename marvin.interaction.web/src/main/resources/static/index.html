@@ -6,32 +6,22 @@
   <title>Chat with Marvin</title>
 </head>
 <body>
-<h1>Chat with Marvin</h1>
-
-<!-- Marvin's Image -->
-<div style="text-align: left; margin-bottom: 20px;">
-  <img src="marvin.jpeg" alt="Marvin the Robot" style="width: 300px; border-radius: 10px; box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);">
-</div>
 
 <p>
   <button id="startBtn">Start Recording</button>
   <button id="stopBtn" disabled>Stop Recording</button>
 </p>
 
-<!-- Form to send messages -->
-<form id="chatForm">
-  <label for="message">Enter your message:</label>
-  <input type="text" id="message" name="message" required style="width: 800px">
-  <button type="submit">Send</button>
-</form>
-
-<!-- Display incoming messages -->
-<h2>Messages:</h2>
-<ul id="messages"></ul>
-
 <!-- Audio player for chat -->
-<h2>Chat Audio:</h2>
-<audio id="audioPlayer" controls style="display: none;"></audio>
+<audio id="audioPlayer" controls style="display: none; width: 300px; height: 30px;"></audio>
+
+<!-- Form to send messages -->
+<form id="chatForm" style="position: fixed; bottom: 0px; left: 0px; width: calc(100%); background: #88aa80; padding: 10px; display: flex; align-items: center;">
+  <input type="text" id="message" name="message" required style="flex: 1; margin-right: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
+  <button type="submit" style="padding: 8px 16px; border-radius: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;margin-right: 10px;">Send</button>
+</form>
+<!-- Display incoming messages -->
+<ul id="messages"></ul>
 
 <!-- Toast notification -->
 <div id="toast"></div>
@@ -106,9 +96,38 @@
 
     eventSource.onmessage = (event) => {
       const newMessage = document.createElement("li");
-      newMessage.textContent = event.data;
+      newMessage.className = "message-bubble";
+      newMessage.textContent = JSON.parse(event.data).content;
+      const sender = JSON.parse(event.data).sender;
+      if (sender === "User") {
+        newMessage.style.backgroundColor = "#3c813c";
+        newMessage.style.textAlign = "right";
+      }
       messageList.appendChild(newMessage);
+      messageList.appendChild(document.createElement("div")).style.clear = "both";
 
+      if (sender !== "User") {
+        const senderHeader = document.createElement("span");
+        senderHeader.textContent = sender;
+        const hashCode = (str) => {
+          let hash = 0;
+          for (let i = 0; i < str.length; i++) {
+            hash = str.charCodeAt(i) + ((hash << 5) - hash);
+          }
+          return hash;
+        };
+
+        const intToRGB = (i) => {
+          const c = (i & 0x00FFFFFF)
+          .toString(16)
+          .toUpperCase();
+          return "00000".substring(0, 6 - c.length) + c;
+        };
+
+        senderHeader.style.fontWeight = "bold";
+        senderHeader.style.color = `#${intToRGB(hashCode(sender))}`;
+        newMessage.insertBefore(senderHeader, newMessage.firstChild);
+      }
       // Limit to the last 10 messages
       while (messageList.children.length > maxMessages) {
         messageList.removeChild(messageList.firstChild);
@@ -200,15 +219,16 @@
   };
 </script>
 
-</body>
-
 <style>
+  body {
+    background-color: #ECE5DD;
+  }
   #toast {
     visibility: hidden;
     min-width: 250px;
     margin: 0 auto;
-    background-color: #005500;
-    color: #fff;
+    background-color: #06f406;
+    color: #ed0808;
     text-align: center;
     border-radius: 4px;
     padding: 16px;
@@ -219,11 +239,49 @@
     z-index: 1000;
     opacity: 0;
     transition: opacity 0.5s, visibility 0.5s;
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
   }
 
   img {
     max-width: 100%;
     height: auto;
   }
+
+  #messages {
+    list-style-type: none;
+    padding: 0;
+    margin-bottom: 60px; /* Adjust this value if needed */
+  }
+
+  .message-bubble {
+    display: inline-block;
+    padding: 10px;
+    border-radius: 10px;
+    margin-bottom: 10px;
+    max-width: 70%;
+    word-wrap: break-word;
+    background-color: #f1f1f1;
+    color: #333;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+  }
+
+  .message-bubble span {
+    display: block;
+  }
+
+  .message-bubble {
+    background-color: #3f4c3f;
+    color: #ffffff;
+  }
+
+  .message-bubble[style*="text-align: right;"] {
+    background-color: #285318;
+    color: #fff;
+    text-align: left;
+    float: right;
+  }
 </style>
+
+</body>
 </html>

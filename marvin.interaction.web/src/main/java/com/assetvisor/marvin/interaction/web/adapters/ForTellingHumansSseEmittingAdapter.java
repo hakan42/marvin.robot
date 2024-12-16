@@ -4,6 +4,7 @@ import com.assetvisor.marvin.interaction.web.AudioBuffer;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
+import com.assetvisor.marvin.robot.domain.communication.Message;
 import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
@@ -42,7 +43,7 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessa
 
 
     @Override
-    public void message(String message) {
+    public void message(Message message) {
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(message);

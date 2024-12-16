@@ -8,6 +8,7 @@ import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsLi
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingSpeechToText;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
+import com.assetvisor.marvin.robot.domain.communication.Message;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import jakarta.annotation.Resource;
@@ -36,8 +37,9 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     @Override
     public void observe(Observation observation) {
         LOG.info(observation);
+        forMessaging.message(new Message("Environment", observation.toString()));
         forInvokingBrain.invoke(
-            observation,
+            observation.toString(),
             true,
             new BrainResponder(
                 forMessaging,
@@ -48,11 +50,11 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     }
 
     @Override
-    public void listenTo(String message) {
+    public void listenTo(Message message) {
         LOG.info(message);
         forMessaging.message(message);
         forInvokingBrain.invoke(
-            message,
+            message.content(),
             true,
             new BrainResponder(
                 forMessaging,
@@ -63,10 +65,10 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     }
 
     @Override
-    public void listenTo(byte[] audio) {
+    public void listenTo(String sender, byte[] audio) {
         String message = forConvertingSpeechToText.convert(audio);
         LOG.info(message);
-        forMessaging.message(message);
+        forMessaging.message(new Message(sender, message));
         forInvokingBrain.invoke(
             message,
             true,

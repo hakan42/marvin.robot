@@ -5,6 +5,7 @@ import com.assetvisor.marvin.equipment.notebook.NoteBook;
 import com.assetvisor.marvin.robot.application.ListenUseCase;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
+import com.assetvisor.marvin.robot.domain.communication.Message;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentFunctions;
 import com.assetvisor.marvin.robot.domain.environment.Functions;
 import com.assetvisor.marvin.robot.domain.jobdescription.ForPersistingRobotDescription;
@@ -41,6 +42,6 @@ public class LifecycleService {
             forPersistingRobotDescription.read(),
             functions.all()
         );
-        listenUseCase.listenTo("You were just woken up, check the current time.");
+        listenUseCase.listenTo(new Message("Nurse", "You were just woken up, check the current time."));
     }
 }
