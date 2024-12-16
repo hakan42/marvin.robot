@@ -142,10 +142,8 @@
         }
 
         const blob = await response.blob();
-        URL.createObjectURL(blob);
-
         // Play the audio
-        audioPlayer.src = url;
+        audioPlayer.src = URL.createObjectURL(blob);
         audioPlayer.style.display = "block";
         audioPlayer.play();
 
