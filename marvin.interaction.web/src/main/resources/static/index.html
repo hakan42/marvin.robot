@@ -16,7 +16,7 @@
 <audio id="audioPlayer" controls style="display: none; width: 300px; height: 30px;"></audio>
 
 <!-- Form to send messages -->
-<form id="chatForm" style="position: fixed; bottom: 0px; left: 0px; width: calc(100%); background: #88aa80; padding: 10px; display: flex; align-items: center;">
+<form id="chatForm" style="position: fixed; bottom: 0; left: 0; width: calc(100%); background: #88aa80; padding: 10px; display: flex; align-items: center;">
   <input type="text" id="message" name="message" required style="flex: 1; margin-right: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
   <button type="submit" style="padding: 8px 16px; border-radius: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;margin-right: 10px;">Send</button>
 </form>
@@ -92,7 +92,6 @@
     const messageList = document.getElementById("messages");
     const audioPlayer = document.getElementById("audioPlayer");
     const eventSource = new EventSource("/stream");
-    const maxMessages = 10; // Maximum number of messages to display
 
     eventSource.onmessage = (event) => {
       const newMessage = document.createElement("li");
@@ -129,10 +128,6 @@
         senderHeader.style.color = `#${intToRGB(hashCode(sender))}`;
         newMessage.insertBefore(senderHeader, newMessage.firstChild);
       }
-      // Limit to the last 10 messages
-      while (messageList.children.length > maxMessages) {
-        messageList.removeChild(messageList.firstChild);
-      }
     };
 
     // Listen for a custom event indicating chat audio is ready
@@ -147,7 +142,7 @@
         }
 
         const blob = await response.blob();
-        const url = URL.createObjectURL(blob);
+        URL.createObjectURL(blob);
 
         // Play the audio
         audioPlayer.src = url;
