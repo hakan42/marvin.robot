@@ -105,6 +105,7 @@
       }
       messageList.appendChild(newMessage);
       messageList.appendChild(document.createElement("div")).style.clear = "both";
+      newMessage.scrollIntoView({ behavior: "smooth" });
 
       if (sender !== "User") {
         const senderHeader = document.createElement("span");

@@ -7,6 +7,7 @@ import static org.mockito.Mockito.verifyNoMoreInteractions;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
+import com.assetvisor.marvin.robot.domain.communication.Message;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -31,16 +32,16 @@ public class BrainResponderTest {
     @Test
     public void shouldRespond() {
         // Given
-        String message = "message";
+        Message message = new Message("Marvin", "message");
         byte[] bytes = {1, 2, 3};
 
-        given(forConvertingTextToSpeech.convert(message)).willReturn(bytes);
+        given(forConvertingTextToSpeech.convert(message.content())).willReturn(bytes);
         given(forCheckingIfAnybodyIsListening.isAnybodyListening()).willReturn(true);
 
         // When
-        brainResponder.respond(message);
+        brainResponder.respond(message.content());
         // Then
-        verify(forConvertingTextToSpeech).convert(message);
+        verify(forConvertingTextToSpeech).convert(message.content());
         verify(speechBuffer).add(bytes);
         verify(forMessaging).message(message);
         verifyNoMoreInteractions(forMessaging, forConvertingTextToSpeech, speechBuffer);
