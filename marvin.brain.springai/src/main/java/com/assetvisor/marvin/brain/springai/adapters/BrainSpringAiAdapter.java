@@ -30,6 +30,8 @@ import org.springframework.stereotype.Component;
 public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
 
     private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
+    private final int VECTORSTORE_TOPK = 20;
+    private final int CHAT_MEMORY_RETRIEVE_SIZE = 10;
 
     @Resource
     private CassandraVectorStore vectorStore;
@@ -39,7 +41,6 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
     private ChatClient.Builder chatClientBuilder;
 
     private ChatClient chatClient;
-    private RobotDescription robotDescription;
 
     @Override
     public void teach(
@@ -59,13 +60,16 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
     ) {
         LOG.info("Waking up Brain...");
 
-        this.robotDescription = robotDescription;
-
         this.chatClient = chatClientBuilder
             .defaultSystem(robotDescription.text())
             .defaultAdvisors(
                 new MessageChatMemoryAdvisor(chatMemory),
-                new QuestionAnswerAdvisor(vectorStore, SearchRequest.defaults()),
+                new QuestionAnswerAdvisor(
+                    vectorStore,
+                    SearchRequest
+                        .defaults()
+                        .withTopK(VECTORSTORE_TOPK)
+                ),
                 new SimpleLoggerAdvisor()
             )
             .defaultFunctions(environmentFunctions
@@ -108,7 +112,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
             .user(message)
             .advisors(a -> a
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, "1")
-                .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, "10")
+                .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, CHAT_MEMORY_RETRIEVE_SIZE)
             )
             .call().chatResponse();
 
