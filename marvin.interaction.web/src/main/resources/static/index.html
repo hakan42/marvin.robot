@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -96,7 +97,7 @@
     eventSource.onmessage = (event) => {
       const newMessage = document.createElement("li");
       newMessage.className = "message-bubble";
-      newMessage.textContent = JSON.parse(event.data).content;
+      newMessage.innerHTML = marked.parse(JSON.parse(event.data).content);
       const sender = JSON.parse(event.data).sender;
       if (sender === "User") {
         newMessage.style.backgroundColor = "#3c813c";
@@ -227,7 +228,7 @@
     border-radius: 4px;
     padding: 16px;
     position: fixed;
-    bottom: 20px;
+    bottom: 50px;
     left: 50%;
     transform: translateX(-50%);
     z-index: 1000;
