@@ -1,4 +1,4 @@
-package com.assetvisor.marvin.persistence.adapters.cassandra;
+package com.assetvisor.marvin.persistence.adapters.cassandra.notebook;
 
 import com.assetvisor.marvin.equipment.notebook.CalendarNote;
 import com.assetvisor.marvin.equipment.notebook.ForPersistingNotes;

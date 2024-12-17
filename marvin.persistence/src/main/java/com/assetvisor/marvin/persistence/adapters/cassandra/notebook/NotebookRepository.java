@@ -1,4 +1,4 @@
-package com.assetvisor.marvin.persistence.adapters.cassandra;
+package com.assetvisor.marvin.persistence.adapters.cassandra.notebook;
 
 import java.util.UUID;
 import org.springframework.data.cassandra.repository.CassandraRepository;

@@ -7,6 +7,7 @@ import com.assetvisor.marvin.equipment.notebook.WriteInNoteBook;
 import com.assetvisor.marvin.equipment.watch.LookAtWatch;
 import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
 import com.assetvisor.marvin.robot.domain.brain.Remember;
+import com.assetvisor.marvin.robot.domain.relationships.ForAddingPerson;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,13 +17,15 @@ public class Functions {
     private final NoteBook noteBook;
     private final ForRemembering forRemembering;
     private final ForSearchingInternet forSearchingInternet;
+    private final ForAddingPerson forAddingPerson;
 
     public Functions(ForGettingEnvironmentFunctions forGettingEnvironmentFunctions, NoteBook noteBook,
-        ForRemembering forRemembering, ForSearchingInternet forSearchingInternet) {
+        ForRemembering forRemembering, ForSearchingInternet forSearchingInternet, ForAddingPerson forAddingPerson) {
         this.forGettingEnvironmentFunctions = forGettingEnvironmentFunctions;
         this.noteBook = noteBook;
         this.forRemembering = forRemembering;
         this.forSearchingInternet = forSearchingInternet;
+        this.forAddingPerson = forAddingPerson;
     }
 
     public List<EnvironmentFunction<?,?>> all() {
@@ -38,6 +41,7 @@ public class Functions {
             new WriteInNoteBook(noteBook),
             new Remember(forRemembering),
             new SearchInternet(forSearchingInternet)
+//            new AddFriendFunction(forAddingFriend)
         );
     }
 }
