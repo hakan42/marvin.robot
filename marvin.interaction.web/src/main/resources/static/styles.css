@@ -1,0 +1,117 @@
+body {
+  background-color: #ECE5DD;
+  padding-top: 42px;
+}
+
+.menu-panel {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin-bottom: 5px;
+  position: fixed;
+  padding-left: 5px;
+  padding-right: 5px;
+  bottom: 0;
+  left: 0;
+  top: 0;
+  right: 0;
+  height: 40px;
+  width: 100%;
+  background-color: #88aa80; /* Optional: to match the body background */
+  z-index: 1000; /* Ensure it stays above other elements */
+}
+
+#toast {
+  visibility: hidden;
+  min-width: 250px;
+  margin: 0 auto;
+  background-color: #06f406;
+  color: #ed0808;
+  text-align: center;
+  border-radius: 4px;
+  padding: 16px;
+  position: fixed;
+  bottom: 50px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 1000;
+  opacity: 0;
+  transition: opacity 0.5s, visibility 0.5s;
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+img {
+  max-width: 100%;
+  height: auto;
+}
+
+#audioPlayer {
+  width: 300px;
+  height: 20px;
+  margin-right: 10px;
+}
+
+#messages {
+  list-style-type: none;
+  padding: 0;
+  margin-bottom: 60px; /* Adjust this value if needed */
+}
+
+.message-bubble {
+  display: inline-block;
+  padding: 10px;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  max-width: 70%;
+  word-wrap: break-word;
+  background-color: #f1f1f1;
+  color: #333;
+  box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
+  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+}
+
+.message-bubble span {
+  display: block;
+}
+
+.message-bubble {
+  background-color: #3f4c3f;
+  color: #ffffff;
+}
+
+.message-bubble[style*="text-align: right;"] {
+  background-color: #285318;
+  color: #fff;
+  text-align: left;
+  float: right;
+}
+
+.chat-form {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  width: calc(100%);
+  background: #88aa80;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.message-input {
+  flex: 1;
+  margin-right: 10px;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ccc;
+}
+
+.send-button {
+  padding: 8px 16px;
+  border-radius: 5px;
+  background-color: #4CAF50;
+  color: white;
+  border: none;
+  cursor: pointer;
+  margin-right: 10px;
+}

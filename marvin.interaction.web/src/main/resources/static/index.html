@@ -1,6 +1,19 @@
 <!DOCTYPE html>
 <html lang="en">
 <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<link rel="stylesheet" href="styles.css">
+<style>
+  .menu-panel {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  .button-panel {
+    display: flex;
+    gap: 10px;
+  }
+</style>
+
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -8,275 +21,27 @@
 </head>
 <body>
 
-<p>
-  <button id="startBtn">Start Recording</button>
-  <button id="stopBtn" disabled>Stop Recording</button>
-</p>
-
-<!-- Audio player for chat -->
-<audio id="audioPlayer" controls style="display: none; width: 300px; height: 30px;"></audio>
+<!-- Menu panel for recording buttons and audio player -->
+<div class="menu-panel">
+  <div class="button-panel">
+    <button id="startBtn">Start Recording</button>
+    <button id="stopBtn" disabled>Stop Recording</button>
+  </div>
+  <audio id="audioPlayer" controls class="audio-player"></audio>
+</div>
 
 <!-- Form to send messages -->
-<form id="chatForm" style="position: fixed; bottom: 0; left: 0; width: calc(100%); background: #88aa80; padding: 10px; display: flex; align-items: center;">
-  <input type="text" id="message" name="message" required style="flex: 1; margin-right: 10px; padding: 8px; border-radius: 5px; border: 1px solid #ccc;">
-  <button type="submit" style="padding: 8px 16px; border-radius: 5px; background-color: #4CAF50; color: white; border: none; cursor: pointer;margin-right: 10px;">Send</button>
+<form id="chatForm" class="chat-form">
+  <input type="text" id="message" name="message" required class="message-input">
+  <button type="submit" class="send-button">Send</button>
 </form>
+
 <!-- Display incoming messages -->
 <ul id="messages"></ul>
 
 <!-- Toast notification -->
 <div id="toast"></div>
 
-<script>
-  let mediaRecorder;
-  let audioChunks = [];
-
-  document.getElementById('startBtn').addEventListener('click', async () => {
-    try {
-      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
-      mediaRecorder = new MediaRecorder(stream);
-      audioChunks = [];
-
-      mediaRecorder.ondataavailable = (event) => {
-        if (event.data.size > 0) {
-          audioChunks.push(event.data);
-        }
-      };
-
-      mediaRecorder.onstop = async () => {
-        const audioBlob = new Blob(audioChunks, { type: 'audio/wav' });
-        const arrayBuffer = await audioBlob.arrayBuffer();
-        const byteArray = new Uint8Array(arrayBuffer);
-
-        showToast("Uploading audio...");
-
-        // Post the byte array to the server
-        fetch('/speech', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/octet-stream' },
-          body: byteArray
-        })
-        .then((response) => {
-          if (response.ok) {
-            showToast("Audio uploaded successfully!");
-          } else {
-            showToast("Failed to upload audio.");
-          }
-        })
-        .catch((error) => {
-          console.error('Error uploading audio:', error);
-          showToast("An error occurred.");
-        });
-      };
-
-      mediaRecorder.start();
-      showToast("Recording...");
-      document.getElementById('startBtn').disabled = true;
-      document.getElementById('stopBtn').disabled = false;
-    } catch (error) {
-      console.error('Error accessing microphone:', error);
-      showToast("Error accessing microphone.");
-    }
-  });
-
-  document.getElementById('stopBtn').addEventListener('click', () => {
-    if (mediaRecorder && mediaRecorder.state !== 'inactive') {
-      mediaRecorder.stop();
-      showToast("Stopped recording.");
-      document.getElementById('startBtn').disabled = false;
-      document.getElementById('stopBtn').disabled = true;
-    }
-  });
-
-  // Connect to the SSE endpoint and display messages
-  function startSSE() {
-    const messageList = document.getElementById("messages");
-    const audioPlayer = document.getElementById("audioPlayer");
-    const eventSource = new EventSource("/stream");
-
-    eventSource.onmessage = (event) => {
-      const newMessage = document.createElement("li");
-      newMessage.className = "message-bubble";
-      newMessage.innerHTML = marked.parse(JSON.parse(event.data).content);
-      const sender = JSON.parse(event.data).sender;
-      if (sender === "User") {
-        newMessage.style.backgroundColor = "#3c813c";
-        newMessage.style.textAlign = "right";
-      }
-      messageList.appendChild(newMessage);
-      messageList.appendChild(document.createElement("div")).style.clear = "both";
-      newMessage.scrollIntoView({ behavior: "smooth" });
-
-      if (sender !== "User") {
-        const senderHeader = document.createElement("span");
-        senderHeader.textContent = sender;
-        const hashCode = (str) => {
-          let hash = 0;
-          for (let i = 0; i < str.length; i++) {
-            hash = str.charCodeAt(i) + ((hash << 5) - hash);
-          }
-          return hash;
-        };
-
-        const intToRGB = (i) => {
-          const c = (i & 0x00FFFFFF)
-          .toString(16)
-          .toUpperCase();
-          return "00000".substring(0, 6 - c.length) + c;
-        };
-
-        senderHeader.style.fontWeight = "bold";
-        senderHeader.style.color = `#${intToRGB(hashCode(sender))}`;
-        newMessage.insertBefore(senderHeader, newMessage.firstChild);
-      }
-    };
-
-    // Listen for a custom event indicating chat audio is ready
-    eventSource.addEventListener("chatReady", async () => {
-      showToast("Chat audio ready! Fetching...");
-
-      // Fetch the chat audio
-      try {
-        const response = await fetch("/speech");
-        if (!response.ok) {
-          throw new Error("Failed to fetch audio");
-        }
-
-        const blob = await response.blob();
-        // Play the audio
-        audioPlayer.src = URL.createObjectURL(blob);
-        audioPlayer.style.display = "block";
-        audioPlayer.play();
-
-        showToast("Playing chat audio...");
-      } catch (error) {
-        console.error("Error fetching or playing audio:", error);
-      }
-    });
-
-    eventSource.onerror = () => {
-      console.error("Error connecting to SSE stream");
-      eventSource.close();
-    };
-  }
-
-  // Send a message via POST request
-  async function sendMessage(event) {
-    event.preventDefault();
-
-    const messageInput = document.getElementById("message");
-    const message = messageInput.value.trim();
-
-    if (message !== "") {
-      try {
-        const response = await fetch("/message", {
-          method: "POST",
-          headers: {
-            "Content-Type": "application/x-www-form-urlencoded",
-          },
-          body: new URLSearchParams({ message }),
-        });
-
-        if (response.ok) {
-          showToast("Message sent: " + message);
-          messageInput.value = ""; // Clear the input field
-        } else {
-          console.error("Failed to send message:", response.statusText);
-        }
-      } catch (error) {
-        console.error("Error sending message:", error);
-      }
-    }
-  }
-
-  // Function to show a toast message
-  function showToast(message) {
-    const toast = document.getElementById("toast");
-    toast.textContent = message;
-    toast.style.visibility = "visible";
-    toast.style.opacity = "1";
-
-    // Hide the toast after 3 seconds
-    setTimeout(() => {
-      toast.style.opacity = "0";
-      setTimeout(() => {
-        toast.style.visibility = "hidden";
-      }, 500); // Wait for fade-out transition
-    }, 10000);
-  }
-
-  // Initialize on page load
-  window.onload = () => {
-    startSSE();
-
-    // Allow form submission with Enter key
-    document.getElementById("chatForm").addEventListener("submit", sendMessage);
-  };
-</script>
-
-<style>
-  body {
-    background-color: #ECE5DD;
-  }
-  #toast {
-    visibility: hidden;
-    min-width: 250px;
-    margin: 0 auto;
-    background-color: #06f406;
-    color: #ed0808;
-    text-align: center;
-    border-radius: 4px;
-    padding: 16px;
-    position: fixed;
-    bottom: 50px;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 1000;
-    opacity: 0;
-    transition: opacity 0.5s, visibility 0.5s;
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-
-  img {
-    max-width: 100%;
-    height: auto;
-  }
-
-  #messages {
-    list-style-type: none;
-    padding: 0;
-    margin-bottom: 60px; /* Adjust this value if needed */
-  }
-
-  .message-bubble {
-    display: inline-block;
-    padding: 10px;
-    border-radius: 10px;
-    margin-bottom: 10px;
-    max-width: 70%;
-    word-wrap: break-word;
-    background-color: #f1f1f1;
-    color: #333;
-    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.7);
-    font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-  }
-
-  .message-bubble span {
-    display: block;
-  }
-
-  .message-bubble {
-    background-color: #3f4c3f;
-    color: #ffffff;
-  }
-
-  .message-bubble[style*="text-align: right;"] {
-    background-color: #285318;
-    color: #fff;
-    text-align: left;
-    float: right;
-  }
-</style>
-
+<script src="script.js"></script>
 </body>
 </html>
