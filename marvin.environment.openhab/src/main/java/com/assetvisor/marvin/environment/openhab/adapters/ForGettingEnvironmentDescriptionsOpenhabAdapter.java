@@ -35,7 +35,6 @@ public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGetti
     private void simplifyItem(Map<String, Object> itemMap) {
         itemMap.remove("link");
         itemMap.remove("stateDescription");
-        itemMap.remove("metadata");
         itemMap.remove("editable");
         itemMap.remove("category");
     }
