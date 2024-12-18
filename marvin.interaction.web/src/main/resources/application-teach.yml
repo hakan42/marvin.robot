@@ -1,5 +1,0 @@
-spring:
-  ai:
-    vectorstore:
-      cassandra:
-        initialize-schema: true
