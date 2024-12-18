@@ -21,25 +21,6 @@ body {
   z-index: 1000; /* Ensure it stays above other elements */
 }
 
-#toast {
-  visibility: hidden;
-  min-width: 250px;
-  margin: 0 auto;
-  background-color: #06f406;
-  color: #ed0808;
-  text-align: center;
-  border-radius: 4px;
-  padding: 16px;
-  position: fixed;
-  bottom: 50px;
-  left: 50%;
-  transform: translateX(-50%);
-  z-index: 1000;
-  opacity: 0;
-  transition: opacity 0.5s, visibility 0.5s;
-  font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
-}
-
 img {
   max-width: 100%;
   height: auto;

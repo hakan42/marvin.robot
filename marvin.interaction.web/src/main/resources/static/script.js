@@ -18,7 +18,7 @@ document.getElementById('startBtn').addEventListener('click', async () => {
       const arrayBuffer = await audioBlob.arrayBuffer();
       const byteArray = new Uint8Array(arrayBuffer);
 
-      showToast("Uploading audio...");
+      console.log("Uploading audio...");
 
       // Post the byte array to the server
       fetch('/speech', {
@@ -28,31 +28,29 @@ document.getElementById('startBtn').addEventListener('click', async () => {
       })
       .then((response) => {
         if (response.ok) {
-          showToast("Audio uploaded successfully!");
+          console.log("Audio uploaded successfully!");
         } else {
-          showToast("Failed to upload audio.");
+          console.error("Failed to upload audio.");
         }
       })
       .catch((error) => {
         console.error('Error uploading audio:', error);
-        showToast("An error occurred.");
       });
     };
 
     mediaRecorder.start();
-    showToast("Recording...");
+    console.log("Recording...");
     document.getElementById('startBtn').disabled = true;
     document.getElementById('stopBtn').disabled = false;
   } catch (error) {
     console.error('Error accessing microphone:', error);
-    showToast("Error accessing microphone.");
   }
 });
 
 document.getElementById('stopBtn').addEventListener('click', () => {
   if (mediaRecorder && mediaRecorder.state !== 'inactive') {
     mediaRecorder.stop();
-    showToast("Stopped recording.");
+    console.log("Stopped recording.");
     document.getElementById('startBtn').disabled = false;
     document.getElementById('stopBtn').disabled = true;
   }
@@ -103,7 +101,7 @@ function startSSE() {
 
   // Listen for a custom event indicating chat audio is ready
   eventSource.addEventListener("chatReady", async () => {
-    showToast("Chat audio ready! Fetching...");
+    console.log("Chat audio ready! Fetching...");
 
     // Fetch the chat audio
     try {
@@ -118,7 +116,7 @@ function startSSE() {
       audioPlayer.style.display = "block";
       audioPlayer.play();
 
-      showToast("Playing chat audio...");
+      console.log("Playing chat audio...");
     } catch (error) {
       console.error("Error fetching or playing audio:", error);
     }
@@ -148,7 +146,7 @@ async function sendMessage(event) {
       });
 
       if (response.ok) {
-        showToast("Message sent: " + message);
+        console.log("Message sent: " + message);
         messageInput.value = ""; // Clear the input field
       } else {
         console.error("Failed to send message:", response.statusText);
@@ -157,22 +155,6 @@ async function sendMessage(event) {
       console.error("Error sending message:", error);
     }
   }
-}
-
-// Function to show a toast message
-function showToast(message) {
-  const toast = document.getElementById("toast");
-  toast.textContent = message;
-  toast.style.visibility = "visible";
-  toast.style.opacity = "1";
-
-  // Hide the toast after 3 seconds
-  setTimeout(() => {
-    toast.style.opacity = "0";
-    setTimeout(() => {
-      toast.style.visibility = "hidden";
-    }, 500); // Wait for fade-out transition
-  }, 10000);
 }
 
 // Initialize on page load
