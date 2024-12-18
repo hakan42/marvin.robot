@@ -13,20 +13,24 @@ public class Teacher {
     private final Log LOG = LogFactory.getLog(getClass());
 
     private final ForInvokingBrain forInvokingBrain;
+    private final ForForgettingEverything forForgettingEverything;
     private final ForPersistingEnvironmentDescriptions forPersistingEnvironmentDescriptions;
     private final ForGettingEnvironmentDescriptions forGettingEnvironmentDescriptions;
 
     public Teacher(
-        ForInvokingBrain forInvokingBrain,
+        ForInvokingBrain forInvokingBrain, ForForgettingEverything forForgettingEverything,
         ForPersistingEnvironmentDescriptions forPersistingEnvironmentDescriptions,
         ForGettingEnvironmentDescriptions forGettingEnvironmentDescriptions
     ) {
         this.forInvokingBrain = forInvokingBrain;
+        this.forForgettingEverything = forForgettingEverything;
         this.forPersistingEnvironmentDescriptions = forPersistingEnvironmentDescriptions;
         this.forGettingEnvironmentDescriptions = forGettingEnvironmentDescriptions;
     }
 
     public void teach() {
+        LOG.info("Forgetting everything...");
+        forForgettingEverything.forgetEverything();
         LOG.info("Teaching brain about environment...");
         List<EnvironmentDescription> environmentDescriptions = new ArrayList<>(forPersistingEnvironmentDescriptions.load());
         environmentDescriptions.addAll(forGettingEnvironmentDescriptions.getEnvironmentDescriptions());

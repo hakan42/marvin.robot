@@ -35,7 +35,7 @@ public class HumanInteractionsController {
     }
 
     @GetMapping("/speech")
-    public ResponseEntity<byte[]> speech() {
+    public ResponseEntity<byte[]> speech(Principal principal) {
         byte[] audioData = audioBuffer.get();
 
         if (audioData == null || audioData.length == 0) {

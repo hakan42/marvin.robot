@@ -6,7 +6,6 @@ import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -81,15 +80,6 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         LOG.info("Brain woken up.");
     }
 
-    @Override
-    public void invoke(Observation observation, boolean reply, BrainResponder responder) {
-        invoke(map(observation), reply, responder);
-    }
-
-    private String map(Observation observation) {
-        return observation.toString(); //TODO proper mapping
-    }
-
     private FunctionCallback map(EnvironmentFunction<?, ?> environmentFunction) {
         return FunctionCallback.builder()
             .description(environmentFunction.description())
@@ -116,6 +106,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
             )
             .call().chatResponse();
 
+        assert chatResponse != null;
         String responseString = chatResponse.getResult().getOutput().getContent();
         if (reply) {
             responder.respond(responseString);

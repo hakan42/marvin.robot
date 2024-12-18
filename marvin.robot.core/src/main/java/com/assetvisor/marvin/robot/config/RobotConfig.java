@@ -1,5 +1,6 @@
 package com.assetvisor.marvin.robot.config;
 
+import com.assetvisor.marvin.robot.domain.brain.ForForgettingEverything;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.brain.Teacher;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
@@ -17,11 +18,13 @@ public class RobotConfig {
     @Profile("teach")
     public Teacher teacher(
         ForInvokingBrain forInvokingBrain,
+        ForForgettingEverything forForgettingEverything,
         ForPersistingEnvironmentDescriptions forPersistingEnvironmentDescriptions,
         ForGettingEnvironmentDescriptions forGettingEnvironmentDescriptions
     ) {
         Teacher teacher = new Teacher(
             forInvokingBrain,
+            forForgettingEverything,
             forPersistingEnvironmentDescriptions,
             forGettingEnvironmentDescriptions
         );
