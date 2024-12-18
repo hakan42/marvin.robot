@@ -23,8 +23,7 @@ public class WebConfiguration {
                 .requestMatchers("/").permitAll()
                 .anyRequest().authenticated())
             .oauth2Login(oauth -> oauth.userInfoEndpoint(userInfo -> userInfo.userService(userService)))
-            .csrf(AbstractHttpConfigurer::disable)
-            .cors(AbstractHttpConfigurer::disable);
+            .csrf(AbstractHttpConfigurer::disable);
         return http.build();
     }
 
