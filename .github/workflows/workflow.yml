@@ -5,6 +5,7 @@ on:
     branches:
       - master   # Run only on pushes to the main branch
   pull_request:
+  workflow_dispatch:
 
 jobs:
   build:
@@ -20,28 +21,31 @@ jobs:
           java-version: '23'
           cache: maven  # Enable dependency caching for faster builds
 
+      - name: Extract Maven project version
+        id: version
+        run: |
+          VERSION=$(mvn help:evaluate -Dexpression=project.version -q -DforceStdout)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
       - name: build the app
         run: |
           mvn clean
-          mvn -B package --file pom.xml
-      - name: build the docker image
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          dockerfile: Dockerfile
-          push: false
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:latest
+          mvn -B package --no-transfer-progress --file pom.xml --activate-profiles with-docker
 
-      - name: login to docker hub
+      - name: Inspect Docker Images
+        run: |
+          docker images | grep -v "IMAGE ID" | sort
+          docker inspect --format='{{json .Config.Labels}}' marvin:latest | jq
+
+      - name: Login to docker hub
         uses: docker/login-action@v1
         with:
           username: ${{ secrets.DOCKER_HUB_USERNAME }}
           password: ${{ secrets.DOCKER_HUB_ACCESS_TOKEN }}
 
-      - name: push the docker image to docker hub
-        uses: docker/build-push-action@v4
-        with:
-          context: .
-          dockerfile: Dockerfile
-          push: true
-          tags: ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:latest
+      - name: Push Docker Image
+        run: |
+          docker tag marvin:${{ env.VERSION }} ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:${{ env.VERSION }}
+          docker tag marvin:latest             ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:latest
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:${{ env.VERSION }}
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/marvin:latest
