@@ -14,6 +14,7 @@
 
   <properties>
     <start-class>com.assetvisor.marvin.Application</start-class>
+    <image-name>marvin</image-name>
   </properties>
 
   <build>
@@ -21,6 +22,7 @@
       <plugin>
         <groupId>org.springframework.boot</groupId>
         <artifactId>spring-boot-maven-plugin</artifactId>
+        <version>${spring-boot-maven-plugin.version}</version>
         <configuration>
           <mainClass>com.assetvisor.marvin.Application</mainClass>
           <executable>true</executable>
@@ -88,4 +90,34 @@
     </dependency>
   </dependencies>
 
+  <profiles>
+    <profile>
+      <id>with-docker</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.springframework.boot</groupId>
+            <artifactId>spring-boot-maven-plugin</artifactId>
+            <configuration>
+            <image>
+              <name>${image-name}</name>
+              <tags>
+                <tag>${image-name}:${project.version}</tag>
+                <tag>${image-name}:latest</tag>
+              </tags>
+                </image>
+            </configuration>
+            <executions>
+              <execution>
+                <goals>
+                  <goal>build-info</goal>
+                  <goal>build-image-no-fork</goal>
+                </goals>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
+  </profiles>
 </project>
