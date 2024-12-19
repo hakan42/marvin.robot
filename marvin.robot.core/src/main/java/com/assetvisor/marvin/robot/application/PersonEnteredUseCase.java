@@ -1,9 +1,7 @@
 package com.assetvisor.marvin.robot.application;
 
+import com.assetvisor.marvin.robot.application.PersonUco.PersonId;
+
 public interface PersonEnteredUseCase {
-
-    void personEntered(PersonUco personUco);
-
-    record PersonUco(String personName, String email) {
-    }
+    void personEntered(PersonId personId);
 }

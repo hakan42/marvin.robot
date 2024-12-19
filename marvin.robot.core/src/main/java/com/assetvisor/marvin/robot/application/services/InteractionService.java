@@ -2,7 +2,6 @@ package com.assetvisor.marvin.robot.application.services;
 
 import com.assetvisor.marvin.robot.application.ListenUseCase;
 import com.assetvisor.marvin.robot.application.ObserveUseCase;
-import com.assetvisor.marvin.robot.application.PersonEnteredUseCase;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
@@ -18,7 +17,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InteractionService implements ObserveUseCase, ListenUseCase, PersonEnteredUseCase {
+public class InteractionService implements ObserveUseCase, ListenUseCase {
 
     Log LOG = LogFactory.getLog(getClass());
 
@@ -80,8 +79,4 @@ public class InteractionService implements ObserveUseCase, ListenUseCase, Person
             ));
     }
 
-    @Override
-    public void personEntered(PersonUco personUco) {
-        LOG.info(personUco + " entered.");
-    }
 }

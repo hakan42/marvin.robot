@@ -1,7 +1,8 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.robot.application.PersonEnteredUseCase;
-import com.assetvisor.marvin.robot.application.PersonEnteredUseCase.PersonUco;
+import com.assetvisor.marvin.robot.application.PersonUco.IdType;
+import com.assetvisor.marvin.robot.application.PersonUco.PersonId;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -11,22 +12,29 @@ import org.springframework.stereotype.Component;
 
 @Component
 public class AuthenticationEventHandlingAdapter {
+
     @Resource
     private PersonEnteredUseCase personEnteredUseCase;
 
     @EventListener
     public void handle(AuthenticationSuccessEvent event) {
-        personEnteredUseCase.personEntered(toUco(event));
+        personEnteredUseCase.personEntered(toId(event));
     }
 
-    private PersonUco toUco(AuthenticationSuccessEvent event) {
+    private PersonId toId(AuthenticationSuccessEvent event) {
         Object source = event.getSource();
-        if(source instanceof OAuth2LoginAuthenticationToken token) {
+        if (source instanceof OAuth2LoginAuthenticationToken token) {
             OAuth2User principal = token.getPrincipal();
-            String name = principal.getAttribute("name");
-            String email = principal.getAttribute("email");
-            return new PersonUco(name, email);
+            String id = principal.getAttribute("id").toString();
+            return new PersonId(IdType.fromRegistrationId(
+                token
+                    .getClientRegistration()
+                    .getRegistrationId()
+            ),
+                id
+            );
         }
-        return null;
+        throw new IllegalArgumentException("Unsupported event source: " + event.getSource());
     }
+
 }
