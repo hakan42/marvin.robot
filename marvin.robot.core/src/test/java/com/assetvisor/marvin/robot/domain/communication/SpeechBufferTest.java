@@ -27,21 +27,22 @@ public class SpeechBufferTest {
     @Test
     public void shouldSayMessage() throws InterruptedException {
         // Given
-        byte[] bytes = {1, 2, 3};
+        Speech speech = new Speech("Marvin", new byte[]{1, 2, 3});
         givenSlowSpeaker();
 
         // When
-        speechBuffer.add(bytes);
-        speechBuffer.add(bytes);
-        speechBuffer.add(bytes);
-        speechBuffer.add(bytes);
+        speechBuffer.add(speech);
+        speechBuffer.add(speech);
+        speechBuffer.add(speech);
+        speechBuffer.add(speech);
 
         // Then
         Thread.sleep(400);
-        verify(forSpeaking, times(4)).say(bytes);
+        verify(forSpeaking, times(4)).say(speech);
     }
 
     private void givenSlowSpeaker() {
+        //noinspection unused
         doAnswer(invocation -> {
             Thread.sleep(100); // Simulate slow response
             return null;

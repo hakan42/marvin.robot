@@ -4,6 +4,7 @@ import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsLi
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.robot.domain.communication.Speech;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
 
 public class BrainResponder {
@@ -30,7 +31,7 @@ public class BrainResponder {
 
     private void speak(String message) {
         byte[] speech = forConvertingTextToSpeech.convert(message);
-        speechBuffer.add(speech);
+        speechBuffer.add(new Speech("Marvin", speech));
     }
 
     private void message(String message) {

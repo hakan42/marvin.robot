@@ -5,6 +5,7 @@ import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsLi
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
 import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.robot.domain.communication.Speech;
 import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.util.List;
@@ -35,6 +36,7 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessa
             emitters.remove(emitter);
             LOG.info("Removed emitter: " + emitter);
         });
+        //noinspection unused
         emitter.onError((e) -> {
             emitters.remove(emitter);
             LOG.error("Error in SSE connection, removed emitter: " + emitter);
@@ -55,8 +57,8 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForMessa
     }
 
     @Override
-    public void say(byte[] audio) {
-        audioBuffer.set(audio);
+    public void say(Speech speech) {
+        audioBuffer.set(speech.audio());
         for (SseEmitter emitter : emitters) {
             try {
                 emitter.send(SseEmitter.event().name("chatReady").data("audio").build());

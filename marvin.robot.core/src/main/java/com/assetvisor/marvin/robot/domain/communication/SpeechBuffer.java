@@ -7,10 +7,10 @@ import java.util.Queue;
 import org.springframework.stereotype.Component;
 
 /**
- * A buffer for speech messages that need to be spoken.
- * This class handles the queueing of messages and the processing of messages.
- * The messages are processed in a separate thread.
- * The messages are added to the queue by calling the {@link #add(byte[])} method.
+ * A buffer for speeches that need to be spoken.
+ * This class handles the queueing of speeches and the processing of speeches.
+ * The speeches are processed in a separate thread.
+ * The speeches are added to the queue by calling the {@link #add(Speech)} method.
  */
 @Component
 public class SpeechBuffer {
@@ -18,14 +18,14 @@ public class SpeechBuffer {
     @Resource
     private ForSpeaking forSpeaking;
 
-    private final Queue<byte[]> messageQueue = new LinkedList<>();
+    private final Queue<Speech> messageQueue = new LinkedList<>();
     private final Object lock = new Object();
 
     @PostConstruct
     public void start() {
         new Thread(() -> {
             while (true) {
-                byte[] message;
+                Speech speech;
                 synchronized (lock) {
                     while (messageQueue.isEmpty()) {
                         try {
@@ -35,16 +35,16 @@ public class SpeechBuffer {
                             return;
                         }
                     }
-                    message = messageQueue.poll();  // Retrieve and remove the head of the queue
+                    speech = messageQueue.poll();  // Retrieve and remove the head of the queue
                 }
-                forSpeaking.say(message);  // Process the message
+                forSpeaking.say(speech);  // Process the message
             }
         }).start();
     }
 
-    public void add(byte[] message) {
+    public void add(Speech speech) {
         synchronized (lock) {
-            messageQueue.offer(message);
+            messageQueue.offer(speech);
             lock.notify();
         }
     }

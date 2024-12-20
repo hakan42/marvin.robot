@@ -8,6 +8,7 @@ import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsLi
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
 import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.robot.domain.communication.Speech;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -33,16 +34,16 @@ public class BrainResponderTest {
     public void shouldRespond() {
         // Given
         Message message = new Message("Marvin", "message");
-        byte[] bytes = {1, 2, 3};
+        Speech speech = new Speech("Marvin", new byte[]{1, 2, 3});
 
-        given(forConvertingTextToSpeech.convert(message.content())).willReturn(bytes);
+        given(forConvertingTextToSpeech.convert(message.content())).willReturn(speech.audio());
         given(forCheckingIfAnybodyIsListening.isAnybodyListening()).willReturn(true);
 
         // When
         brainResponder.respond(message.content());
         // Then
         verify(forConvertingTextToSpeech).convert(message.content());
-        verify(speechBuffer).add(bytes);
+        verify(speechBuffer).add(speech);
         verify(forMessaging).message(message);
         verifyNoMoreInteractions(forMessaging, forConvertingTextToSpeech, speechBuffer);
     }
