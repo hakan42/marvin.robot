@@ -40,7 +40,7 @@ public class BrainResponderTest {
         given(forCheckingIfAnybodyIsListening.isAnybodyListening()).willReturn(true);
 
         // When
-        brainResponder.respond(message.getContent(), message.getConversationId());
+        brainResponder.respond(message.getContent(), message.conversationId());
         // Then
         verify(forConvertingTextToSpeech).convert(message.getContent());
         verify(speechBuffer).add(speech);

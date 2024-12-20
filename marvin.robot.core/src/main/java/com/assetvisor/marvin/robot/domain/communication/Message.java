@@ -11,4 +11,18 @@ public abstract class Message {
     public String getSender() {
         return sender;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (!(o instanceof Message message)) {
+            return false;
+        }
+
+        return sender.equals(message.sender);
+    }
+
+    @Override
+    public int hashCode() {
+        return sender.hashCode();
+    }
 }
