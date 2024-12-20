@@ -40,17 +40,21 @@ that contains the application.yml configuration file.
 
 The Spring AI implemented brain is in the marvin.brain.springai module. It needs a vector store to work.
 
-Use a docker container to run the vector store. There is a docker compose file at project root.
+Use a docker container to run the Cassandra vector store. There is a docker compose file at project root. 
 
-If you use intellij, there are two run configs bundled with the project. One for runtime and one that includes populating the vector store.
+When cassandra is up and running you have to create a keyspace called springframework. 
+You can do this by running the following command:
 
-If not, to trigger the vector store population, include the Spring profile 'teach' when starting the application.
+```
+CREATE KEYSPACE springframework WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
+```
 
+When the application has started, open localhost:9090 in your browser. You will be redirected to the OAuth2 login page, currently at github.
 
-When the application has started, open localhost:9090 in your browser. You can ask Marvin questions and give commands in natural language.
-## How to build Marvin
+A person record is then added in the personentry table with relation STRANGER. Change this to FRIEND and refresh the page.
 
-Maven is used to build Marvin.
+There is a swagger ui included on http://localhost:9090/swagger-ui/index.html To initialise Marvin, use the POST /initialise endpoint.
+ 
 
 ## Cool things to try
 * Change the rule for the lights in the living room to turn on at sunset

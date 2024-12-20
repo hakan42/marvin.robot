@@ -8,10 +8,10 @@ import org.springframework.stereotype.Component;
 public class VectorStoreCassandraAdapter implements ForForgettingEverything {
 
     @Resource
-    private VectorStoreRepository vectorStoreRepository;
+    private VectorStoreService vectorStoreService;
 
     @Override
     public void forgetEverything() {
-        vectorStoreRepository.deleteAll();
+        vectorStoreService.deleteAll();
     }
 }

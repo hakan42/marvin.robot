@@ -5,6 +5,9 @@ spring:
     name: Marvin the Robot
     version: 0.0.1
   ai:
+    vectorstore:
+      cassandra:
+        initialize-schema: true
     openai:
       api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
   cassandra:
