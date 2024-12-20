@@ -1,6 +1,7 @@
 package com.assetvisor.marvin.robot.domain.relationships;
 
 public interface ForGettingPerson {
-    Person getPerson(String email);
+    Person byId(String id);
+    Person byEmail(String email);
 
 }

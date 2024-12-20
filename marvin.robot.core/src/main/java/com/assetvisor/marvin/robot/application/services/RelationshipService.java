@@ -29,7 +29,7 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
 
     @Override
     public EntryAttemptResponseUco attemptEntry(PersonUco personUco) {
-        Person person = forGettingPerson.getPerson(personUco.getEmail());
+        Person person = forGettingPerson.byEmail(personUco.getEmail());
         if(person == null) {
             //no idea who this is, but remember him as stranger
             forAddingPerson.addPerson(

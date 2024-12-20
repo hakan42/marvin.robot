@@ -29,7 +29,14 @@ public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGe
     }
 
     @Override
-    public Person getPerson(String email) {
+    public Person byId(String id) {
+        return personRepository.findById(UUID.fromString(id))
+            .map(this::toPerson)
+            .orElse(null);
+    }
+
+    @Override
+    public Person byEmail(String email) {
         return personRepository.findByEmail(email).stream()
             .findAny()
             .map(this::toPerson)
