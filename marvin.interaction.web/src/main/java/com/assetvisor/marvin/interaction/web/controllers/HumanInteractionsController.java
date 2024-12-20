@@ -24,7 +24,7 @@ public class HumanInteractionsController {
     private AudioBuffer audioBuffer;
 
     @PostMapping("/message")
-    public void message(Principal principal, @RequestParam(value = "text") String text) {
+    public void message(Principal principal, @RequestParam(value = "message") String text) {
         listenUseCaseHumanInteractionAdapter.listenTo(text, principal);
     }
 

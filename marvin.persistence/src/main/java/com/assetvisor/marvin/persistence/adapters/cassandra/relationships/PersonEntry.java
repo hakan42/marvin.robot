@@ -11,32 +11,22 @@ import org.springframework.data.cassandra.core.mapping.Table;
 public class PersonEntry {
 
     @Id
-    @PrimaryKeyColumn(
-        name = "id",
-        type = PrimaryKeyType.PARTITIONED
-    )
+    @PrimaryKeyColumn(name = "id", type = PrimaryKeyType.PARTITIONED)
     private UUID id;
-    @Column(
-        "person_name"
-    )
+
+    @Column("person_name")
     private String personName;
-    @Column(
-        "email"
-    )
+
+    @Column("email")
     private String email;
-    @Column(
-        "relation"
-    )
+
+    @Column("relation")
     private String relationship;
 
-    public PersonEntry() {
-    }
+    @Column("github_id")
+    private String githubId;
 
-    public PersonEntry(UUID id, String personName, String email, String relationship) {
-        this.id = id;
-        this.personName = personName;
-        this.email = email;
-        this.relationship = relationship;
+    public PersonEntry() {
     }
 
     public UUID getId() {
@@ -69,5 +59,13 @@ public class PersonEntry {
 
     public void setRelationship(String relationship) {
         this.relationship = relationship;
+    }
+
+    public String getGithubId() {
+        return githubId;
+    }
+
+    public void setGithubId(String githubId) {
+        this.githubId = githubId;
     }
 }

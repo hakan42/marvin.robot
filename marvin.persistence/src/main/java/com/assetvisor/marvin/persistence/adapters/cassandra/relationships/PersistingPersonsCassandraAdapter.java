@@ -5,6 +5,8 @@ import com.assetvisor.marvin.robot.domain.relationships.ForGettingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.Person;
 import com.assetvisor.marvin.robot.domain.relationships.Person.Relationship;
 import jakarta.annotation.Resource;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
@@ -35,19 +37,26 @@ public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGe
     }
 
     private PersonEntry toPersonEntry(Person person) {
-        return new PersonEntry(
-            UUID.randomUUID(),
-            person.name(),
-            person.email(),
-            person.relationship().name()
-        );
+        PersonEntry personEntry = new PersonEntry();
+        personEntry.setId(UUID.randomUUID());
+        personEntry.setPersonName(person.name());
+        personEntry.setEmail(person.email());
+        personEntry.setRelationship(person.relationship().name());
+        personEntry.setGithubId(person.externalIds().get("GITHUB"));
+        return personEntry;
     }
 
     private Person toPerson(PersonEntry personEntry) {
         return new Person(
+            personEntry.getId().toString(),
             personEntry.getPersonName(),
             personEntry.getEmail(),
-            Relationship.valueOf(personEntry.getRelationship())
+            Relationship.valueOf(personEntry.getRelationship()),
+            Optional.ofNullable(personEntry.getGithubId())
+                .map(githubId ->
+                    Map.of("GITHUB", githubId)
+                )
+                .orElse(Map.of())
         );
     }
 }

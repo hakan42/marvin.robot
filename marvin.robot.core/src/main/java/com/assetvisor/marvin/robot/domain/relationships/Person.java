@@ -1,6 +1,8 @@
 package com.assetvisor.marvin.robot.domain.relationships;
 
-public record Person(String name, String email, Relationship relationship) {
+import java.util.Map;
+
+public record Person(String id, String name, String email, Relationship relationship, Map<String, String> externalIds) {
     public enum Relationship {
         FRIEND, FAMILY, COLLEAGUE, ACQUAINTANCE, STRANGER
     }

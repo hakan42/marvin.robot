@@ -11,6 +11,8 @@ import com.assetvisor.marvin.robot.domain.relationships.ForAddingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.ForGettingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.Person;
 import jakarta.annotation.Resource;
+import java.util.Map;
+import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Component;
@@ -30,7 +32,17 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
         Person person = forGettingPerson.getPerson(personUco.getEmail());
         if(person == null) {
             //no idea who this is, but remember him as stranger
-            forAddingPerson.addPerson(new Person(personUco.getName(), personUco.getEmail(), STRANGER));
+            forAddingPerson.addPerson(
+                new Person(
+                    UUID.randomUUID().toString(),
+                    personUco.getName(),
+                    personUco.getEmail(),
+                    STRANGER,
+                    Map.of(
+                        personUco.getId().idType().name(),
+                        personUco.getId().value()
+                    )
+                ));
             return new EntryAttemptResponseUco(false);
         }
         if(person.relationship() == FRIEND) {
