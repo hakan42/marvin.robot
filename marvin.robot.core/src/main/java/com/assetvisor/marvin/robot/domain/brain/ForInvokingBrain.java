@@ -13,5 +13,5 @@ public interface ForInvokingBrain {
         RobotDescription robotDescription,
         List<EnvironmentFunction<?,?>> environmentFunctions
     );
-    void invoke(String message, boolean reply, BrainResponder responder);
+    void invoke(String message, boolean reply, BrainResponder responder, String conversationId);
 }

@@ -85,7 +85,7 @@ public class OpenhabSseEventReceiver {
                     },
                     () -> {
                         LOG.debug("No command found for observation: " + observation);
-                        observeUseCase.observe(observation);
+                        observeUseCase.observe(observation, "openhab");
                     }
                 );
 

@@ -1,8 +1,7 @@
 package com.assetvisor.marvin.interaction.web.controllers;
 
 import com.assetvisor.marvin.interaction.web.AudioBuffer;
-import com.assetvisor.marvin.robot.application.ListenUseCase;
-import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.interaction.web.adapters.ListenUseCaseHumanInteractionAdapter;
 import jakarta.annotation.Resource;
 import java.security.Principal;
 import org.springframework.http.HttpHeaders;
@@ -20,18 +19,18 @@ import org.springframework.web.bind.annotation.RestController;
 public class HumanInteractionsController {
 
     @Resource
-    private ListenUseCase listenUseCase;
+    private ListenUseCaseHumanInteractionAdapter listenUseCaseHumanInteractionAdapter;
     @Resource
     private AudioBuffer audioBuffer;
 
     @PostMapping("/message")
-    public void message(Principal principal, @RequestParam(value = "message") String message) {
-        listenUseCase.listenTo(new Message("User", message));
+    public void message(Principal principal, @RequestParam(value = "text") String text) {
+        listenUseCaseHumanInteractionAdapter.listenTo(text, principal);
     }
 
     @PostMapping(path = "/speech", consumes = "application/octet-stream")
-    public void speech(Principal principal, @RequestBody byte[] message) {
-        listenUseCase.listenTo("User", message);
+    public void speech(Principal principal, @RequestBody byte[] audio) {
+        listenUseCaseHumanInteractionAdapter.listenTo(audio, principal);
     }
 
     @GetMapping("/speech")

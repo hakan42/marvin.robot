@@ -2,6 +2,7 @@ package com.assetvisor.marvin.interaction.web.controllers;
 
 import com.assetvisor.marvin.interaction.web.adapters.ForTellingHumansSseEmittingAdapter;
 import jakarta.annotation.Resource;
+import java.security.Principal;
 import org.springframework.http.MediaType;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -16,9 +17,9 @@ public class SseController {
     private ForTellingHumansSseEmittingAdapter sseService;
 
     @GetMapping(path = "/stream", produces = MediaType.TEXT_EVENT_STREAM_VALUE)
-    public SseEmitter subscribe() {
+    public SseEmitter subscribe(Principal principal) {
         SseEmitter emitter = new SseEmitter(Long.MAX_VALUE);
-        sseService.addEmitter(emitter);
+        sseService.addEmitter(principal, emitter);
         return emitter;
     }
 }

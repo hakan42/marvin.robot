@@ -29,7 +29,8 @@ import org.springframework.stereotype.Component;
 public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
 
     private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
-    private final int VECTORSTORE_TOPK = 20;
+    @SuppressWarnings("FieldCanBeLocal")
+    private final int VECTORSTORE_TOP_K = 20;
     private final int CHAT_MEMORY_RETRIEVE_SIZE = 10;
 
     @Resource
@@ -67,7 +68,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
                     vectorStore,
                     SearchRequest
                         .defaults()
-                        .withTopK(VECTORSTORE_TOPK)
+                        .withTopK(VECTORSTORE_TOP_K)
                 ),
                 new SimpleLoggerAdvisor()
             )
@@ -93,7 +94,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
     }
 
     @Override
-    public void invoke(String message, boolean reply, BrainResponder responder) {
+    public void invoke(String message, boolean reply, BrainResponder responder, String conversationId) {
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
@@ -101,7 +102,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         ChatResponse chatResponse = chatClient.prompt()
             .user(message)
             .advisors(a -> a
-                .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, "1")
+                .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationId)
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, CHAT_MEMORY_RETRIEVE_SIZE)
             )
             .call().chatResponse();
@@ -109,7 +110,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         assert chatResponse != null;
         String responseString = chatResponse.getResult().getOutput().getContent();
         if (reply) {
-            responder.respond(responseString);
+            responder.respond(responseString, conversationId);
         }
     }
 

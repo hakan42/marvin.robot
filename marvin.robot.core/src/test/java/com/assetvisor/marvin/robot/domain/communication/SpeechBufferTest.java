@@ -27,18 +27,18 @@ public class SpeechBufferTest {
     @Test
     public void shouldSayMessage() throws InterruptedException {
         // Given
-        Speech speech = new Speech("Marvin", new byte[]{1, 2, 3});
+        AudioMessage audioMessage = new AudioMessage("Marvin", "C1", new byte[]{1, 2, 3});
         givenSlowSpeaker();
 
         // When
-        speechBuffer.add(speech);
-        speechBuffer.add(speech);
-        speechBuffer.add(speech);
-        speechBuffer.add(speech);
+        speechBuffer.add(audioMessage);
+        speechBuffer.add(audioMessage);
+        speechBuffer.add(audioMessage);
+        speechBuffer.add(audioMessage);
 
         // Then
         Thread.sleep(400);
-        verify(forSpeaking, times(4)).say(speech);
+        verify(forSpeaking, times(4)).say(audioMessage);
     }
 
     private void givenSlowSpeaker() {

@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.equipment.notebook;
 
 import com.assetvisor.marvin.robot.application.ListenUseCase;
-import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import jakarta.annotation.Resource;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
@@ -20,7 +20,7 @@ public class NoteBook {
     public void readNoteForNow() {
         forPersistingNotes.getFirstOverdueAndDelete()
             .ifPresent(note -> {
-                listenUseCase.listenTo(new Message("Notebook", note.note()));
+                listenUseCase.listenTo(new TextMessage("Notebook", "notebook", note.note()));
             });
     }
 

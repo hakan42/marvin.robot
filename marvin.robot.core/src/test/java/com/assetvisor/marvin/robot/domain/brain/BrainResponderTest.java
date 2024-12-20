@@ -4,12 +4,12 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
+import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
-import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
-import com.assetvisor.marvin.robot.domain.communication.Message;
-import com.assetvisor.marvin.robot.domain.communication.Speech;
+import com.assetvisor.marvin.robot.domain.communication.ForTexting;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
+import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -20,7 +20,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class BrainResponderTest {
     @Mock
-    private ForMessaging forMessaging;
+    private ForTexting forMessaging;
     @Mock
     private ForConvertingTextToSpeech forConvertingTextToSpeech;
     @Mock
@@ -33,18 +33,18 @@ public class BrainResponderTest {
     @Test
     public void shouldRespond() {
         // Given
-        Message message = new Message("Marvin", "message");
-        Speech speech = new Speech("Marvin", new byte[]{1, 2, 3});
+        TextMessage message = new TextMessage("Marvin", "C1", "message");
+        AudioMessage speech = new AudioMessage("Marvin", "C1", new byte[]{1, 2, 3});
 
-        given(forConvertingTextToSpeech.convert(message.content())).willReturn(speech.audio());
+        given(forConvertingTextToSpeech.convert(message.getContent())).willReturn(speech.getAudio());
         given(forCheckingIfAnybodyIsListening.isAnybodyListening()).willReturn(true);
 
         // When
-        brainResponder.respond(message.content());
+        brainResponder.respond(message.getContent(), message.getConversationId());
         // Then
-        verify(forConvertingTextToSpeech).convert(message.content());
+        verify(forConvertingTextToSpeech).convert(message.getContent());
         verify(speechBuffer).add(speech);
-        verify(forMessaging).message(message);
+        verify(forMessaging).text(message);
         verifyNoMoreInteractions(forMessaging, forConvertingTextToSpeech, speechBuffer);
     }
 }

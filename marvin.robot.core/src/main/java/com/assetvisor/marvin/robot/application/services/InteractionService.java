@@ -7,9 +7,10 @@ import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingSpeechToText;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
-import com.assetvisor.marvin.robot.domain.communication.ForMessaging;
-import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.robot.domain.communication.ForTexting;
+import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
+import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
@@ -24,7 +25,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     @Resource
     private ForInvokingBrain forInvokingBrain;
     @Resource
-    private ForMessaging forMessaging;
+    private ForTexting forMessaging;
     @Resource
     private ForConvertingTextToSpeech forConvertingTextToSpeech;
     @Resource
@@ -35,7 +36,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     private SpeechBuffer speechBuffer;
 
     @Override
-    public void observe(Observation observation) {
+    public void observe(Observation observation, String conversationId) {
         LOG.info(observation);
         forInvokingBrain.invoke(
             observation.toString(),
@@ -45,38 +46,44 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
                 forConvertingTextToSpeech,
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
-            ));
+            ),
+            conversationId
+        );
     }
 
     @Override
-    public void listenTo(Message message) {
+    public void listenTo(TextMessage message) {
         LOG.info(message);
-        forMessaging.message(message);
+        forMessaging.text(message);
         forInvokingBrain.invoke(
-            message.content(),
+            message.getContent(),
             true,
             new BrainResponder(
                 forMessaging,
                 forConvertingTextToSpeech,
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
-            ));
+            ),
+            message.getConversationId()
+        );
     }
 
     @Override
-    public void listenTo(String sender, byte[] audio) {
-        String message = forConvertingSpeechToText.convert(audio);
-        LOG.info(message);
-        forMessaging.message(new Message(sender, message));
+    public void listenTo(AudioMessage speech) {
+        String text = forConvertingSpeechToText.convert(speech.getAudio());
+        LOG.info(text);
+        forMessaging.text(new TextMessage(speech.getSender(), speech.getConversationId(), text));
         forInvokingBrain.invoke(
-            message,
+            text,
             true,
             new BrainResponder(
                 forMessaging,
                 forConvertingTextToSpeech,
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
-            ));
+            ),
+            speech.getConversationId()
+        );
     }
 
 }
