@@ -10,8 +10,10 @@ import com.assetvisor.marvin.robot.application.PersonWantsToEnterUseCase;
 import com.assetvisor.marvin.robot.domain.relationships.ForAddingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.ForGettingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.Person;
+import com.assetvisor.marvin.robot.domain.relationships.Person.ExternalId;
+import com.assetvisor.marvin.robot.domain.relationships.Person.ExternalIdType;
 import jakarta.annotation.Resource;
-import java.util.Map;
+import java.util.List;
 import java.util.UUID;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -38,9 +40,11 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
                     personUco.getName(),
                     personUco.getEmail(),
                     STRANGER,
-                    Map.of(
-                        personUco.getId().idType().name(),
-                        personUco.getId().value()
+                    List.of(
+                        new Person.ExternalId(
+                            ExternalIdType.valueOf(personUco.getId().idType().name()),
+                            personUco.getId().value()
+                        )
                     )
                 ));
             return new EntryAttemptResponseUco(false);
@@ -55,6 +59,10 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
 
     @Override
     public void personEntered(PersonId personId) {
-        LOG.info("Person entered: " + personId);
+        Person person = forGettingPerson.byExternalId(new ExternalId(
+            ExternalIdType.valueOf(personId.idType().name()),
+            personId.value()
+        ));
+        LOG.info("Person entered: " + person);
     }
 }

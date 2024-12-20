@@ -1,17 +1,19 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.interaction.web.AudioBuffer;
-import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
-import com.assetvisor.marvin.robot.domain.communication.ForTexting;
-import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
-import com.assetvisor.marvin.robot.domain.communication.Message;
 import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
+import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
+import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
+import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
+import com.assetvisor.marvin.robot.domain.communication.ForTexting;
+import com.assetvisor.marvin.robot.domain.communication.Message;
 import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import jakarta.annotation.Resource;
 import java.io.IOException;
 import java.security.Principal;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.concurrent.ConcurrentHashMap;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -48,7 +50,8 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForTexti
 
     @Override
     public void text(TextMessage message) {
-        resolveEmitter(message).ifPresent(emitter -> {
+        resolveEmitters(message)
+            .forEach(emitter -> {
             try {
                 emitter.send(message);
             } catch (IOException e) {
@@ -60,7 +63,8 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForTexti
     @Override
     public void say(AudioMessage speech) {
         audioBuffer.set(speech.getAudio());
-        resolveEmitter(speech).ifPresent(emitter -> {
+        resolveEmitters(speech)
+            .forEach(emitter -> {
             try {
                 emitter.send(SseEmitter.event().name("chatReady").data("audio").build());
             } catch (IOException e) {
@@ -69,9 +73,14 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForTexti
         });
     }
 
-    private Optional<SseEmitter> resolveEmitter(Message message) {
-        return Optional.ofNullable(emitters.get(message.getSender()))
-            .or(() -> Optional.ofNullable(emitters.get(message.getConversationId())));
+    private List<SseEmitter> resolveEmitters(Message message) {
+        if(message instanceof ConversationMessage conversationMessage) {
+            if(conversationMessage.conversationId().equals(ConversationMessage.DEFAULT_CONVERSATION_ID)) {
+                return new ArrayList<>(emitters.values());
+            }
+            return new ArrayList<>(emitters.values());
+        }
+        return List.of(emitters.get(message.getSender()));
     }
 
     @Override

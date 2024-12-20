@@ -2,7 +2,7 @@ package com.assetvisor.marvin.robot.domain.communication;
 
 import java.util.Arrays;
 
-public final class AudioMessage extends Message {
+public final class AudioMessage extends ConversationMessage {
 
     private final byte[] audio;
 

@@ -4,6 +4,7 @@ import com.assetvisor.marvin.robot.application.ListenUseCase;
 import com.assetvisor.marvin.robot.application.ObserveUseCase;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingSpeechToText;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
@@ -36,7 +37,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     private SpeechBuffer speechBuffer;
 
     @Override
-    public void observe(Observation observation, String conversationId) {
+    public void observe(Observation observation) {
         LOG.info(observation);
         forInvokingBrain.invoke(
             observation.toString(),
@@ -47,7 +48,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
             ),
-            conversationId
+            ConversationMessage.DEFAULT_CONVERSATION_ID
         );
     }
 
@@ -64,7 +65,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
             ),
-            message.getConversationId()
+            message.conversationId()
         );
     }
 
@@ -72,7 +73,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
     public void listenTo(AudioMessage speech) {
         String text = forConvertingSpeechToText.convert(speech.getAudio());
         LOG.info(text);
-        forMessaging.text(new TextMessage(speech.getSender(), speech.getConversationId(), text));
+        forMessaging.text(new TextMessage(speech.getSender(), speech.conversationId(), text));
         forInvokingBrain.invoke(
             text,
             true,
@@ -82,7 +83,7 @@ public class InteractionService implements ObserveUseCase, ListenUseCase {
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
             ),
-            speech.getConversationId()
+            speech.conversationId()
         );
     }
 

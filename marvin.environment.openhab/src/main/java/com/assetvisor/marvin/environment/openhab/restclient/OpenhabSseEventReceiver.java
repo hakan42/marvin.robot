@@ -85,7 +85,7 @@ public class OpenhabSseEventReceiver {
                     },
                     () -> {
                         LOG.debug("No command found for observation: " + observation);
-                        observeUseCase.observe(observation, "openhab");
+                        observeUseCase.observe(observation);
                     }
                 );
 
@@ -130,7 +130,7 @@ public class OpenhabSseEventReceiver {
 
         String value = (String) payloadMap.get("value");
         String oldValue = initialOldValue == null ? (String) payloadMap.get("oldValue") : initialOldValue;
-        return new Observation(itemId, value, oldValue, "state changed");
+        return new Observation("OpenHAB", itemId, value, oldValue, "state changed");
     }
 
     @PreDestroy

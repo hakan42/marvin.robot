@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.robot.domain.communication;
 
-public class TextMessage extends Message {
+public class TextMessage extends ConversationMessage {
     private final String content;
 
     public TextMessage(String sender, String conversationId, String content) {
