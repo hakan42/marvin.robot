@@ -64,7 +64,7 @@ services:
       VECTORDB_ADDRESS: cassandra:9042
       SPRING_PROFILES_ACTIVE: teach
     volumes:
-      - /root:/root
+      - /home/cnb:/home/cnb
     networks:
       app-nw:
         aliases:
