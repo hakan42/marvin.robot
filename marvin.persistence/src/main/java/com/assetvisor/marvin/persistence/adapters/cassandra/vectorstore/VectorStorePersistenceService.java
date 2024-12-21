@@ -5,7 +5,7 @@ import org.springframework.data.cassandra.core.cql.CqlTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
-public class VectorStoreService {
+public class VectorStorePersistenceService {
 
     @Resource
     private CqlTemplate cqlTemplate;
