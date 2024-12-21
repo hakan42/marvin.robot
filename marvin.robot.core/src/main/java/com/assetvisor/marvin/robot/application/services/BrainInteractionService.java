@@ -19,7 +19,7 @@ import org.apache.commons.logging.LogFactory;
 import org.springframework.stereotype.Service;
 
 @Service
-public class InteractionService implements
+public class BrainInteractionService implements
     SomethingHappenedInTheEnvironmentUseCase,
     SomethingWasSaidUseCase,
     SomethingWasTextedUseCase {
