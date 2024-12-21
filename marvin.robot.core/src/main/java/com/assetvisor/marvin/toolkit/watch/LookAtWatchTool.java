@@ -1,15 +1,15 @@
-package com.assetvisor.marvin.equipment.watch;
+package com.assetvisor.marvin.toolkit.watch;
 
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.equipment.watch.LookAtWatch.Request;
-import com.assetvisor.marvin.equipment.watch.LookAtWatch.Response;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
+import com.assetvisor.marvin.toolkit.watch.LookAtWatchTool.Request;
+import com.assetvisor.marvin.toolkit.watch.LookAtWatchTool.Response;
 import java.time.LocalDateTime;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class LookAtWatch implements EnvironmentFunction<Request, Response> {
+public class LookAtWatchTool implements Tool<Request, Response> {
 
-    private static final Log LOG = LogFactory.getLog(LookAtWatch.class);
+    private static final Log LOG = LogFactory.getLog(LookAtWatchTool.class);
 
     @Override
     public String name() {

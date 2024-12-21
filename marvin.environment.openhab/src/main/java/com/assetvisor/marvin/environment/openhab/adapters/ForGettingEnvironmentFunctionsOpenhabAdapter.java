@@ -4,8 +4,8 @@ import com.assetvisor.marvin.environment.openhab.functions.GetRuleActionsFunctio
 import com.assetvisor.marvin.environment.openhab.functions.SendCommandFunction;
 import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction;
 import com.assetvisor.marvin.environment.openhab.functions.UpdateRuleActionFunction;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentFunctions;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
+import com.assetvisor.marvin.robot.domain.tools.ForGettingEnvironmentTools;
 import jakarta.annotation.Resource;
 import java.util.ArrayList;
 import java.util.List;
@@ -14,7 +14,7 @@ import org.springframework.stereotype.Component;
 
 @Component
 @Profile("openhab")
-public class ForGettingEnvironmentFunctionsOpenhabAdapter implements ForGettingEnvironmentFunctions {
+public class ForGettingEnvironmentFunctionsOpenhabAdapter implements ForGettingEnvironmentTools {
 
     @Resource
     private GetItemStateFunction getItemStateFunction;
@@ -26,7 +26,7 @@ public class ForGettingEnvironmentFunctionsOpenhabAdapter implements ForGettingE
     private UpdateRuleActionFunction updateRuleActionFunction;
 
     @Override
-    public List<EnvironmentFunction<?, ?>> getEnvironmentFunctions() {
+    public List<Tool<?, ?>> getEnvironmentTools() {
         return new ArrayList<>(List.of(
             getItemStateFunction,
             sendCommandFunction,

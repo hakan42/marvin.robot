@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.persistence.adapters.cassandra.notebook;
 
-import com.assetvisor.marvin.equipment.notebook.CalendarNote;
-import com.assetvisor.marvin.equipment.notebook.ForPersistingNotes;
+import com.assetvisor.marvin.toolkit.notebook.CalendarNote;
+import com.assetvisor.marvin.toolkit.notebook.ForPersistingNotes;
 import jakarta.annotation.Resource;
 import java.time.Instant;
 import java.time.LocalDateTime;

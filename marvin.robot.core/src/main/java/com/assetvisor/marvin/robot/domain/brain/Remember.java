@@ -1,11 +1,11 @@
 package com.assetvisor.marvin.robot.domain.brain;
 
 import com.assetvisor.marvin.robot.domain.brain.Remember.Thought;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Remember implements EnvironmentFunction<Thought, Void> {
+public class Remember implements Tool<Thought, Void> {
 
     private static final Log LOG = LogFactory.getLog(Remember.class);
 

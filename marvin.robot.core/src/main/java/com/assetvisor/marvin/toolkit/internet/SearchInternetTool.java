@@ -1,20 +1,17 @@
-package com.assetvisor.marvin.equipment.internet;
+package com.assetvisor.marvin.toolkit.internet;
 
-import com.assetvisor.marvin.equipment.internet.SearchInternet.Query;
-import com.assetvisor.marvin.equipment.internet.SearchInternet.Result;
-import com.assetvisor.marvin.equipment.watch.LookAtWatch.Request;
-import com.assetvisor.marvin.equipment.watch.LookAtWatch.Response;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import java.time.LocalDateTime;
+import com.assetvisor.marvin.toolkit.internet.SearchInternetTool.Query;
+import com.assetvisor.marvin.toolkit.internet.SearchInternetTool.Result;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class SearchInternet implements EnvironmentFunction<Query, Result> {
+public class SearchInternetTool implements Tool<Query, Result> {
 
-    private static final Log LOG = LogFactory.getLog(SearchInternet.class);
+    private static final Log LOG = LogFactory.getLog(SearchInternetTool.class);
     private final ForSearchingInternet forSearchingInternet;
 
-    public SearchInternet(ForSearchingInternet forSearchingInternet) {
+    public SearchInternetTool(ForSearchingInternet forSearchingInternet) {
         this.forSearchingInternet = forSearchingInternet;
     }
 

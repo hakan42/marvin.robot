@@ -1,16 +1,16 @@
-package com.assetvisor.marvin.equipment.notebook;
+package com.assetvisor.marvin.toolkit.notebook;
 
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
-import com.assetvisor.marvin.equipment.notebook.WriteInNoteBook.Response;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
+import com.assetvisor.marvin.toolkit.notebook.WriteInNoteBookTool.Response;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class WriteInNoteBook implements EnvironmentFunction<CalendarNote, Response> {
+public class WriteInNoteBookTool implements Tool<CalendarNote, Response> {
 
     private final Log LOG = LogFactory.getLog(getClass());
     private final NoteBook noteBook;
 
-    public WriteInNoteBook(NoteBook noteBook) {
+    public WriteInNoteBookTool(NoteBook noteBook) {
         this.noteBook = noteBook;
     }
 

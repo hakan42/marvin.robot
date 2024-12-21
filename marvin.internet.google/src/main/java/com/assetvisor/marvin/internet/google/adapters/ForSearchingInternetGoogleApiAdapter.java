@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.internet.google.adapters;
 
-import com.assetvisor.marvin.equipment.internet.ForSearchingInternet;
+import com.assetvisor.marvin.toolkit.internet.ForSearchingInternet;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;

@@ -1,4 +1,4 @@
-package com.assetvisor.marvin.equipment.notebook;
+package com.assetvisor.marvin.toolkit.notebook;
 
 import java.time.LocalDateTime;
 

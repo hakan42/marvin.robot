@@ -1,6 +1,5 @@
-package com.assetvisor.marvin.equipment.notebook;
+package com.assetvisor.marvin.toolkit.notebook;
 
-import com.assetvisor.marvin.robot.application.SomethingWasSaidUseCase;
 import com.assetvisor.marvin.robot.application.SomethingWasTextedUseCase;
 import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import jakarta.annotation.Resource;

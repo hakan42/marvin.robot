@@ -2,7 +2,7 @@ package com.assetvisor.marvin.environment.openhab.functions;
 
 import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction.Request;
 import com.assetvisor.marvin.environment.openhab.functions.GetItemStateFunction.Response;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import jakarta.annotation.Resource;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
@@ -14,7 +14,7 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class GetItemStateFunction implements EnvironmentFunction<Request, Response> {
+public class GetItemStateFunction implements Tool<Request, Response> {
 
     Log LOG = LogFactory.getLog(getClass());
 

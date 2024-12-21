@@ -5,7 +5,7 @@ import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
 import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import jakarta.annotation.Resource;
 import java.util.List;
@@ -56,7 +56,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
     @Override
     public void wakeUp(
         RobotDescription robotDescription,
-        List<EnvironmentFunction<?, ?>> environmentFunctions
+        List<Tool<?, ?>> environmentFunctions
     ) {
         LOG.info("Waking up Brain...");
 
@@ -81,7 +81,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         LOG.info("Brain woken up.");
     }
 
-    private FunctionCallback map(EnvironmentFunction<?, ?> environmentFunction) {
+    private FunctionCallback map(Tool<?, ?> environmentFunction) {
         return FunctionCallback.builder()
             .description(environmentFunction.description())
             .function(environmentFunction.name(), environmentFunction)

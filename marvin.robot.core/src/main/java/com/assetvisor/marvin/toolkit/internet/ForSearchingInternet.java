@@ -1,4 +1,4 @@
-package com.assetvisor.marvin.equipment.internet;
+package com.assetvisor.marvin.toolkit.internet;
 
 public interface ForSearchingInternet {
     String search(String query);

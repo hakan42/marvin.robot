@@ -1,8 +1,7 @@
 package com.assetvisor.marvin.environment.openhab.functions;
 
 import com.assetvisor.marvin.environment.openhab.functions.GetRuleActionsFunction.Request;
-import com.assetvisor.marvin.environment.openhab.functions.GetRuleActionsFunction.Response;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.Map;
@@ -16,7 +15,7 @@ import org.springframework.web.client.RestClient;
 
 @Component
 @Profile("openhab")
-public class GetRuleActionsFunction implements EnvironmentFunction<Request, List<Map<String, Object>>> {
+public class GetRuleActionsFunction implements Tool<Request, List<Map<String, Object>>> {
 
     Log LOG = LogFactory.getLog(getClass());
 

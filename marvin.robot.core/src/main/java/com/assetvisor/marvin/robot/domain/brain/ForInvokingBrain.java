@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.robot.domain.brain;
 
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.environment.EnvironmentFunction;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import java.util.List;
 
@@ -11,7 +11,7 @@ public interface ForInvokingBrain {
     );
     void wakeUp(
         RobotDescription robotDescription,
-        List<EnvironmentFunction<?,?>> environmentFunctions
+        List<Tool<?,?>> environmentFunctions
     );
     void invoke(String message, boolean reply, BrainResponder responder, String conversationId);
 }
