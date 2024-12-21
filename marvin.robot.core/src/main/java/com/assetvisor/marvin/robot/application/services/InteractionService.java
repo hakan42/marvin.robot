@@ -79,7 +79,7 @@ public class InteractionService implements
     public void listenTo(SpeechMessage speech) {
         String text = forConvertingSpeechToText.convert(speech.getAudio());
         LOG.info(text);
-        forTexting.text(new TextMessage(speech.getSender(), speech.conversationId(), text), false);
+        forTexting.text(new TextMessage(speech.getSender(), speech.conversationId(), text), true);
         forInvokingBrain.invoke(
             text,
             true,
