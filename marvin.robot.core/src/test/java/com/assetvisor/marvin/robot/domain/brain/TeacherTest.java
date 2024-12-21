@@ -19,7 +19,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 @ExtendWith(MockitoExtension.class)
 public class TeacherTest {
     @Mock
-    private ForInvokingBrain forInvokingBrain;
+    private ForInvokingIntelligence forInvokingIntelligence;
     @Mock
     private ForPersistingEnvironmentDescriptions forPersistingEnvironmentDescriptions;
     @Mock
@@ -43,10 +43,10 @@ public class TeacherTest {
         ArgumentCaptor<List<EnvironmentDescription>> captor = ArgumentCaptor.forClass(List.class);
         teacher.teach();
         // Then
-        verify(forInvokingBrain).teach(captor.capture());
+        verify(forInvokingIntelligence).teach(captor.capture());
         assertTrue(captor.getValue().containsAll(environmentDescriptionList));
         verify(forPersistingEnvironmentDescriptions).load();
         verify(forGettingEnvironmentDescriptions).getEnvironmentDescriptions();
-        verifyNoMoreInteractions(forInvokingBrain, forPersistingEnvironmentDescriptions, forGettingEnvironmentDescriptions);
+        verifyNoMoreInteractions(forInvokingIntelligence, forPersistingEnvironmentDescriptions, forGettingEnvironmentDescriptions);
     }
 }

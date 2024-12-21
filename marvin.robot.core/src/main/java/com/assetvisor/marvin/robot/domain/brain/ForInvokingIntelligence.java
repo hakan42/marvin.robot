@@ -5,7 +5,7 @@ import com.assetvisor.marvin.robot.domain.tools.Tool;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
 import java.util.List;
 
-public interface ForInvokingBrain {
+public interface ForInvokingIntelligence {
     void teach(
         List<EnvironmentDescription> environmentDescriptions
     );
@@ -13,5 +13,5 @@ public interface ForInvokingBrain {
         RobotDescription robotDescription,
         List<Tool<?,?>> environmentFunctions
     );
-    void invoke(String message, boolean reply, BrainResponder responder, String conversationId);
+    void invoke(String message, boolean reply, Brain brain, String conversationId);
 }

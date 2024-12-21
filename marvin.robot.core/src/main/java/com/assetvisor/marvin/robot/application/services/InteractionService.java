@@ -1,17 +1,16 @@
 package com.assetvisor.marvin.robot.application.services;
 
-import com.assetvisor.marvin.robot.application.SomethingWasSaidUseCase;
 import com.assetvisor.marvin.robot.application.SomethingHappenedInTheEnvironmentUseCase;
+import com.assetvisor.marvin.robot.application.SomethingWasSaidUseCase;
 import com.assetvisor.marvin.robot.application.SomethingWasTextedUseCase;
-import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
-import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
+import com.assetvisor.marvin.robot.domain.brain.Brain;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingIntelligence;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingSpeechToText;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForTexting;
-import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import jakarta.annotation.Resource;
@@ -28,7 +27,7 @@ public class InteractionService implements
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private ForInvokingBrain forInvokingBrain;
+    private ForInvokingIntelligence forInvokingIntelligence;
     @Resource
     private ForTexting forTexting;
     @Resource
@@ -42,55 +41,27 @@ public class InteractionService implements
 
     @Override
     public void observe(Observation observation) {
-        LOG.info(observation);
-        forInvokingBrain.invoke(
-            observation.toString(),
-            true,
-            new BrainResponder(
-                forTexting,
-                forConvertingTextToSpeech,
-                forCheckingIfAnybodyIsListening,
-                speechBuffer
-            ),
-            ConversationMessage.DEFAULT_CONVERSATION_ID
-        );
+        brain().observe(observation);
     }
 
     @Override
     public void read(TextMessage message, boolean echoToSender) {
-        LOG.info(message);
-        if(echoToSender) {
-            forTexting.text(message, true);
-        }
-        forInvokingBrain.invoke(
-            message.getContent(),
-            true,
-            new BrainResponder(
-                forTexting,
-                forConvertingTextToSpeech,
-                forCheckingIfAnybodyIsListening,
-                speechBuffer
-            ),
-            message.conversationId()
-        );
+        brain().read(message, echoToSender);
     }
 
     @Override
     public void listenTo(SpeechMessage speech) {
-        String text = forConvertingSpeechToText.convert(speech.getAudio());
-        LOG.info(text);
-        forTexting.text(new TextMessage(speech.getSender(), speech.conversationId(), text), true);
-        forInvokingBrain.invoke(
-            text,
-            true,
-            new BrainResponder(
-                forTexting,
-                forConvertingTextToSpeech,
-                forCheckingIfAnybodyIsListening,
-                speechBuffer
-            ),
-            speech.conversationId()
-        );
+        brain().listenTo(speech);
     }
 
+    private Brain brain() {
+        return new Brain(
+            forTexting,
+            forConvertingTextToSpeech,
+            forConvertingSpeechToText,
+            forCheckingIfAnybodyIsListening,
+            speechBuffer,
+            forInvokingIntelligence
+        );
+    }
 }

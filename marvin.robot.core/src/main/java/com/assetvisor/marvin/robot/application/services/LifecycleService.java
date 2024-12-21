@@ -2,7 +2,7 @@ package com.assetvisor.marvin.robot.application.services;
 
 import com.assetvisor.marvin.robot.application.InitialiseUseCase;
 import com.assetvisor.marvin.robot.domain.brain.ForForgettingEverything;
-import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingIntelligence;
 import com.assetvisor.marvin.robot.domain.brain.Teacher;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
 import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
@@ -23,7 +23,7 @@ public class LifecycleService implements InitialiseUseCase {
     @Resource
     private ForForgettingEverything forForgettingEverything;
     @Resource
-    private ForInvokingBrain forInvokingBrain;
+    private ForInvokingIntelligence forInvokingIntelligence;
     @Resource
     private ForPersistingRobotDescription forPersistingRobotDescription;
     @Resource
@@ -41,7 +41,7 @@ public class LifecycleService implements InitialiseUseCase {
         forForgettingEverything.forgetEverything();
 
         Teacher teacher = new Teacher(
-            forInvokingBrain,
+            forInvokingIntelligence,
             forPersistingEnvironmentDescriptions,
             forGettingEnvironmentDescriptions
         );
@@ -54,7 +54,7 @@ public class LifecycleService implements InitialiseUseCase {
             forGettingEnvironmentTools,
             forGettingOwnTools
         );
-        forInvokingBrain.wakeUp(
+        forInvokingIntelligence.wakeUp(
             forPersistingRobotDescription.read(),
             toolCollector.all()
         );

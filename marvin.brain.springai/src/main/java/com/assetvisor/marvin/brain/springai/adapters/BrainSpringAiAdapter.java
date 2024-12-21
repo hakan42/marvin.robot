@@ -1,8 +1,8 @@
 package com.assetvisor.marvin.brain.springai.adapters;
 
 import com.assetvisor.marvin.robot.domain.brain.AsleepException;
-import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
-import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
+import com.assetvisor.marvin.robot.domain.brain.Brain;
+import com.assetvisor.marvin.robot.domain.brain.ForInvokingIntelligence;
 import com.assetvisor.marvin.toolkit.memory.ForRemembering;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.tools.Tool;
@@ -26,7 +26,7 @@ import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
+public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembering {
 
     private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
     @SuppressWarnings("FieldCanBeLocal")
@@ -94,7 +94,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
     }
 
     @Override
-    public void invoke(String message, boolean reply, BrainResponder responder, String conversationId) {
+    public void invoke(String message, boolean reply, Brain brain, String conversationId) {
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
@@ -110,7 +110,7 @@ public class BrainSpringAiAdapter implements ForInvokingBrain, ForRemembering {
         assert chatResponse != null;
         String responseString = chatResponse.getResult().getOutput().getContent();
         if (reply) {
-            responder.respond(responseString, conversationId);
+            brain.respond(responseString, conversationId);
         }
     }
 
