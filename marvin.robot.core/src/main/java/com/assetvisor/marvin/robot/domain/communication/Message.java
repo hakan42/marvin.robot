@@ -25,4 +25,11 @@ public abstract class Message {
     public int hashCode() {
         return sender.hashCode();
     }
+
+    @Override
+    public String toString() {
+        return "Message{" +
+            "sender='" + sender + '\'' +
+            '}';
+    }
 }

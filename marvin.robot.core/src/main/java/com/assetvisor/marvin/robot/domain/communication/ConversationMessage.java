@@ -13,4 +13,11 @@ public abstract class ConversationMessage extends Message {
     public String conversationId() {
         return conversationId;
     }
+
+    @Override
+    public String toString() {
+        return "ConversationMessage{" +
+            "conversationId='" + conversationId + '\'' +
+            "} " + super.toString();
+    }
 }

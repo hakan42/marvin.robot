@@ -30,4 +30,11 @@ public class TextMessage extends ConversationMessage {
         result = 31 * result + content.hashCode();
         return result;
     }
+
+    @Override
+    public String toString() {
+        return "TextMessage{" +
+            "content='" + content + '\'' +
+            "} " + super.toString();
+    }
 }
