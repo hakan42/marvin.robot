@@ -22,9 +22,10 @@ public class WriteInNoteBookTool implements Tool<CalendarNote, Response> {
     @Override
     public String description() {
         return """
-            This tool is used for writing reminders to yourself in your notebook.
-            Check that you have the correct time before writing a reminder.
-            The notebook will automatically remind you at the time you specify.
+            This tool is used for writing notes in your notebook.
+            When the time arrives, you will be reminded of the note.
+            You should then tell the user about it.
+            Check your watch before making a note.
             """;
     }
 

@@ -20,7 +20,14 @@ public class NoteBook {
     public void readNoteForNow() {
         forPersistingNotes.getFirstOverdueAndDelete()
             .ifPresent(note -> {
-                somethingWasTextedUseCase.read(new TextMessage("Notebook", "notebook", note.note()), false);
+                somethingWasTextedUseCase.read(
+                    new TextMessage(
+                        "Notebook",
+                        "notebook",
+                        "Note from the notebook to the user: " + note.note()
+                    ),
+                    false
+                );
             });
     }
 
