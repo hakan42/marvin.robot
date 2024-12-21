@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.toolkit;
 
-import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
-import com.assetvisor.marvin.robot.domain.brain.Remember;
+import com.assetvisor.marvin.toolkit.memory.ForRemembering;
+import com.assetvisor.marvin.toolkit.memory.RememberTool;
 import com.assetvisor.marvin.robot.domain.tools.ForGettingOwnTools;
 import com.assetvisor.marvin.robot.domain.tools.Tool;
 import com.assetvisor.marvin.toolkit.internet.ForSearchingInternet;
@@ -29,7 +29,7 @@ public class Toolkit implements ForGettingOwnTools {
         return List.of(
             new LookAtWatchTool(),
             new WriteInNoteBookTool(noteBook),
-            new Remember(forRemembering),
+            new RememberTool(forRemembering),
             new SearchInternetTool(forSearchingInternet)
         );
     }

@@ -3,7 +3,7 @@ package com.assetvisor.marvin.brain.springai.adapters;
 import com.assetvisor.marvin.robot.domain.brain.AsleepException;
 import com.assetvisor.marvin.robot.domain.brain.BrainResponder;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingBrain;
-import com.assetvisor.marvin.robot.domain.brain.ForRemembering;
+import com.assetvisor.marvin.toolkit.memory.ForRemembering;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.tools.Tool;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;

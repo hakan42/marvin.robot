@@ -22,7 +22,7 @@ public class SearchInternetTool implements Tool<Query, Result> {
 
     @Override
     public String description() {
-        return "This function is used for searching the internet. Make the response simple and easy to understand.";
+        return "This tool is used for searching the internet. Make the response simple and easy to understand.";
     }
 
     @Override

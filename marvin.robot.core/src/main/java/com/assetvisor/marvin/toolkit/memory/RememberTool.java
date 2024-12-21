@@ -1,17 +1,17 @@
-package com.assetvisor.marvin.robot.domain.brain;
+package com.assetvisor.marvin.toolkit.memory;
 
-import com.assetvisor.marvin.robot.domain.brain.Remember.Thought;
+import com.assetvisor.marvin.toolkit.memory.RememberTool.Thought;
 import com.assetvisor.marvin.robot.domain.tools.Tool;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 
-public class Remember implements Tool<Thought, Void> {
+public class RememberTool implements Tool<Thought, Void> {
 
-    private static final Log LOG = LogFactory.getLog(Remember.class);
+    private static final Log LOG = LogFactory.getLog(RememberTool.class);
 
     private final ForRemembering forRemembering;
 
-    public Remember(ForRemembering forRemembering) {
+    public RememberTool(ForRemembering forRemembering) {
         this.forRemembering = forRemembering;
     }
 
@@ -22,7 +22,7 @@ public class Remember implements Tool<Thought, Void> {
 
     @Override
     public String description() {
-        return "This function is used to remember things.";
+        return "This tool is used to remember things.";
     }
 
     @Override

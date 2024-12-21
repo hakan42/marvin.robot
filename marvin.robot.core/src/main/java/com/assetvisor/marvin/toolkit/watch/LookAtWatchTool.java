@@ -18,7 +18,7 @@ public class LookAtWatchTool implements Tool<Request, Response> {
 
     @Override
     public String description() {
-        return "This function is used for getting current date and time from your watch";
+        return "This tool is used for getting current date and time from your watch";
     }
 
     @Override

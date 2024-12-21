@@ -1,4 +1,4 @@
-package com.assetvisor.marvin.robot.domain.brain;
+package com.assetvisor.marvin.toolkit.memory;
 
 public interface ForRemembering {
     void remember(String thought);
