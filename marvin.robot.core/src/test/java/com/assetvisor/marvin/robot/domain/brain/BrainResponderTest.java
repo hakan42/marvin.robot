@@ -44,7 +44,7 @@ public class BrainResponderTest {
         // Then
         verify(forConvertingTextToSpeech).convert(message.getContent());
         verify(speechBuffer).add(speech);
-        verify(forMessaging).text(message);
+        verify(forMessaging).text(message, false);
         verifyNoMoreInteractions(forMessaging, forConvertingTextToSpeech, speechBuffer);
     }
 }

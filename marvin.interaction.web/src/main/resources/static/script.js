@@ -66,8 +66,9 @@ function startSSE() {
     const newMessage = document.createElement("li");
     newMessage.className = "message-bubble";
     newMessage.innerHTML = marked.parse(JSON.parse(event.data).content);
+    const feedback = JSON.parse(event.data).feedback;
     const sender = JSON.parse(event.data).sender;
-    if (sender === "User") {
+    if (feedback) {
       newMessage.style.backgroundColor = "#3c813c";
       newMessage.style.textAlign = "right";
     }
@@ -75,29 +76,27 @@ function startSSE() {
     messageList.appendChild(document.createElement("div")).style.clear = "both";
     newMessage.scrollIntoView({ behavior: "smooth" });
 
-    if (sender !== "User") {
-      const senderHeader = document.createElement("span");
-      senderHeader.textContent = sender;
-      const hashCode = (str) => {
-        let hash = 0;
-        for (let i = 0; i < str.length; i++) {
-          hash = str.charCodeAt(i) + ((hash << 5) - hash);
-        }
-        return hash;
-      };
+    const senderHeader = document.createElement("span");
+    senderHeader.textContent = sender;
+    const hashCode = (str) => {
+      let hash = 0;
+      for (let i = 0; i < str.length; i++) {
+        hash = str.charCodeAt(i) + ((hash << 5) - hash);
+      }
+      return hash;
+    };
 
-      const intToRGB = (i) => {
-        const c = (i & 0x00FFFFFF)
-        .toString(16)
-        .toUpperCase();
-        return "00000".substring(0, 6 - c.length) + c;
-      };
+    const intToRGB = (i) => {
+      const c = (i & 0x00FFFFFF)
+      .toString(16)
+      .toUpperCase();
+      return "00000".substring(0, 6 - c.length) + c;
+    };
 
-      senderHeader.style.fontWeight = "bold";
-      senderHeader.style.color = `#${intToRGB(hashCode(sender))}`;
-      newMessage.insertBefore(senderHeader, newMessage.firstChild);
-    }
-  };
+    senderHeader.style.fontWeight = "bold";
+    senderHeader.style.color = `#${intToRGB(hashCode(sender))}`;
+    newMessage.insertBefore(senderHeader, newMessage.firstChild);
+  }
 
   // Listen for a custom event indicating chat audio is ready
   eventSource.addEventListener("chatReady", async () => {

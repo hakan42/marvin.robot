@@ -35,6 +35,6 @@ public class BrainResponder {
     }
 
     private void message(String message, String conversationId) {
-        forMessaging.text(new TextMessage("Marvin", conversationId, message));
+        forMessaging.text(new TextMessage("Marvin", conversationId, message), false);
     }
 }

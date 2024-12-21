@@ -30,7 +30,7 @@ public class InteractionService implements
     @Resource
     private ForInvokingBrain forInvokingBrain;
     @Resource
-    private ForTexting forMessaging;
+    private ForTexting forTexting;
     @Resource
     private ForConvertingTextToSpeech forConvertingTextToSpeech;
     @Resource
@@ -47,7 +47,7 @@ public class InteractionService implements
             observation.toString(),
             true,
             new BrainResponder(
-                forMessaging,
+                forTexting,
                 forConvertingTextToSpeech,
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
@@ -59,12 +59,12 @@ public class InteractionService implements
     @Override
     public void read(TextMessage message) {
         LOG.info(message);
-        forMessaging.text(message);
+        forTexting.text(message, true);
         forInvokingBrain.invoke(
             message.getContent(),
             true,
             new BrainResponder(
-                forMessaging,
+                forTexting,
                 forConvertingTextToSpeech,
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
@@ -77,12 +77,12 @@ public class InteractionService implements
     public void listenTo(SpeechMessage speech) {
         String text = forConvertingSpeechToText.convert(speech.getAudio());
         LOG.info(text);
-        forMessaging.text(new TextMessage(speech.getSender(), speech.conversationId(), text));
+        forTexting.text(new TextMessage(speech.getSender(), speech.conversationId(), text), false);
         forInvokingBrain.invoke(
             text,
             true,
             new BrainResponder(
-                forMessaging,
+                forTexting,
                 forConvertingTextToSpeech,
                 forCheckingIfAnybodyIsListening,
                 speechBuffer
