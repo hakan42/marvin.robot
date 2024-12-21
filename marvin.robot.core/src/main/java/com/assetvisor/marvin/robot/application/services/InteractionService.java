@@ -57,9 +57,11 @@ public class InteractionService implements
     }
 
     @Override
-    public void read(TextMessage message) {
+    public void read(TextMessage message, boolean echoToSender) {
         LOG.info(message);
-        forTexting.text(message, true);
+        if(echoToSender) {
+            forTexting.text(message, true);
+        }
         forInvokingBrain.invoke(
             message.getContent(),
             true,

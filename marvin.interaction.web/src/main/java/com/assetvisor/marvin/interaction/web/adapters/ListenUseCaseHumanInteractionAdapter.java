@@ -21,7 +21,7 @@ public class ListenUseCaseHumanInteractionAdapter {
                 PrincipalMapper.userNameFrom(principal),
                 PrincipalMapper.conversationIdFrom(principal),
                 text
-            ));
+            ), true);
     }
 
     public void listenTo(byte[] audio, Principal principal) {

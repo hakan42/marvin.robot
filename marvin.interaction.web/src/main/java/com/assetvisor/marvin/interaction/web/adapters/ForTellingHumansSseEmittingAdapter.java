@@ -49,11 +49,11 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForTexti
     }
 
     @Override
-    public void text(TextMessage message, boolean feedback) {
+    public void text(TextMessage message, boolean thisIsAnEcho) {
         resolveEmitters(message)
             .forEach(emitter -> {
             try {
-                emitter.send(toSseTextMessage(message, feedback));
+                emitter.send(toSseTextMessage(message, thisIsAnEcho));
             } catch (IOException e) {
                 emitters.remove(message.getSender());
             }
