@@ -1,6 +1,6 @@
 package com.assetvisor.marvin.environment.openhab.restclient;
 
-import com.assetvisor.marvin.robot.application.ObserveUseCase;
+import com.assetvisor.marvin.robot.application.SomethingHappenedInTheEnvironmentUseCase;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.core.type.TypeReference;
@@ -31,7 +31,7 @@ public class OpenhabSseEventReceiver {
     private static final int DEBOUNCE_TIME_MS = 3000; // Debounce time in milliseconds
 
     @Resource
-    private ObserveUseCase observeUseCase;
+    private SomethingHappenedInTheEnvironmentUseCase observeUseCase;
     @Resource
     private WebClient webClient;
     @Resource

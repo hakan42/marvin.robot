@@ -27,7 +27,7 @@ public class SpeechBufferTest {
     @Test
     public void shouldSayMessage() throws InterruptedException {
         // Given
-        AudioMessage audioMessage = new AudioMessage("Marvin", "C1", new byte[]{1, 2, 3});
+        SpeechMessage audioMessage = new SpeechMessage("Marvin", "C1", new byte[]{1, 2, 3});
         givenSlowSpeaker();
 
         // When

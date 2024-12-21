@@ -3,7 +3,7 @@ package com.assetvisor.marvin.robot.domain.brain;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForTexting;
-import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
 import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 
@@ -31,7 +31,7 @@ public class BrainResponder {
 
     private void speak(String message, String conversationId) {
         byte[] speech = forConvertingTextToSpeech.convert(message);
-        speechBuffer.add(new AudioMessage("Marvin", conversationId, speech));
+        speechBuffer.add(new SpeechMessage("Marvin", conversationId, speech));
     }
 
     private void message(String message, String conversationId) {

@@ -2,11 +2,11 @@ package com.assetvisor.marvin.robot.domain.communication;
 
 import java.util.Arrays;
 
-public final class AudioMessage extends ConversationMessage {
+public final class SpeechMessage extends ConversationMessage {
 
     private final byte[] audio;
 
-    public AudioMessage(String sender, String conversationId, byte[] audio) {
+    public SpeechMessage(String sender, String conversationId, byte[] audio) {
         super(sender, conversationId);
         this.audio = audio;
     }
@@ -17,7 +17,7 @@ public final class AudioMessage extends ConversationMessage {
 
     @Override
     public boolean equals(Object o) {
-        if (!(o instanceof AudioMessage that)) {
+        if (!(o instanceof SpeechMessage that)) {
             return false;
         }
         if (!super.equals(o)) {

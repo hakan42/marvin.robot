@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.interaction.web.AudioBuffer;
-import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForSpeaking;
@@ -61,7 +61,7 @@ public class ForTellingHumansSseEmittingAdapter implements ForSpeaking, ForTexti
     }
 
     @Override
-    public void say(AudioMessage speech) {
+    public void say(SpeechMessage speech) {
         audioBuffer.set(speech.getAudio());
         resolveEmitters(speech)
             .forEach(emitter -> {

@@ -1,7 +1,8 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
-import com.assetvisor.marvin.robot.application.ListenUseCase;
-import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
+import com.assetvisor.marvin.robot.application.SomethingWasSaidUseCase;
+import com.assetvisor.marvin.robot.application.SomethingWasTextedUseCase;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import jakarta.annotation.Resource;
 import java.security.Principal;
@@ -10,10 +11,12 @@ import org.springframework.stereotype.Component;
 @Component
 public class ListenUseCaseHumanInteractionAdapter {
     @Resource
-    private ListenUseCase listenUseCase;
+    private SomethingWasSaidUseCase listenUseCase;
+    @Resource
+    private SomethingWasTextedUseCase somethingWasTextedUseCase;
 
     public void listenTo(String text, Principal principal) {
-        listenUseCase.listenTo(
+        somethingWasTextedUseCase.read(
             new TextMessage(
                 PrincipalMapper.userNameFrom(principal),
                 PrincipalMapper.conversationIdFrom(principal),
@@ -23,7 +26,7 @@ public class ListenUseCaseHumanInteractionAdapter {
 
     public void listenTo(byte[] audio, Principal principal) {
         listenUseCase.listenTo(
-            new AudioMessage(
+            new SpeechMessage(
                 PrincipalMapper.userNameFrom(principal),
                 PrincipalMapper.conversationIdFrom(principal),
                 audio

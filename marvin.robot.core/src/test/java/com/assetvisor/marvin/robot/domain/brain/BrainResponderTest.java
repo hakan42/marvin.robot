@@ -4,7 +4,7 @@ import static org.mockito.BDDMockito.given;
 import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.verifyNoMoreInteractions;
 
-import com.assetvisor.marvin.robot.domain.communication.AudioMessage;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForTexting;
@@ -34,7 +34,7 @@ public class BrainResponderTest {
     public void shouldRespond() {
         // Given
         TextMessage message = new TextMessage("Marvin", "C1", "message");
-        AudioMessage speech = new AudioMessage("Marvin", "C1", new byte[]{1, 2, 3});
+        SpeechMessage speech = new SpeechMessage("Marvin", "C1", new byte[]{1, 2, 3});
 
         given(forConvertingTextToSpeech.convert(message.getContent())).willReturn(speech.getAudio());
         given(forCheckingIfAnybodyIsListening.isAnybodyListening()).willReturn(true);
