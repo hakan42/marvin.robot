@@ -1,5 +1,7 @@
 package com.assetvisor.marvin.brain.springai.adapters;
 
+import static com.assetvisor.marvin.robot.domain.communication.ConversationMessage.DEFAULT_CONVERSATION_ID;
+
 import com.assetvisor.marvin.robot.domain.brain.AsleepException;
 import com.assetvisor.marvin.robot.domain.brain.Brain;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingIntelligence;
@@ -106,12 +108,12 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
 
     @Override
     public void invoke(ConversationMessage message, Brain brain) {
-        doInvoke(message, brain, message.conversationId());
+        doInvoke(message, brain, DEFAULT_CONVERSATION_ID);
     }
 
     @Override
     public void invoke(Observation observation, Brain brain) {
-        doInvoke(observation, brain, ConversationMessage.DEFAULT_CONVERSATION_ID);
+        doInvoke(observation, brain, DEFAULT_CONVERSATION_ID);
     }
 
     private void doInvoke(Message message, Brain brain, String conversationId) {
