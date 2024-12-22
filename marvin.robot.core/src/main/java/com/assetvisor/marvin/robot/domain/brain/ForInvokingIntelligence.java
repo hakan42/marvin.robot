@@ -1,8 +1,10 @@
 package com.assetvisor.marvin.robot.domain.brain;
 
+import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.tools.Tool;
+import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
 import java.util.List;
 
 public interface ForInvokingIntelligence {
@@ -13,5 +15,6 @@ public interface ForInvokingIntelligence {
         RobotDescription robotDescription,
         List<Tool<?,?>> environmentFunctions
     );
-    void invoke(String message, boolean reply, Brain brain, String conversationId);
+    void invoke(ConversationMessage message, Brain brain);
+    void invoke(Observation observation, Brain brain);
 }

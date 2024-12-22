@@ -3,16 +3,22 @@ package com.assetvisor.marvin.brain.springai.adapters;
 import com.assetvisor.marvin.robot.domain.brain.AsleepException;
 import com.assetvisor.marvin.robot.domain.brain.Brain;
 import com.assetvisor.marvin.robot.domain.brain.ForInvokingIntelligence;
-import com.assetvisor.marvin.toolkit.memory.ForRemembering;
+import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
+import com.assetvisor.marvin.robot.domain.communication.Message;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
+import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
-import com.assetvisor.marvin.robot.domain.tools.Tool;
+import com.assetvisor.marvin.robot.domain.environment.Observation;
 import com.assetvisor.marvin.robot.domain.jobdescription.RobotDescription;
+import com.assetvisor.marvin.robot.domain.tools.Tool;
+import com.assetvisor.marvin.toolkit.memory.ForRemembering;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.ChatClient.PromptUserSpec;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.QuestionAnswerAdvisor;
@@ -21,8 +27,12 @@ import org.springframework.ai.chat.memory.ChatMemory;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.ai.document.Document;
 import org.springframework.ai.model.function.FunctionCallback;
-import org.springframework.ai.vectorstore.CassandraVectorStore;
+import org.springframework.ai.openai.OpenAiChatOptions;
+import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
+import org.springframework.ai.vectorstore.cassandra.CassandraVectorStore;
+import org.springframework.core.io.ByteArrayResource;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -67,8 +77,9 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
                 new QuestionAnswerAdvisor(
                     vectorStore,
                     SearchRequest
-                        .defaults()
-                        .withTopK(VECTORSTORE_TOP_K)
+                        .builder()
+                        .topK(VECTORSTORE_TOP_K)
+                        .build()
                 ),
                 new SimpleLoggerAdvisor()
             )
@@ -83,9 +94,9 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
 
     private FunctionCallback map(Tool<?, ?> environmentFunction) {
         return FunctionCallback.builder()
-            .description(environmentFunction.description())
             .function(environmentFunction.name(), environmentFunction)
             .inputType(environmentFunction.inputType())
+            .description(environmentFunction.description())
             .build();
     }
 
@@ -94,13 +105,23 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
     }
 
     @Override
-    public void invoke(String message, boolean reply, Brain brain, String conversationId) {
+    public void invoke(ConversationMessage message, Brain brain) {
+        doInvoke(message, brain, message.conversationId());
+    }
+
+    @Override
+    public void invoke(Observation observation, Brain brain) {
+        doInvoke(observation, brain, ConversationMessage.DEFAULT_CONVERSATION_ID);
+    }
+
+    private void doInvoke(Message message, Brain brain, String conversationId) {
         if (chatClient == null) {
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
 
         ChatResponse chatResponse = chatClient.prompt()
-            .user(message)
+            .user(u -> promptUserSpec(u, message))
+            .options(options(message))
             .advisors(a -> a
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationId)
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, CHAT_MEMORY_RETRIEVE_SIZE)
@@ -109,9 +130,37 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
 
         assert chatResponse != null;
         String responseString = chatResponse.getResult().getOutput().getContent();
-        if (reply) {
-            brain.respond(responseString, conversationId);
+        brain.respond(responseString, conversationId);
+    }
+
+    private void promptUserSpec(PromptUserSpec promptUserSpec, Message message) {
+        if(message instanceof TextMessage textMessage) {
+            promptUserSpec.text(textMessage.getContent());
         }
+        if(message instanceof Observation observation) {
+            promptUserSpec.text(observation.toString());
+        }
+        if(message instanceof SpeechMessage speechMessage) {
+            promptUserSpec.text("Please respond to the audio message.");
+            promptUserSpec.media(
+                MediaType.parseMediaType("audio/wav"),
+                new ByteArrayResource(speechMessage.getAudio())
+            );
+        }
+    }
+
+    private OpenAiChatOptions options(Message message) {
+        if(message instanceof TextMessage textMessage) {
+            return OpenAiChatOptions.builder()
+                //.model(ChatModel.GPT_4_O_MINI)
+                .build();
+        }
+        if(message instanceof SpeechMessage speechMessage) {
+            return OpenAiChatOptions.builder()
+                .model(ChatModel.GPT_4_O_AUDIO_PREVIEW)
+                .build();
+        }
+        throw new IllegalArgumentException("Unknown message type: " + message.getClass());
     }
 
     @Override

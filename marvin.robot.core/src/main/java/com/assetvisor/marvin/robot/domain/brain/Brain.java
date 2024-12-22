@@ -1,12 +1,11 @@
 package com.assetvisor.marvin.robot.domain.brain;
 
-import com.assetvisor.marvin.robot.domain.communication.ConversationMessage;
 import com.assetvisor.marvin.robot.domain.communication.ForCheckingIfAnybodyIsListening;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingSpeechToText;
 import com.assetvisor.marvin.robot.domain.communication.ForConvertingTextToSpeech;
 import com.assetvisor.marvin.robot.domain.communication.ForTexting;
-import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.SpeechBuffer;
+import com.assetvisor.marvin.robot.domain.communication.SpeechMessage;
 import com.assetvisor.marvin.robot.domain.communication.TextMessage;
 import com.assetvisor.marvin.robot.domain.environment.Observation;
 import org.apache.commons.logging.Log;
@@ -41,10 +40,8 @@ public class Brain {
     public void observe(Observation observation) {
         LOG.info(observation);
         forInvokingIntelligence.invoke(
-            observation.toString(),
-            true,
-            this,
-            ConversationMessage.DEFAULT_CONVERSATION_ID
+            observation,
+            this
         );
     }
 
@@ -54,28 +51,26 @@ public class Brain {
             forTexting.text(message, true);
         }
         forInvokingIntelligence.invoke(
-            message.getContent(),
-            true,
-            this,
-            message.conversationId()
+            message,
+            this
         );
     }
 
     public void listenTo(SpeechMessage speech) {
         String text = forConvertingSpeechToText.convert(speech.getAudio());
-        LOG.info(text);
+        TextMessage textMessage = new TextMessage(
+            speech.getSender(),
+            speech.conversationId(),
+            text
+        );
+        LOG.info(textMessage);
         forTexting.text(
-            new TextMessage(
-                speech.getSender(),
-                speech.conversationId(),
-                text),
+            textMessage,
             true
         );
         forInvokingIntelligence.invoke(
-            text,
-            true,
-            this,
-            speech.conversationId()
+            textMessage,
+            this
         );
     }
 
