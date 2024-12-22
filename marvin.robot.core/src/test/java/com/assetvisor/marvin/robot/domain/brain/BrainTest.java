@@ -64,10 +64,8 @@ public class BrainTest {
         brain.observe(observation);
         // Then
         verify(forInvokingIntelligence).invoke(
-            observation.toString(),
-            true,
-            brain,
-            ConversationMessage.DEFAULT_CONVERSATION_ID
+            observation,
+            brain
         );
         verifyNoMoreInteractions(forInvokingIntelligence);
         verifyNoInteractions(forTexting, forConvertingTextToSpeech, speechBuffer);
@@ -81,10 +79,8 @@ public class BrainTest {
         brain.read(textMessage, true);
         // Then
         verify(forInvokingIntelligence).invoke(
-            textMessage.getContent(),
-            true,
-            brain,
-            textMessage.conversationId()
+            textMessage,
+            brain
         );
         verify(forTexting).text(textMessage, true);
         verifyNoMoreInteractions(forInvokingIntelligence, forTexting);
@@ -95,6 +91,7 @@ public class BrainTest {
     public void shouldListenTo() {
         // Given
         SpeechMessage speechMessage = new SpeechMessage("Marvin", "C1", new byte[]{1, 2, 3});
+        TextMessage textMessage = new TextMessage("Marvin", "C1", "text");
         given(forConvertingSpeechToText.convert(speechMessage.getAudio())).willReturn("text");
         // When
         brain.listenTo(speechMessage);
@@ -102,10 +99,8 @@ public class BrainTest {
         verify(forConvertingSpeechToText).convert(speechMessage.getAudio());
         verify(forTexting).text(new TextMessage("Marvin", "C1", "text"), true);
         verify(forInvokingIntelligence).invoke(
-            "text",
-            true,
-            brain,
-            speechMessage.conversationId()
+            textMessage,
+            brain
         );
         verifyNoMoreInteractions(forInvokingIntelligence, forTexting, forConvertingSpeechToText);
         verifyNoInteractions(forConvertingTextToSpeech, speechBuffer);
