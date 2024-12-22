@@ -2,7 +2,7 @@ package com.assetvisor.marvin.robot.domain.communication;
 
 public abstract class ConversationMessage extends Message {
 
-    public static final String DEFAULT_CONVERSATION_ID = "DEFAULT";
+    public static final String DEFAULT_CONVERSATION_ID = "1";
     private final String conversationId;
 
     public ConversationMessage(String sender, String conversationId) {
