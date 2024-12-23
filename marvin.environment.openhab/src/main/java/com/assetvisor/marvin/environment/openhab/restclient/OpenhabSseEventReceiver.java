@@ -8,7 +8,14 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.annotation.PostConstruct;
 import jakarta.annotation.PreDestroy;
 import jakarta.annotation.Resource;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Map;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.Executors;
+import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Profile;
@@ -16,12 +23,6 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
-
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
-import java.util.concurrent.Executors;
-import java.util.concurrent.ScheduledExecutorService;
-import java.util.concurrent.TimeUnit;
 
 @Component
 @Profile("openhab")
@@ -41,41 +42,48 @@ public class OpenhabSseEventReceiver {
 
     private final ScheduledExecutorService scheduler = Executors.newScheduledThreadPool(1);
     private final Map<String, ScheduledFuture<?>> debounceTasks = new ConcurrentHashMap<>();
-    private final Map<String, String> initialOldValues = new ConcurrentHashMap<>(); // Cache for old values
+    private final Map<String, String> initialOldValues = new ConcurrentHashMap<>(); // Cache for initial context
+    private final List<String> itemIds = new ArrayList<>();
 
     @PostConstruct
     public void listenForSseEvents() {
-        getEventPublishingItemsRestClient.asIds().forEach(this::connect);
+        itemIds.addAll(getEventPublishingItemsRestClient.asIds());
+        connect();
     }
 
-    private void connect(String itemId) {
-        // Set up the SSE stream and process each event
-        @SuppressWarnings("rawtypes") Flux<Map> eventStream = webClient.get()
-            .uri("events?topics=openhab/items/" + itemId + "/statechanged") // Replace with the correct SSE endpoint
+    private void connect() {
+        @SuppressWarnings("rawtypes")
+        Flux<Map> eventStream = webClient.get()
+            .uri("events") // Replace with the correct SSE endpoint
             .accept(MediaType.TEXT_EVENT_STREAM)
             .retrieve()
             .bodyToFlux(Map.class);
 
         eventStream.subscribe(
-            event -> handleEvent(itemId, event), // Process each event
-            error -> LOG.error("Error: " + error), // Handle errors
-            () -> LOG.info("Stream completed for item: " + itemId) // Handle stream completion
+            this::handleEvent,
+            error -> LOG.error("Error: " + error),
+            () -> LOG.info("Stream completed")
         );
-        LOG.info("Receiving events for: " + itemId);
+        LOG.info("Receiving events for: " + itemIds);
     }
 
-    private void handleEvent(String itemId, Map<?, ?> event) {
-        if (!"ItemStateChangedEvent".equals(event.get("type"))) {
-            return; // Only process ItemStateChangedEvent events
+    private void handleEvent(Map<?, ?> event) {
+        if ("ALIVE".equals(event.get("type"))) {
+            return;
+        }
+        Topic topic = parseTopic(event);
+        if (!isRelevant(topic)) {
+            return;
         }
 
-        String currentOldValue = extractOldValue(event);
-
-        // Cache the initial oldValue if not already cached for this itemId
-        initialOldValues.computeIfAbsent(itemId, key -> currentOldValue);
-
         Runnable debounceTask = () -> {
-            Observation observation = toObservation(event, initialOldValues.get(itemId));
+            Observation observation = toObservation(event);
+
+            // Correctly detect state changes
+            if (observation.oldValue().equals(observation.value())) {
+                LOG.warn("Redundant state change detected for item: " + topic.itemId);
+                return;
+            }
 
             sentCommands.relatedCommand(observation)
                 .ifPresentOrElse(
@@ -89,34 +97,38 @@ public class OpenhabSseEventReceiver {
                     }
                 );
 
-            // Clean up the cache and task map
-            initialOldValues.remove(itemId);
-            debounceTasks.remove(itemId);
+            // Update the initialOldValues cache after processing
+            initialOldValues.put(topic.itemId, observation.oldValue());
+            debounceTasks.remove(topic.itemId);
         };
 
         // Cancel any existing task for this itemId
-        if (debounceTasks.containsKey(itemId)) {
-            debounceTasks.get(itemId).cancel(false); // Cancel without interrupting
+        if (debounceTasks.containsKey(topic.itemId)) {
+            debounceTasks.get(topic.itemId).cancel(false);
         }
 
         // Schedule the new debounce task and store its Future
         ScheduledFuture<?> futureTask = scheduler.schedule(debounceTask, DEBOUNCE_TIME_MS, TimeUnit.MILLISECONDS);
-        debounceTasks.put(itemId, futureTask);
+        debounceTasks.put(topic.itemId, futureTask);
     }
 
-    private String extractOldValue(Map<?, ?> event) {
-        // Extract the oldValue from the payload
-        ObjectMapper objectMapper = new ObjectMapper();
-        try {
-            Map<String, Object> payload = objectMapper.readValue((String) event.get("payload"), new TypeReference<>() {});
-            return (String) payload.get("oldValue");
-        } catch (JsonProcessingException e) {
-            LOG.error("Failed to parse event payload", e);
-            return null;
-        }
+    private boolean isRelevant(Topic topic) {
+        return itemIds.contains(topic.itemId)
+            && (
+            topic.type.equals("ItemStateChangedEvent")
+                || topic.type.equals("GroupItemStateChangedEvent")
+        );
     }
 
-    private Observation toObservation(Map<?, ?> event, String initialOldValue) {
+    private Topic parseTopic(Map<?, ?> event) {
+        String topic = (String) event.get("topic");
+        String[] parts = topic.split("/");
+        return new Topic(parts[2], event.get("type").toString(), event.get("payload").toString());
+    }
+
+    private record Topic(String itemId, String type, String payload) {}
+
+    private Observation toObservation(Map<?, ?> event) {
         String[] topicParts = ((String) event.get("topic")).split("/");
         String itemId = topicParts[2];
         ObjectMapper objectMapper = new ObjectMapper();
@@ -129,7 +141,7 @@ public class OpenhabSseEventReceiver {
         }
 
         String value = (String) payloadMap.get("value");
-        String oldValue = initialOldValue == null ? (String) payloadMap.get("oldValue") : initialOldValue;
+        String oldValue = (String) payloadMap.get("oldValue");
         return new Observation("OpenHAB", itemId, value, oldValue, "state changed");
     }
 
@@ -148,5 +160,4 @@ public class OpenhabSseEventReceiver {
             Thread.currentThread().interrupt();
         }
     }
-
 }

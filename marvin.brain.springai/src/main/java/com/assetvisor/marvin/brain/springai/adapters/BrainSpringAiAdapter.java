@@ -20,6 +20,7 @@ import java.util.stream.Collectors;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.ai.chat.client.ChatClient;
+import org.springframework.ai.chat.client.ChatClient.ChatClientRequestSpec;
 import org.springframework.ai.chat.client.ChatClient.PromptUserSpec;
 import org.springframework.ai.chat.client.advisor.AbstractChatMemoryAdvisor;
 import org.springframework.ai.chat.client.advisor.MessageChatMemoryAdvisor;
@@ -121,13 +122,15 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
             throw new AsleepException("Brain is asleep, please wake it up first.");
         }
 
-        ChatResponse chatResponse = chatClient.prompt()
+        ChatClientRequestSpec chatClientRequestSpec = chatClient.prompt()
             .user(u -> promptUserSpec(u, message))
             .options(options(message))
             .advisors(a -> a
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_CONVERSATION_ID_KEY, conversationId)
                 .param(AbstractChatMemoryAdvisor.CHAT_MEMORY_RETRIEVE_SIZE_KEY, CHAT_MEMORY_RETRIEVE_SIZE)
-            )
+            );
+
+        ChatResponse chatResponse = chatClientRequestSpec
             .call().chatResponse();
 
         assert chatResponse != null;
@@ -160,6 +163,11 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
         if(message instanceof SpeechMessage speechMessage) {
             return OpenAiChatOptions.builder()
                 .model(ChatModel.GPT_4_O_AUDIO_PREVIEW)
+                .build();
+        }
+        if(message instanceof Observation observation) {
+            return OpenAiChatOptions.builder()
+//                .model(ChatModel.GPT_4_O_MINI)
                 .build();
         }
         throw new IllegalArgumentException("Unknown message type: " + message.getClass());
