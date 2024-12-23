@@ -140,10 +140,10 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
 
     private void promptUserSpec(PromptUserSpec promptUserSpec, Message message) {
         if(message instanceof TextMessage textMessage) {
-            promptUserSpec.text(textMessage.getContent());
+            promptUserSpec.text(textMessage.getSender() + " says " + textMessage.getContent());
         }
         if(message instanceof Observation observation) {
-            promptUserSpec.text(observation.toString());
+            promptUserSpec.text("Observation of the environment: " + observation);
         }
         if(message instanceof SpeechMessage speechMessage) {
             promptUserSpec.text("Please respond to the audio message.");
@@ -157,7 +157,7 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
     private OpenAiChatOptions options(Message message) {
         if(message instanceof TextMessage textMessage) {
             return OpenAiChatOptions.builder()
-                //.model(ChatModel.GPT_4_O_MINI)
+                .model(ChatModel.GPT_4_O_MINI)
                 .build();
         }
         if(message instanceof SpeechMessage speechMessage) {
@@ -167,7 +167,7 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
         }
         if(message instanceof Observation observation) {
             return OpenAiChatOptions.builder()
-//                .model(ChatModel.GPT_4_O_MINI)
+                .model(ChatModel.GPT_4_O_MINI)
                 .build();
         }
         throw new IllegalArgumentException("Unknown message type: " + message.getClass());
