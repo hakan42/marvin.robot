@@ -9,7 +9,6 @@ You can talk to Marvin in natural language and ask him questions about your hous
 
 ## Initial learning
 * Put a text file called marvin-robot.txt in your home directory.
-* Put a text file called marvin-environment in your home directory.
 * There are example files in the descriptions folder
 
 * Marvin will read descriptions from the connected control server and add them to a vector store for use in prompts.
@@ -53,7 +52,9 @@ When the application has started, open http://localhost:9090 in your browser. Yo
 
 A person record is then added in the personentry table with relation STRANGER. Change this to FRIEND and refresh the page.
 
-There is a swagger ui included on http://localhost:9090/swagger-ui/index.html To initialise Marvin, use the POST /initialise endpoint. That will clear it's memory and populate the vector store.
+There is a swagger ui included on http://localhost:9090/swagger-ui/index.html
+To add environment descriptions, use the /environment endpoint.
+To initialise Marvin, use the POST /initialise endpoint. That will clear it's memory and populate the vector store.
  
 
 ## Cool things to try
