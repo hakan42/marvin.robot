@@ -36,7 +36,7 @@ public class TeacherTest {
         EnvironmentDescription environmentDescription3 = new EnvironmentDescription("description3");
         List<EnvironmentDescription> environmentDescriptionList = List.of(environmentDescription1, environmentDescription2, environmentDescription3);
 
-        given(forPersistingEnvironmentDescriptions.load()).willReturn(List.of(environmentDescription1, environmentDescription2));
+        given(forPersistingEnvironmentDescriptions.all()).willReturn(List.of(environmentDescription1, environmentDescription2));
         given(forGettingEnvironmentDescriptions.getEnvironmentDescriptions()).willReturn(List.of(environmentDescription3));
 
         // When
@@ -45,7 +45,7 @@ public class TeacherTest {
         // Then
         verify(forInvokingIntelligence).teach(captor.capture());
         assertTrue(captor.getValue().containsAll(environmentDescriptionList));
-        verify(forPersistingEnvironmentDescriptions).load();
+        verify(forPersistingEnvironmentDescriptions).all();
         verify(forGettingEnvironmentDescriptions).getEnvironmentDescriptions();
         verifyNoMoreInteractions(forInvokingIntelligence, forPersistingEnvironmentDescriptions, forGettingEnvironmentDescriptions);
     }

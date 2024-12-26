@@ -16,7 +16,7 @@ public class PersistingEnvironmentDescriptionsCassandraAdapter implements ForPer
 
 
     @Override
-    public List<EnvironmentDescription> load() {
+    public List<EnvironmentDescription> all() {
         return environmentDescriptionRepository.findAll().stream()
             .map(this::toEnvironmentDescription)
             .toList();
@@ -29,13 +29,14 @@ public class PersistingEnvironmentDescriptionsCassandraAdapter implements ForPer
 
     private EnvironmentDescription toEnvironmentDescription(EnvironmentDescriptionEntry environmentDescriptionEntry) {
         return new EnvironmentDescription(
+            environmentDescriptionEntry.getId().toString(),
             environmentDescriptionEntry.getDescription()
         );
     }
 
     private EnvironmentDescriptionEntry toEnvironmentDescriptionEntry(EnvironmentDescription environmentDescription) {
         EnvironmentDescriptionEntry environmentDescriptionEntry = new EnvironmentDescriptionEntry();
-        environmentDescriptionEntry.setId(UUID.randomUUID());
+        environmentDescriptionEntry.setId(UUID.fromString(environmentDescription.id()));
         environmentDescriptionEntry.setDescription(environmentDescription.text());
         return environmentDescriptionEntry;
     }

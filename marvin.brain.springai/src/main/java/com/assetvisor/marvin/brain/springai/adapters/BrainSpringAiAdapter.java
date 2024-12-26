@@ -160,7 +160,7 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
     private OpenAiChatOptions options(Message message) {
         if(message instanceof TextMessage textMessage) {
             return OpenAiChatOptions.builder()
-                .model(CHAT_MODEL_TEXT)
+                //.model(CHAT_MODEL_TEXT)
                 .build();
         }
         if(message instanceof SpeechMessage speechMessage) {
@@ -170,7 +170,7 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
         }
         if(message instanceof Observation observation) {
             return OpenAiChatOptions.builder()
-                .model(CHAT_MODEL_OBSERVATION)
+                //.model(CHAT_MODEL_OBSERVATION)
                 .build();
         }
         throw new IllegalArgumentException("Unknown message type: " + message.getClass());

@@ -1,10 +1,14 @@
 package com.assetvisor.marvin.interaction.web.controllers;
 
 import com.assetvisor.marvin.robot.application.AddEnvironmentDescriptionUseCase;
+import com.assetvisor.marvin.robot.application.GetEnvironmentDescriptionsUseCase;
 import com.assetvisor.marvin.robot.application.InitialiseUseCase;
+import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import jakarta.annotation.Resource;
 import java.security.Principal;
+import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,6 +21,8 @@ public class WorkshopController {
     private InitialiseUseCase initialiseUseCase;
     @Resource
     private AddEnvironmentDescriptionUseCase addEnvironmentDescriptionUseCase;
+    @Resource
+    private GetEnvironmentDescriptionsUseCase getEnvironmentDescriptionsUseCase;
 
 
     @PostMapping("/initialise")
@@ -32,4 +38,8 @@ public class WorkshopController {
         addEnvironmentDescriptionUseCase.add(description);
     }
 
+    @GetMapping("/environment")
+    public List<EnvironmentDescription> getEnvironmentDescriptions(Principal principal) {
+        return getEnvironmentDescriptionsUseCase.all();
+    }
 }

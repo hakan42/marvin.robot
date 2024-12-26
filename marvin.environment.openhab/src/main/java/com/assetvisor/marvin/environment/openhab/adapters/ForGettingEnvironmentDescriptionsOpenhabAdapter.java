@@ -28,7 +28,7 @@ public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGetti
             getStaticRulesRestClient.asMaps().stream()
         )
             .map(Object::toString)
-            .map(EnvironmentDescription::new)
+            .map(text -> new EnvironmentDescription("openhab", text))
             .toList();
     }
 

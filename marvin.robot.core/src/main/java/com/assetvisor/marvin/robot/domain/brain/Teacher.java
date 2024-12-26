@@ -28,7 +28,7 @@ public class Teacher {
 
     public void teach() {
         LOG.info("Teaching brain about environment...");
-        List<EnvironmentDescription> environmentDescriptions = new ArrayList<>(forPersistingEnvironmentDescriptions.load());
+        List<EnvironmentDescription> environmentDescriptions = new ArrayList<>(forPersistingEnvironmentDescriptions.all());
         environmentDescriptions.addAll(forGettingEnvironmentDescriptions.getEnvironmentDescriptions());
         forInvokingIntelligence.teach(
             environmentDescriptions
