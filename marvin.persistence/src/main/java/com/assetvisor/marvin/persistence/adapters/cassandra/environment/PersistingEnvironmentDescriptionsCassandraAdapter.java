@@ -27,6 +27,11 @@ public class PersistingEnvironmentDescriptionsCassandraAdapter implements ForPer
         environmentDescriptionRepository.save(toEnvironmentDescriptionEntry(description));
     }
 
+    @Override
+    public void delete(String id) {
+        environmentDescriptionRepository.deleteById(UUID.fromString(id));
+    }
+
     private EnvironmentDescription toEnvironmentDescription(EnvironmentDescriptionEntry environmentDescriptionEntry) {
         return new EnvironmentDescription(
             environmentDescriptionEntry.getId().toString(),

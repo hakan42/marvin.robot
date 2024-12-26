@@ -1,6 +1,7 @@
 package com.assetvisor.marvin.robot.application.services;
 
 import com.assetvisor.marvin.robot.application.AddEnvironmentDescriptionUseCase;
+import com.assetvisor.marvin.robot.application.DeleteEnvironmentDescriptionUseCase;
 import com.assetvisor.marvin.robot.application.GetEnvironmentDescriptionsUseCase;
 import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
@@ -10,7 +11,10 @@ import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
-public class EnvironmentService implements AddEnvironmentDescriptionUseCase, GetEnvironmentDescriptionsUseCase {
+public class EnvironmentService implements
+    AddEnvironmentDescriptionUseCase,
+    GetEnvironmentDescriptionsUseCase,
+    DeleteEnvironmentDescriptionUseCase {
 
     @Resource
     private ForPersistingEnvironmentDescriptions forPersistingEnvironmentDescriptions;
@@ -28,5 +32,10 @@ public class EnvironmentService implements AddEnvironmentDescriptionUseCase, Get
     @Override
     public List<EnvironmentDescription> all() {
         return forPersistingEnvironmentDescriptions.all();
+    }
+
+    @Override
+    public void delete(String id) {
+        forPersistingEnvironmentDescriptions.delete(id);
     }
 }

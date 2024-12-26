@@ -5,4 +5,5 @@ import java.util.List;
 public interface ForPersistingEnvironmentDescriptions {
     List<EnvironmentDescription> all();
     void save(EnvironmentDescription description);
+    void delete(String id);
 }
