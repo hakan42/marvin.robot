@@ -45,6 +45,9 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
     @SuppressWarnings("FieldCanBeLocal")
     private final int VECTORSTORE_TOP_K = 20;
     private final int CHAT_MEMORY_RETRIEVE_SIZE = 10;
+    private final ChatModel CHAT_MODEL_TEXT = ChatModel.GPT_4_O_MINI;
+    private final ChatModel CHAT_MODEL_AUDIO = ChatModel.GPT_4_O_AUDIO_PREVIEW;
+    private final ChatModel CHAT_MODEL_OBSERVATION = ChatModel.GPT_4_O_MINI;
 
     @Resource
     private CassandraVectorStore vectorStore;
@@ -140,10 +143,10 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
 
     private void promptUserSpec(PromptUserSpec promptUserSpec, Message message) {
         if(message instanceof TextMessage textMessage) {
-            promptUserSpec.text(textMessage.getSender() + " says " + textMessage.getContent());
+            promptUserSpec.text(textMessage.getContent());
         }
         if(message instanceof Observation observation) {
-            promptUserSpec.text("Observation of the environment: " + observation);
+            promptUserSpec.text("Observation from the environment: " + observation);
         }
         if(message instanceof SpeechMessage speechMessage) {
             promptUserSpec.text("Please respond to the audio message.");
@@ -157,17 +160,17 @@ public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembe
     private OpenAiChatOptions options(Message message) {
         if(message instanceof TextMessage textMessage) {
             return OpenAiChatOptions.builder()
-                .model(ChatModel.GPT_4_O_MINI)
+                .model(CHAT_MODEL_TEXT)
                 .build();
         }
         if(message instanceof SpeechMessage speechMessage) {
             return OpenAiChatOptions.builder()
-                .model(ChatModel.GPT_4_O_AUDIO_PREVIEW)
+                .model(CHAT_MODEL_AUDIO)
                 .build();
         }
         if(message instanceof Observation observation) {
             return OpenAiChatOptions.builder()
-                .model(ChatModel.GPT_4_O_MINI)
+                .model(CHAT_MODEL_OBSERVATION)
                 .build();
         }
         throw new IllegalArgumentException("Unknown message type: " + message.getClass());
