@@ -9,6 +9,7 @@ import com.assetvisor.marvin.robot.domain.environment.EnvironmentDescription;
 import com.assetvisor.marvin.robot.domain.environment.ForGettingEnvironmentDescriptions;
 import com.assetvisor.marvin.robot.domain.environment.ForPersistingEnvironmentDescriptions;
 import java.util.List;
+import java.util.UUID;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.ArgumentCaptor;
@@ -31,9 +32,9 @@ public class TeacherTest {
     @Test
     public void shouldTeachBrain() {
         // Given
-        EnvironmentDescription environmentDescription1 = new EnvironmentDescription("description1");
-        EnvironmentDescription environmentDescription2 = new EnvironmentDescription("description2");
-        EnvironmentDescription environmentDescription3 = new EnvironmentDescription("description3");
+        EnvironmentDescription environmentDescription1 = new EnvironmentDescription(UUID.randomUUID().toString(), "description1");
+        EnvironmentDescription environmentDescription2 = new EnvironmentDescription(UUID.randomUUID().toString(), "description2");
+        EnvironmentDescription environmentDescription3 = new EnvironmentDescription(UUID.randomUUID().toString(), "description3");
         List<EnvironmentDescription> environmentDescriptionList = List.of(environmentDescription1, environmentDescription2, environmentDescription3);
 
         given(forPersistingEnvironmentDescriptions.all()).willReturn(List.of(environmentDescription1, environmentDescription2));
