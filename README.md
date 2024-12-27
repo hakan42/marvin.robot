@@ -23,6 +23,7 @@ To use Marvin, you need to have a running OpenHAB server.
 
 Add the following environment variables
 
+* EXTERNAL_ADDRESS http://localhost:9090
 * OPENHAB_URL http://[openhab ip]:[openhab port]
 * OPENHAB_USERNAME [myopenhabusername]
 * OPENHAB_PASSWORD [myopenhabpassword]
@@ -32,7 +33,8 @@ Add the following environment variables
 * OPENAI_APIKEY (get your own from openai)
 * GITHUB_CLIENT_ID (for oauth, get your own from github)
 * GITHUB_CLIENT_SECRET (for oauth, get your own from github)
-
+* GOOGLE_CLIENT_ID (for oauth, get your own from google)
+* GOOGLE_CLIENT_SECRET (for oauth, get your own from google)
 
 The main module that brings Marvin to life is marvin.interaction.web. It is a Spring Boot application
 that contains the application.yml configuration file.
@@ -48,7 +50,7 @@ You can do this by running the following command:
 CREATE KEYSPACE springframework WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
 ```
 
-When the application has started, open http://localhost:9090 in your browser. You will be redirected to the OAuth2 login page, currently at github.
+When the application has started, open http://localhost:9090 in your browser. You will be redirected to the OAuth2 login page.
 
 A person record is then added in the personentry table with relation STRANGER. Change this to FRIEND and refresh the page.
 
