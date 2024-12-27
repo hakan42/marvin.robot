@@ -1,15 +1,24 @@
 package com.assetvisor.marvin.robot.domain.communication;
 
+import java.time.LocalDateTime;
+
 public abstract class Message {
 
     private final String sender;
+    private final LocalDateTime timestamp;
+
 
     public Message(String sender) {
         this.sender = sender;
+        this.timestamp = LocalDateTime.now();
     }
 
     public String getSender() {
         return sender;
+    }
+
+    public LocalDateTime getTimestamp() {
+        return timestamp;
     }
 
     @Override
