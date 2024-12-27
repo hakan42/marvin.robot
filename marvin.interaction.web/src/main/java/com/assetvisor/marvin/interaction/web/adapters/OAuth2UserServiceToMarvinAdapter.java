@@ -1,9 +1,8 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.robot.application.PersonUco;
-import com.assetvisor.marvin.robot.application.PersonUco.IdType;
-import com.assetvisor.marvin.robot.application.PersonUco.PersonId;
 import com.assetvisor.marvin.robot.application.PersonWantsToEnterUseCase;
+import com.assetvisor.marvin.robot.domain.relationships.Person;
 import jakarta.annotation.Resource;
 import java.util.Map;
 import org.springframework.security.oauth2.client.userinfo.DefaultOAuth2UserService;
@@ -28,9 +27,9 @@ public class OAuth2UserServiceToMarvinAdapter extends DefaultOAuth2UserService {
         Map<String, Object> attributes = oAuth2User.getAttributes();
         if (personWantsToEnter.attemptEntry(
                 PersonUco.builder(
-                        new PersonId(
-                            IdType.fromRegistrationId(request.getClientRegistration().getRegistrationId()),
-                            attributes.get("id").toString()
+                        new Person.PersonId(
+                            Person.IdType.fromRegistrationId(request.getClientRegistration().getRegistrationId()),
+                            oAuth2User.getName()
                         )
                     )
                     .withName(attributes.get("name").toString())

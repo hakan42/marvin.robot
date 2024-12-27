@@ -14,4 +14,8 @@ public interface PersonRepository extends CassandraRepository<PersonEntry, UUID>
 
     @Query("SELECT * FROM personentry WHERE github_id = ?0 ALLOW FILTERING")
     List<PersonEntry> findByGithubId(String githubId);
+
+    @Query("SELECT * FROM personentry WHERE google_id = ?0 ALLOW FILTERING")
+    List<PersonEntry> findByGoogleId(String googleId);
+
 }

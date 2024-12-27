@@ -1,20 +1,18 @@
 package com.assetvisor.marvin.persistence.adapters.cassandra.relationships;
 
-import com.assetvisor.marvin.robot.domain.relationships.ForAddingPerson;
-import com.assetvisor.marvin.robot.domain.relationships.ForGettingPerson;
+import com.assetvisor.marvin.robot.domain.relationships.ForPersistingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.Person;
-import com.assetvisor.marvin.robot.domain.relationships.Person.ExternalId;
-import com.assetvisor.marvin.robot.domain.relationships.Person.ExternalIdType;
+import com.assetvisor.marvin.robot.domain.relationships.Person.IdType;
 import com.assetvisor.marvin.robot.domain.relationships.Person.Relationship;
 import jakarta.annotation.Resource;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 import java.util.UUID;
 import org.springframework.stereotype.Component;
 
 @Component
 //@Profile("cassandra")
-public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGettingPerson {
+public class PersistingPersonsCassandraAdapter implements ForPersistingPerson {
 
     @Resource
     private PersonRepository personRepository;
@@ -28,6 +26,25 @@ public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGe
                 }
             );
         personRepository.save(toPersonEntry(person));
+    }
+
+    @Override
+    public void addExternalId(Person person, Person.PersonId externalId) {
+        PersonEntry personEntry = personRepository.findById(UUID.fromString(person.id()))
+            .orElseThrow(() -> new IllegalArgumentException("Person with id " + person.id() + " not found"));
+        if(personEntry.getGithubId().isPresent() && externalId.idType() == IdType.GITHUB) {
+            throw new IllegalArgumentException("Person with id " + person.id() + " already has github id");
+        }
+        if(personEntry.getGoogleId().isPresent() && externalId.idType() == Person.IdType.GOOGLE) {
+            throw new IllegalArgumentException("Person with id " + person.id() + " already has google id");
+        }
+        if(externalId.idType() == Person.IdType.GITHUB) {
+            personEntry.setGithubId(externalId.value());
+        }
+        if(externalId.idType() == Person.IdType.GOOGLE) {
+            personEntry.setGoogleId(externalId.value());
+        }
+        personRepository.save(personEntry);
     }
 
     @Override
@@ -46,14 +63,20 @@ public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGe
     }
 
     @Override
-    public Person byExternalId(ExternalId externalId) {
-        if(externalId.externalIdType() == ExternalIdType.GITHUB) {
-            return personRepository.findByGithubId(externalId.externalId()).stream()
+    public Person byExternalId(Person.PersonId externalId) {
+        if(externalId.idType() == IdType.GITHUB) {
+            return personRepository.findByGithubId(externalId.value()).stream()
                 .findAny()
                 .map(this::toPerson)
                 .orElse(null);
         }
-        return null;
+        if(externalId.idType() == IdType.GOOGLE) {
+            return personRepository.findByGoogleId(externalId.value()).stream()
+                .findAny()
+                .map(this::toPerson)
+                .orElse(null);
+        }
+        throw new IllegalArgumentException("Unsupported external id type: " + externalId.idType());
     }
 
     private PersonEntry toPersonEntry(Person person) {
@@ -63,8 +86,14 @@ public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGe
         personEntry.setEmail(person.email());
         personEntry.setRelationship(person.relationship().name());
         personEntry.setGithubId(person.externalIds().stream()
-            .filter(externalId -> externalId.externalIdType() == Person.ExternalIdType.GITHUB)
-            .map(Person.ExternalId::externalId)
+            .filter(externalId -> externalId.idType() == IdType.GITHUB)
+            .map(Person.PersonId::value)
+            .findAny()
+            .orElse(null)
+        );
+        personEntry.setGoogleId(person.externalIds().stream()
+            .filter(externalId -> externalId.idType() == IdType.GOOGLE)
+            .map(Person.PersonId::value)
             .findAny()
             .orElse(null)
         );
@@ -72,16 +101,19 @@ public class PersistingPersonsCassandraAdapter implements ForAddingPerson, ForGe
     }
 
     private Person toPerson(PersonEntry personEntry) {
+        List<Person.PersonId> externalIds = new ArrayList<>();
+        personEntry.getGithubId().ifPresent(
+            githubId -> externalIds.add(new Person.PersonId(IdType.GITHUB, githubId))
+        );
+        personEntry.getGoogleId().ifPresent(
+            googleId -> externalIds.add(new Person.PersonId(IdType.GOOGLE, googleId))
+        );
         return new Person(
             personEntry.getId().toString(),
             personEntry.getPersonName(),
             personEntry.getEmail(),
             Relationship.valueOf(personEntry.getRelationship()),
-            Optional.ofNullable(personEntry.getGithubId())
-                .map(githubId ->
-                    List.of(new ExternalId(ExternalIdType.GITHUB, githubId))
-                )
-                .orElse(List.of())
+            externalIds
         );
     }
 }

@@ -1,7 +1,10 @@
 <!DOCTYPE html>
 <html lang="en">
-<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
 <link rel="stylesheet" href="styles.css">
+<link rel="stylesheet" type="text/css" href="/webjars/bootstrap/css/bootstrap.min.css"/>
+<script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+<script type="text/javascript" src="/webjars/jquery/jquery.min.js"></script>
+<script type="text/javascript" src="/webjars/bootstrap/js/bootstrap.min.js"></script>
 <style>
   .menu-panel {
     display: flex;
@@ -20,7 +23,16 @@
   <title>Chat with Marvin</title>
 </head>
 <body>
+<div class="container unauthenticated">
+  <div>
+    With GitHub: <a href="/oauth2/authorization/github">click here</a>
+  </div>
+  <div>
+    With Google: <a href="/oauth2/authorization/google">click here</a>
+  </div>
+</div>
 
+<div class="container authenticated" style="display:none">
 <!-- Menu panel for recording buttons and audio player -->
 <div class="menu-panel">
   <div class="button-panel">
@@ -28,6 +40,10 @@
     <button id="stopBtn" disabled>Stop Recording</button>
   </div>
   <audio id="audioPlayer" controls class="audio-player"></audio>
+  <span id="user"></span>
+  <div>
+    <button onClick="logout()">Logout</button>
+  </div>
 </div>
 
 <!-- Form to send messages -->
@@ -39,6 +55,23 @@
 <!-- Display incoming messages -->
 <ul id="messages"></ul>
 
-<script src="script.js"></script>
+<script type="module" src="script.js"></script>
+</div>
+<script type="text/javascript">
+  $.get("/user", function(data) {
+    $("#user").html(data.name);
+    $(".unauthenticated").hide()
+    $(".authenticated").show()
+  });
+
+  var logout = function() {
+    $.post("/logout", function() {
+      $("#user").html('');
+      $(".unauthenticated").show();
+      $(".authenticated").hide();
+    })
+    return true;
+  }
+</script>
 </body>
 </html>

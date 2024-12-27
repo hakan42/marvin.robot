@@ -25,6 +25,13 @@ spring:
             redirect-uri: ${EXTERNAL_ADDRESS}/login/oauth2/code/github
             clientId: ${GITHUB_CLIENT_ID}
             clientSecret: ${GITHUB_CLIENT_SECRET}
+          google:
+            scope:
+              - email
+              - profile
+            redirect-uri: ${EXTERNAL_ADDRESS}/login/oauth2/code/google
+            clientId: ${GOOGLE_CLIENT_ID}
+            clientSecret: ${GOOGLE_CLIENT_SECRET}
 server:
   port: 9090
 

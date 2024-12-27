@@ -1,5 +1,7 @@
 package com.assetvisor.marvin.robot.application;
 
+import com.assetvisor.marvin.robot.domain.relationships.Person.PersonId;
+
 public class PersonUco {
     private final PersonId id;
     private final String name;
@@ -48,19 +50,6 @@ public class PersonUco {
 
         public PersonUco build() {
             return new PersonUco(this);
-        }
-    }
-
-    public record PersonId(IdType idType, String value) {}
-    public enum IdType {
-        LOCAL,
-        GITHUB;
-
-        public static IdType fromRegistrationId(String registrationId) {
-            return switch (registrationId) {
-                case "github" -> IdType.GITHUB;
-                default -> throw new IllegalArgumentException("Unsupported registrationId: " + registrationId);
-            };
         }
     }
 }

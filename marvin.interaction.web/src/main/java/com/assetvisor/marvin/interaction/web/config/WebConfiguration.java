@@ -18,9 +18,9 @@ public class WebConfiguration {
     @Bean
     public SecurityFilterChain securityFilterChain(HttpSecurity http, OAuth2UserServiceToMarvinAdapter userService) throws Exception {
         http.authorizeHttpRequests((requests) -> requests
-                .requestMatchers("/whatsapp").permitAll()
-                .requestMatchers("/").permitAll()
+                .requestMatchers("/", "/whatsapp", "/error", "/webjars").permitAll()
                 .anyRequest().authenticated())
+            .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
             .oauth2Login(oauth -> oauth.userInfoEndpoint(userInfo -> userInfo.userService(userService)))
             .csrf(AbstractHttpConfigurer::disable);
         return http.build();
@@ -30,16 +30,4 @@ public class WebConfiguration {
     public AuthenticationEventPublisher authenticationEventPublisher(ApplicationEventPublisher applicationEventPublisher) {
         return new DefaultAuthenticationEventPublisher(applicationEventPublisher);
     }
-
-//    @Bean
-//    public WebMvcConfigurer corsConfigurer() {
-//        return new WebMvcConfigurer() {
-//            @Override
-//            public void addCorsMappings(CorsRegistry registry) {
-//                registry.addMapping("/**")
-//                    .allowedOrigins("*")
-//                    .allowedMethods("HEAD", "GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS");
-//            }
-//        };
-//    }
 }

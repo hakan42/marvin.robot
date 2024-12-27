@@ -1,7 +1,7 @@
 package com.assetvisor.marvin.robot.application;
 
-import com.assetvisor.marvin.robot.application.PersonUco.PersonId;
+import com.assetvisor.marvin.robot.domain.relationships.Person;
 
 public interface PersonEnteredUseCase {
-    void personEntered(PersonId personId);
+    void personEntered(Person.PersonId personId);
 }

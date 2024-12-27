@@ -74,7 +74,7 @@ function startSSE() {
     }
     messageList.appendChild(newMessage);
     messageList.appendChild(document.createElement("div")).style.clear = "both";
-    newMessage.scrollIntoView({ behavior: "smooth" });
+    newMessage.scrollIntoView({behavior: "smooth"});
 
     const senderHeader = document.createElement("span");
     senderHeader.textContent = sender;
@@ -139,7 +139,7 @@ async function sendMessage(event) {
       const response = await fetch("/message", {
         method: "POST",
         headers: {
-          "Content-Type": "application/x-www-form-urlencoded",
+          "Content-Type": "application/x-www-form-urlencoded"
         },
         body: new URLSearchParams({ message }),
       });

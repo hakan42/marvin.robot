@@ -1,5 +1,6 @@
 package com.assetvisor.marvin.persistence.adapters.cassandra.relationships;
 
+import java.util.Optional;
 import java.util.UUID;
 import org.springframework.data.annotation.Id;
 import org.springframework.data.cassandra.core.cql.PrimaryKeyType;
@@ -25,6 +26,9 @@ public class PersonEntry {
 
     @Column("github_id")
     private String githubId;
+
+    @Column("google_id")
+    private String googleId;
 
     public PersonEntry() {
     }
@@ -61,11 +65,19 @@ public class PersonEntry {
         this.relationship = relationship;
     }
 
-    public String getGithubId() {
-        return githubId;
+    public Optional<String> getGithubId() {
+        return Optional.ofNullable(githubId);
     }
 
     public void setGithubId(String githubId) {
         this.githubId = githubId;
+    }
+
+    public Optional<String> getGoogleId() {
+        return Optional.ofNullable(googleId);
+    }
+
+    public void setGoogleId(String googleId) {
+        this.googleId = googleId;
     }
 }

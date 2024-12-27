@@ -1,8 +1,7 @@
 package com.assetvisor.marvin.interaction.web.adapters;
 
 import com.assetvisor.marvin.robot.application.PersonEnteredUseCase;
-import com.assetvisor.marvin.robot.application.PersonUco.IdType;
-import com.assetvisor.marvin.robot.application.PersonUco.PersonId;
+import com.assetvisor.marvin.robot.domain.relationships.Person;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.EventListener;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
@@ -21,12 +20,12 @@ public class AuthenticationEventHandlingAdapter {
         personEnteredUseCase.personEntered(toId(event));
     }
 
-    private PersonId toId(AuthenticationSuccessEvent event) {
+    private Person.PersonId toId(AuthenticationSuccessEvent event) {
         Object source = event.getSource();
         if (source instanceof OAuth2LoginAuthenticationToken token) {
             OAuth2User principal = token.getPrincipal();
-            String id = principal.getAttribute("id").toString();
-            return new PersonId(IdType.fromRegistrationId(
+            String id = principal.getName();
+            return new Person.PersonId(Person.IdType.fromRegistrationId(
                 token
                     .getClientRegistration()
                     .getRegistrationId()

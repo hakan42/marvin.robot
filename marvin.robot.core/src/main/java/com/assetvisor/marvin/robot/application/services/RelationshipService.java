@@ -5,13 +5,10 @@ import static com.assetvisor.marvin.robot.domain.relationships.Person.Relationsh
 
 import com.assetvisor.marvin.robot.application.PersonEnteredUseCase;
 import com.assetvisor.marvin.robot.application.PersonUco;
-import com.assetvisor.marvin.robot.application.PersonUco.PersonId;
 import com.assetvisor.marvin.robot.application.PersonWantsToEnterUseCase;
-import com.assetvisor.marvin.robot.domain.relationships.ForAddingPerson;
-import com.assetvisor.marvin.robot.domain.relationships.ForGettingPerson;
+import com.assetvisor.marvin.robot.domain.relationships.ForPersistingPerson;
 import com.assetvisor.marvin.robot.domain.relationships.Person;
-import com.assetvisor.marvin.robot.domain.relationships.Person.ExternalId;
-import com.assetvisor.marvin.robot.domain.relationships.Person.ExternalIdType;
+import com.assetvisor.marvin.robot.domain.relationships.Person.IdType;
 import jakarta.annotation.Resource;
 import java.util.List;
 import java.util.UUID;
@@ -25,29 +22,31 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
     private static final Log LOG = LogFactory.getLog(RelationshipService.class);
 
     @Resource
-    private ForGettingPerson forGettingPerson;
-    @Resource
-    private ForAddingPerson forAddingPerson;
+    private ForPersistingPerson forPersistingPerson;
 
     @Override
     public EntryAttemptResponseUco attemptEntry(PersonUco personUco) {
-        Person person = forGettingPerson.byEmail(personUco.getEmail());
+        Person person = forPersistingPerson.byEmail(personUco.getEmail());
         if(person == null) {
             //no idea who this is, but remember him as stranger
-            forAddingPerson.addPerson(
+            forPersistingPerson.addPerson(
                 new Person(
                     UUID.randomUUID().toString(),
                     personUco.getName(),
                     personUco.getEmail(),
                     STRANGER,
                     List.of(
-                        new Person.ExternalId(
-                            ExternalIdType.valueOf(personUco.getId().idType().name()),
+                        new Person.PersonId(
+                            IdType.valueOf(personUco.getId().idType().name()),
                             personUco.getId().value()
                         )
                     )
                 ));
             return new EntryAttemptResponseUco(false);
+        }
+        if(!person.hasExternalId(personUco.getId())) {
+            //this person is known, but with different id
+            person.addExternalId(personUco.getId(), forPersistingPerson);
         }
         if(person.relationship() == FRIEND) {
             //welcome back
@@ -58,11 +57,12 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
     }
 
     @Override
-    public void personEntered(PersonId personId) {
-        Person person = forGettingPerson.byExternalId(new ExternalId(
-            ExternalIdType.valueOf(personId.idType().name()),
-            personId.value()
-        ));
+    public void personEntered(Person.PersonId personId) {
+        Person person = forPersistingPerson.byExternalId(personId);
+        if(person == null) {
+            LOG.warn("Unknown person entered: " + personId);
+            return;
+        }
         LOG.info("Person entered: " + person);
     }
 }
