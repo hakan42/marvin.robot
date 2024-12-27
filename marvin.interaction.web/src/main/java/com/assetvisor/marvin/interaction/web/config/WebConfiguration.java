@@ -20,11 +20,6 @@ public class WebConfiguration {
         http.authorizeHttpRequests((requests) -> requests
                 .requestMatchers("/", "/whatsapp", "/error", "/webjars").permitAll()
                 .anyRequest().authenticated())
-            .formLogin(form -> form
-                .loginPage("/index.html") // Specify your custom login page URL
-                .defaultSuccessUrl("/index.html", true) // Redirect after successful login
-                .permitAll()
-            )
             .logout(logout -> logout.logoutSuccessUrl("/").permitAll())
             .oauth2Login(oauth -> oauth.userInfoEndpoint(userInfo -> userInfo.userService(userService)))
             .csrf(AbstractHttpConfigurer::disable);

@@ -1,6 +1,7 @@
 package com.assetvisor.marvin.robot.domain.environment;
 
 import com.assetvisor.marvin.robot.domain.communication.Message;
+import java.time.LocalDateTime;
 import java.util.Objects;
 
 public final class Observation extends Message {
@@ -9,6 +10,7 @@ public final class Observation extends Message {
     private final String value;
     private final String oldValue;
     private final String description;
+    private LocalDateTime timestamp;
 
     public Observation(String sender, String itemId, String value, String oldValue, String description) {
         super(sender);
@@ -16,11 +18,12 @@ public final class Observation extends Message {
         this.value = value;
         this.oldValue = oldValue;
         this.description = description;
+        this.timestamp = LocalDateTime.now();
     }
 
     @Override
     public String toString() {
-        return "Item: " + itemId + " changed value from " + oldValue + " to " + value + " at " + getTimestamp();
+        return "Item: " + itemId + " changed value from " + oldValue + " to " + value + " - " + description;
     }
 
     public String itemId() {
@@ -37,6 +40,10 @@ public final class Observation extends Message {
 
     public String description() {
         return description;
+    }
+
+    public LocalDateTime timestamp() {
+        return timestamp;
     }
 
     @Override
