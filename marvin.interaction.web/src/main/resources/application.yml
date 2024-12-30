@@ -1,6 +1,8 @@
 spring:
   profiles:
-    include: openhab
+    include:
+      - environment-openhab
+      - chat-openai
   application:
     name: Marvin the Robot
     version: 0.0.1

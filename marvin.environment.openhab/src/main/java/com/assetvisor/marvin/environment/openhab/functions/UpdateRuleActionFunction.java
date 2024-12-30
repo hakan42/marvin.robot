@@ -17,7 +17,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class UpdateRuleActionFunction implements Tool<Command, Response> {
 
     Log LOG = LogFactory.getLog(getClass());

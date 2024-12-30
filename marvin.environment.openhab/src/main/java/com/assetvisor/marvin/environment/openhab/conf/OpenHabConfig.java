@@ -9,7 +9,7 @@ import org.springframework.web.client.RestClient;
 import org.springframework.web.reactive.function.client.WebClient;
 
 @Configuration
-@Profile("openhab")
+@Profile("environment-openhab")
 public class OpenHabConfig {
 
     @Value("${openhab.username}")

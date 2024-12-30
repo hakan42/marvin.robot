@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class SentCommands {
     private final List<Command> commandList = new ArrayList<>();
 

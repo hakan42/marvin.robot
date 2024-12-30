@@ -34,14 +34,16 @@ import org.springframework.ai.openai.OpenAiChatOptions;
 import org.springframework.ai.openai.api.OpenAiApi.ChatModel;
 import org.springframework.ai.vectorstore.SearchRequest;
 import org.springframework.ai.vectorstore.cassandra.CassandraVectorStore;
+import org.springframework.context.annotation.Profile;
 import org.springframework.core.io.ByteArrayResource;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 
 @Component
-public class BrainSpringAiAdapter implements ForInvokingIntelligence, ForRemembering {
+@Profile("chat-openai")
+public class BrainSpringAiAdapterOpenAi implements ForInvokingIntelligence, ForRemembering {
 
-    private final Log LOG = LogFactory.getLog(BrainSpringAiAdapter.class);
+    private final Log LOG = LogFactory.getLog(BrainSpringAiAdapterOpenAi.class);
     @SuppressWarnings("FieldCanBeLocal")
     private final int VECTORSTORE_TOP_K = 20;
     private final int CHAT_MEMORY_RETRIEVE_SIZE = 10;

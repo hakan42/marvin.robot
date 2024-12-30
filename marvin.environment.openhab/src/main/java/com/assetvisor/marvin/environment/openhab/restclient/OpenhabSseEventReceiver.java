@@ -25,7 +25,7 @@ import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class OpenhabSseEventReceiver {
 
     private static final Log LOG = LogFactory.getLog(OpenhabSseEventReceiver.class);

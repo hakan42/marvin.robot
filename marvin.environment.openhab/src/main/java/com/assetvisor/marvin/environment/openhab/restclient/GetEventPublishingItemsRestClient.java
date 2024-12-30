@@ -11,7 +11,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class GetEventPublishingItemsRestClient {
     Log LOG = LogFactory.getLog(getClass());
 

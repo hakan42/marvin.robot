@@ -13,7 +13,7 @@ import org.springframework.context.annotation.Profile;
 import org.springframework.stereotype.Component;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class ForGettingEnvironmentDescriptionsOpenhabAdapter implements ForGettingEnvironmentDescriptions {
 
     @Resource

@@ -14,7 +14,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class GetRuleActionsFunction implements Tool<Request, List<Map<String, Object>>> {
 
     Log LOG = LogFactory.getLog(getClass());

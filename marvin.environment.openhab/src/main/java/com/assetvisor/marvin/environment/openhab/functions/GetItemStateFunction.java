@@ -13,7 +13,7 @@ import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 
 @Component
-@Profile("openhab")
+@Profile("environment-openhab")
 public class GetItemStateFunction implements Tool<Request, Response> {
 
     Log LOG = LogFactory.getLog(getClass());
