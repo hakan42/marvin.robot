@@ -23,7 +23,7 @@ public final class Observation extends Message {
 
     @Override
     public String toString() {
-        return "Item: " + itemId + " changed value from " + oldValue + " to " + value + " - " + description;
+        return "Item: " + itemId + " changed value from " + oldValue + " to " + value;
     }
 
     public String itemId() {

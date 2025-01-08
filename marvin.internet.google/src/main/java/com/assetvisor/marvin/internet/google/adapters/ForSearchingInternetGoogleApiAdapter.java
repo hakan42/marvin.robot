@@ -15,7 +15,7 @@ public class ForSearchingInternetGoogleApiAdapter implements ForSearchingInterne
     Log LOG = LogFactory.getLog(getClass());
 
     @Resource
-    private RestClient restClient;
+    private RestClient googleRestClient;
     @Resource
     private Environment env;
 
@@ -23,7 +23,7 @@ public class ForSearchingInternetGoogleApiAdapter implements ForSearchingInterne
     public String search(String query) {
         LOG.info(query);
         try {
-            String body = restClient.get()
+            String body = googleRestClient.get()
                 .uri(uriBuilder -> uriBuilder
                     .queryParam("key", env.getProperty("google.apikey"))
                     .queryParam("cx", env.getProperty("google.cx"))

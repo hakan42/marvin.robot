@@ -3,6 +3,7 @@ spring:
     include:
       - environment-openhab
       - chat-openai
+      - library-bookstack
   application:
     name: Marvin the Robot
     version: 0.0.1
@@ -48,6 +49,11 @@ logging:
 google:
   apikey: ${GOOGLE_APIKEY}
   cx: ${GOOGLE_CX}
+
+bookstack:
+  url: ${BOOKSTACK_URL}
+  tokenid: ${BOOKSTACK_TOKEN_ID}
+  tokensecret: ${BOOKSTACK_TOKEN_SECRET}
 
 marvin:
   language: 'en'
