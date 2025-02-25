@@ -139,7 +139,7 @@ public class BrainSpringAiAdapterOpenAi implements ForInvokingIntelligence, ForR
             .call().chatResponse();
 
         assert chatResponse != null;
-        String responseString = chatResponse.getResult().getOutput().getContent();
+        String responseString = chatResponse.getResult().getOutput().getText();
         brain.respond(responseString, conversationId);
     }
 

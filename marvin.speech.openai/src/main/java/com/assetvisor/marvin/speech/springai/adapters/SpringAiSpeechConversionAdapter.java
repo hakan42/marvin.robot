@@ -39,10 +39,10 @@ public class SpringAiSpeechConversionAdapter implements ForConvertingTextToSpeec
     @Override
     public byte[] convert(String text) {
         OpenAiAudioSpeechOptions speechOptions = OpenAiAudioSpeechOptions.builder()
-            .withResponseFormat(AudioResponseFormat.MP3)
-            .withSpeed(1.0f)
-            .withModel(TtsModel.TTS_1.value)
-            .withVoice(Voice.FABLE)
+            .responseFormat(AudioResponseFormat.MP3)
+            .speed(1.0f)
+            .model(TtsModel.TTS_1.value)
+            .voice(Voice.FABLE)
             .build();
 
         var speechPrompt = new SpeechPrompt(text, speechOptions);
@@ -53,9 +53,9 @@ public class SpringAiSpeechConversionAdapter implements ForConvertingTextToSpeec
     @Override
     public String convert(byte[] speech) {
         OpenAiAudioTranscriptionOptions transcriptionOptions = OpenAiAudioTranscriptionOptions.builder()
-            .withResponseFormat(TranscriptResponseFormat.TEXT)
-            .withTemperature(0.0f)
-            .withLanguage(environment.getProperty("marvin.language","en"))
+            .responseFormat(TranscriptResponseFormat.TEXT)
+            .temperature(0.0f)
+            .language(environment.getProperty("marvin.language","en"))
             .build();
 
         org.springframework.core.io.Resource audioResource = new org.springframework.core.io.ByteArrayResource(speech);
