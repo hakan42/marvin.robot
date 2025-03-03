@@ -9,6 +9,9 @@
   <version>1.0.0-SNAPSHOT</version>
   <packaging>pom</packaging>
 
+  <url>https://github.com/geir-eilertsen/marvin.robot</url>
+  <description>Marvin is a RAG AI agent that can connecto to a house control server, read sensor states and send commands.</description>
+
   <modules>
     <module>marvin.brain.springai</module>
     <module>marvin.environment.openhab</module>
@@ -21,11 +24,14 @@
   </modules>
 
   <properties>
+    <title>Marvin, the smart house robot</title>
+
     <maven.compiler.source>23</maven.compiler.source>
     <maven.compiler.target>23</maven.compiler.target>
     <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     <assertj-core.version>3.26.3</assertj-core.version>
     <exec-maven-plugin.version>3.5.0</exec-maven-plugin.version>
+    <git-commit-id-maven-plugin.version>5.0.0</git-commit-id-maven-plugin.version>
     <mockito-junit-jupiter.version>5.14.2</mockito-junit-jupiter.version>
     <swagger.version>2.6.0</swagger.version>
     <spring-boot.version>3.3.5</spring-boot.version>
@@ -138,6 +144,30 @@
             </configuration>
           </execution>
         </executions>
+      </plugin>
+
+      <plugin>
+        <groupId>io.github.git-commit-id</groupId>
+        <artifactId>git-commit-id-maven-plugin</artifactId>
+        <version>${git-commit-id-maven-plugin.version}</version>
+        <executions>
+          <execution>
+            <id>get-the-git-infos</id>
+            <goals>
+              <goal>revision</goal>
+            </goals>
+            <phase>initialize</phase>
+          </execution>
+        </executions>
+        <configuration>
+          <generateGitPropertiesFile>true</generateGitPropertiesFile>
+          <generateGitPropertiesFilename>${project.build.outputDirectory}/git.properties</generateGitPropertiesFilename>
+          <includeOnlyProperties>
+            <includeOnlyProperty>^git.build.(time|version)$</includeOnlyProperty>
+            <includeOnlyProperty>^git.commit.id.(abbrev|full)$</includeOnlyProperty>
+          </includeOnlyProperties>
+          <commitIdGenerationMode>full</commitIdGenerationMode>
+        </configuration>
       </plugin>
     </plugins>
   </build>
