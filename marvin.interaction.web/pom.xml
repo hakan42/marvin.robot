@@ -119,13 +119,27 @@
             <groupId>org.springframework.boot</groupId>
             <artifactId>spring-boot-maven-plugin</artifactId>
             <configuration>
-            <image>
-              <name>${image-name}</name>
-              <tags>
-                <tag>${image-name}:${project.version}</tag>
-                <tag>${image-name}:latest</tag>
-              </tags>
-                </image>
+              <image>
+                <name>${image-name}</name>
+                <env>
+		  <!--
+		      Basic build-time metadata as defined at
+		      https://github.com/opencontainers/image-spec/blob/main/annotations.md#pre-defined-annotation-keys
+		  -->
+                  <BP_OCI_TITLE>${title}</BP_OCI_TITLE>
+                  <BP_OCI_DESCRIPTION>${project.parent.description}</BP_OCI_DESCRIPTION>
+                  <BP_OCI_URL>${project.parent.url}</BP_OCI_URL>
+                  <BP_OCI_SOURCE>${project.parent.url}.git</BP_OCI_SOURCE>
+                  <BP_OCI_LICENSES>MIT License</BP_OCI_LICENSES>
+                  <BP_OCI_VERSION>${git.build.version}</BP_OCI_VERSION>
+                  <BP_OCI_REVISION>${git.commit.id.full}</BP_OCI_REVISION>
+                  <BP_OCI_CREATED>${git.build.time}</BP_OCI_CREATED>
+                </env>
+                <tags>
+                  <tag>${image-name}:${project.version}</tag>
+                  <tag>${image-name}:latest</tag>
+                </tags>
+              </image>
             </configuration>
             <executions>
               <execution>
