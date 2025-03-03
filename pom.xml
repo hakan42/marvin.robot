@@ -10,7 +10,7 @@
   <packaging>pom</packaging>
 
   <url>https://github.com/geir-eilertsen/marvin.robot</url>
-  <description>Marvin is a RAG AI agent that can connecto to a house control server, read sensor states and send commands.</description>
+  <description>Marvin is a RAG AI agent that can connect to a house control server, read sensor states and send commands.</description>
 
   <modules>
     <module>marvin.brain.springai</module>
