@@ -20,6 +20,7 @@ spring:
     password: admin
     username: admin
     schema-action: create_if_not_exists
+    port: 9042
   security:
     oauth2:
       client:
