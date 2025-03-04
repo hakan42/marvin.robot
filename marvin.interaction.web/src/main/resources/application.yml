@@ -11,6 +11,7 @@ spring:
     vectorstore:
       cassandra:
         initialize-schema: true
+        keyspace: springframework
     openai:
       api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
   cassandra:
