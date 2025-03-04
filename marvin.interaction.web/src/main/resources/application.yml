@@ -3,7 +3,7 @@ spring:
     include:
       - environment-openhab
       - chat-openai
-      - library-bookstack
+#      - library-bookstack
   application:
     name: Marvin the Robot
     version: 0.0.1
