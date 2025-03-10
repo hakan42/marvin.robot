@@ -43,7 +43,7 @@ server:
 openhab:
   url: ${OPENHAB_URL}
   username: ${OPENHAB_USERNAME}
-  password: ${OPENHAB_PASSWORD}
+  password: ${OPENHAB_PASSWORD:}
 
 logging:
   include-application-name: true
