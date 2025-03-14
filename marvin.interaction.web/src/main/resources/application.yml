@@ -11,7 +11,7 @@ spring:
     vectorstore:
       cassandra:
         initialize-schema: true
-        keyspace: springframework
+        keyspace: ${spring.cassandra.keyspace-name}
     openai:
       api-key: ${OPENAI_APIKEY} # OpenAI API key, get your own at https://platform.openai.com
   cassandra:
@@ -20,7 +20,7 @@ spring:
     contact-points: ${VECTORDB_ADDRESS}
     password: admin
     username: admin
-    schema-action: create_if_not_exists
+    schema-action: none
     port: 9042
   security:
     oauth2:
@@ -39,6 +39,10 @@ spring:
             clientSecret: ${GOOGLE_CLIENT_SECRET}
 server:
   port: 9090
+
+cassandra:
+  migration:
+    keyspace-name: ${spring.cassandra.keyspace-name}
 
 openhab:
   url: ${OPENHAB_URL}
