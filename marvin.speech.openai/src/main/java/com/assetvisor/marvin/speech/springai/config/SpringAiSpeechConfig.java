@@ -17,7 +17,9 @@ public class SpringAiSpeechConfig {
 
     @Bean
     public OpenAiAudioApi openAiAudioApi() {
-        return new OpenAiAudioApi(openAiApiKey);
+        return OpenAiAudioApi.builder()
+            .apiKey(openAiApiKey)
+            .build();
     }
 
     @Bean
