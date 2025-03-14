@@ -37,6 +37,9 @@ spring:
             redirect-uri: ${EXTERNAL_ADDRESS}/login/oauth2/code/google
             clientId: ${GOOGLE_CLIENT_ID}
             clientSecret: ${GOOGLE_CLIENT_SECRET}
+  web:
+    resources:
+      add-mappings: true
 server:
   port: 9090
 

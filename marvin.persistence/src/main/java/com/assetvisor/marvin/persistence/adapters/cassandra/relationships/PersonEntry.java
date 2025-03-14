@@ -30,6 +30,9 @@ public class PersonEntry {
     @Column("google_id")
     private String googleId;
 
+    @Column("password")
+    private String password;
+
     public PersonEntry() {
     }
 
@@ -79,5 +82,13 @@ public class PersonEntry {
 
     public void setGoogleId(String googleId) {
         this.googleId = googleId;
+    }
+
+    public Optional<String> getPassword() {
+        return Optional.ofNullable(password);
+    }
+
+    public void setPassword(String password) {
+        this.password = password;
     }
 }

@@ -23,16 +23,8 @@
   <title>Chat with Marvin</title>
 </head>
 <body>
-<div class="container unauthenticated">
-  <div>
-    With GitHub: <a href="/oauth2/authorization/github">click here</a>
-  </div>
-  <div>
-    With Google: <a href="/oauth2/authorization/google">click here</a>
-  </div>
-</div>
 
-<div class="container authenticated" style="display:none">
+<div class="container">
 <!-- Menu panel for recording buttons and audio player -->
 <div class="menu-panel">
   <div class="button-panel">
@@ -42,7 +34,7 @@
   <audio id="audioPlayer" controls class="audio-player"></audio>
   <span id="user"></span>
   <div>
-    <button onClick="logout()">Logout</button>
+    <button onclick="window.location.href='/logout'">Logout</button>
   </div>
 </div>
 
@@ -57,21 +49,5 @@
 
 <script type="module" src="script.js"></script>
 </div>
-<script type="text/javascript">
-  $.get("/user", function(data) {
-    $("#user").html(data.name);
-    $(".unauthenticated").hide()
-    $(".authenticated").show()
-  });
-
-  var logout = function() {
-    $.post("/logout", function() {
-      $("#user").html('');
-      $(".unauthenticated").show();
-      $(".authenticated").hide();
-    })
-    return true;
-  }
-</script>
 </body>
 </html>
