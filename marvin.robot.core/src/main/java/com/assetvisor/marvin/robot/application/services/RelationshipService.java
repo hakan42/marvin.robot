@@ -34,6 +34,7 @@ public class RelationshipService implements PersonWantsToEnterUseCase, PersonEnt
                     UUID.randomUUID().toString(),
                     personUco.getName(),
                     personUco.getEmail(),
+                    null,
                     STRANGER,
                     List.of(
                         new Person.PersonId(

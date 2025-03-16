@@ -32,7 +32,7 @@ public class PersistingPersonsCassandraAdapter implements ForPersistingPerson {
     public void addExternalId(Person person, Person.PersonId externalId) {
         PersonEntry personEntry = personRepository.findById(UUID.fromString(person.id()))
             .orElseThrow(() -> new IllegalArgumentException("Person with id " + person.id() + " not found"));
-        if(personEntry.getGithubId().isPresent() && externalId.idType() == IdType.GITHUB) {
+        if(personEntry.getGithubId().isPresent() && externalId.idType() == Person.IdType.GITHUB) {
             throw new IllegalArgumentException("Person with id " + person.id() + " already has github id");
         }
         if(personEntry.getGoogleId().isPresent() && externalId.idType() == Person.IdType.GOOGLE) {
@@ -64,19 +64,16 @@ public class PersistingPersonsCassandraAdapter implements ForPersistingPerson {
 
     @Override
     public Person byExternalId(Person.PersonId externalId) {
-        if(externalId.idType() == IdType.GITHUB) {
-            return personRepository.findByGithubId(externalId.value()).stream()
+        var entries = switch(externalId.idType()) {
+            case GOOGLE -> personRepository.findByGoogleId(externalId.value());
+            case GITHUB -> personRepository.findByGithubId(externalId.value());
+            case LOCAL -> personRepository.findByEmail(externalId.value());
+            default -> throw new IllegalArgumentException("Unsupported external id type: " + externalId.idType());
+        };
+        return entries.stream()
                 .findAny()
                 .map(this::toPerson)
                 .orElse(null);
-        }
-        if(externalId.idType() == IdType.GOOGLE) {
-            return personRepository.findByGoogleId(externalId.value()).stream()
-                .findAny()
-                .map(this::toPerson)
-                .orElse(null);
-        }
-        throw new IllegalArgumentException("Unsupported external id type: " + externalId.idType());
     }
 
     private PersonEntry toPersonEntry(Person person) {
@@ -84,6 +81,7 @@ public class PersistingPersonsCassandraAdapter implements ForPersistingPerson {
         personEntry.setId(UUID.randomUUID());
         personEntry.setPersonName(person.name());
         personEntry.setEmail(person.email());
+        personEntry.setPassword(person.password());
         personEntry.setRelationship(person.relationship().name());
         personEntry.setGithubId(person.externalIds().stream()
             .filter(externalId -> externalId.idType() == IdType.GITHUB)
@@ -112,6 +110,7 @@ public class PersistingPersonsCassandraAdapter implements ForPersistingPerson {
             personEntry.getId().toString(),
             personEntry.getPersonName(),
             personEntry.getEmail(),
+            personEntry.getPassword().orElse(null),
             Relationship.valueOf(personEntry.getRelationship()),
             externalIds
         );

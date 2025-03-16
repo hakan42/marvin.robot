@@ -6,6 +6,7 @@ public record Person(
     String id,
     String name,
     String email,
+    String password,
     Relationship relationship,
     List<PersonId> externalIds
 ) {

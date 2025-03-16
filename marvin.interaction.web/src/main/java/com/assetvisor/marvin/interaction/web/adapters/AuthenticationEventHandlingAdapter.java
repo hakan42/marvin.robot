@@ -4,6 +4,7 @@ import com.assetvisor.marvin.robot.application.PersonEnteredUseCase;
 import com.assetvisor.marvin.robot.domain.relationships.Person;
 import jakarta.annotation.Resource;
 import org.springframework.context.event.EventListener;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.authentication.event.AuthenticationSuccessEvent;
 import org.springframework.security.oauth2.client.authentication.OAuth2LoginAuthenticationToken;
 import org.springframework.security.oauth2.core.user.OAuth2User;
@@ -32,6 +33,9 @@ public class AuthenticationEventHandlingAdapter {
             ),
                 id
             );
+        }
+        if (source instanceof UsernamePasswordAuthenticationToken token) {
+            return new Person.PersonId(Person.IdType.LOCAL, token.getName());
         }
         throw new IllegalArgumentException("Unsupported event source: " + event.getSource());
     }

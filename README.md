@@ -23,8 +23,10 @@ To use Marvin, you need to have a running OpenHAB server. To authenticate Marvin
 need to create an access token or explicitly enable Basic authentication in OpenHAB
 (see [openHAB REST API / Authentication](https://www.openhab.org/docs/configuration/restdocs.html#authentication)).
 
-The user interface and REST services are protected with OAuth2. To be able to log in to Marvin, you
-need to create an OAuth application in either Github or Google Auth Platform (or both).
+The user interface and REST services are protected. You can either authenticate with OAuth2 using Github or Google Auth
+Platform, or using a local user directory. If you plan to use OAuth2, you need to create an application in either of
+them and set the appropriate variables. To use the local user directory, you have to add a user after starting the
+application for the first time.
 
 Set at least the following environment variables:
 
@@ -58,17 +60,43 @@ The Spring AI implemented brain is in the marvin.brain.springai module. It needs
 Use a docker container to run the Cassandra vector store. There is a docker compose file at project root. Keyspaces and
 tables will be created and updated when the application starts.
 
-When the application has started, open http://localhost:9090 in your browser. You will be redirected to the OAuth2 login page.
+When the application has started, open http://localhost:9090 in your browser. You will be redirected to the login page.
 
-A person record is then added in the personentry table with relation STRANGER. Change this to FRIEND and refresh the page.
+### OAuth2
+
+When using Github or Google to login, you will receive "Invalid credentials" on the first try, but a record will be
+added to the personentry table with relation STRANGER. Change this to friend using following statements and login again:
+
+```
+SELECT * FROM personentry;
+# copy the UUID from the id column and paste it here:
+UPDATE personentry SET relation='FRIEND' where id=<UUID>;
+```
+
+### Local user account
+
+To log in locally with email and password, you have to hash the password and add the user record manually. To hash the
+password, use the following command:
+
+```
+htpasswd -bnBC 10 '' '<PASSWORD>' | head -1 | tr -d ':' | sed 's/^/{bcrypt}/'
+```
+
+Copy the output of this command and insert it into the following statement. Adapt the other fields as necessary:
+
+```
+INSERT INTO personentry (id, email, password, person_name, relation) VALUES (uuid(), '<EMAIL>', '<HASHED_PASSWORD>', '<FULL NAME>', 'FRIEND')
+```
+
+## More
 
 There is a swagger ui included on http://localhost:9090/swagger-ui/index.html
 To add environment descriptions, use the /environment endpoint.
 To initialise Marvin, open http://localhost:9090/initialise in your browser after authenticating. That will clear it's
 memory and populate the vector store.
 
-
 ## Cool things to try
+
 * Change the rule for the lights in the living room to turn on at sunset
 * Notify me about dinner in 5 minutes
 * Turn on the lights in the living room
