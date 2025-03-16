@@ -46,7 +46,7 @@ public class SendCommandFunction implements Tool<Command, Response> {
         LOG.info(command);
         try {
             ResponseEntity<Void> responseEntity = openhabRestClient.post()
-                .uri("items/" + command.itemId)
+                .uri("items/{itemId}", command.itemId)
                 .contentType(MediaType.TEXT_PLAIN)
                 .body(command.command)
                 .retrieve()

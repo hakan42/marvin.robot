@@ -5,16 +5,18 @@ import com.assetvisor.marvin.environment.openhab.functions.UpdateRuleActionFunct
 import com.assetvisor.marvin.environment.openhab.restclient.SentCommands;
 import com.assetvisor.marvin.robot.domain.tools.Tool;
 import jakarta.annotation.Resource;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
 import org.springframework.web.client.RestClientException;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Profile("environment-openhab")
@@ -46,7 +48,7 @@ public class UpdateRuleActionFunction implements Tool<Command, Response> {
     public Response apply(Command command) {
         LOG.info("Rule updated: " + command.ruleId());
         Map<String, Object> rule = getRule(command.ruleId());
-        Map<String, Object> action = ((List<Map<String, Object>>) rule.get("actions")).get(0);
+        Map<String, Object> action = ((List<Map<String, Object>>) rule.get("actions")).getFirst();
         Map<String, Object> configuration = ((Map<String, Object>) action.get("configuration"));
         configuration.put("script", command.script());
         updateRule(command.ruleId(), rule);
@@ -58,12 +60,11 @@ public class UpdateRuleActionFunction implements Tool<Command, Response> {
 
     private Map<String, Object> getRule(String ruleId) {
         try {
-            Map<String, Object> body = openhabRestClient.get()
-                .uri("rules/" + ruleId)
+            return openhabRestClient.get()
+                .uri("rules/{ruleId}", ruleId)
                 .accept(MediaType.APPLICATION_JSON)
                 .retrieve()
-                .body(Map.class);
-            return body;
+                .body(MAP_OF_STRING_TYPE);
         } catch (HttpClientErrorException e) {
             throw new RestClientException(e.getMessage(), e);
         }
@@ -81,4 +82,7 @@ public class UpdateRuleActionFunction implements Tool<Command, Response> {
             throw new RestClientException(e.getMessage(), e);
         }
     }
+
+    private static final ParameterizedTypeReference<Map<String, Object>> MAP_OF_STRING_TYPE =
+        new ParameterizedTypeReference<>() {};
 }

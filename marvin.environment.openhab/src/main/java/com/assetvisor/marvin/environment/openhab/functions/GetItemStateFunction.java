@@ -41,7 +41,7 @@ public class GetItemStateFunction implements Tool<Request, Response> {
         LOG.info(request);
         try {
             String body = openhabRestClient.get()
-                .uri("items/" + request.itemId + "/state")
+                .uri("items/{itemId}/state", request.itemId)
                 .accept(MediaType.TEXT_PLAIN)
                 .retrieve()
                 .body(String.class);
