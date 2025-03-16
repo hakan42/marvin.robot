@@ -55,14 +55,8 @@ that contains the application.yml configuration file.
 
 The Spring AI implemented brain is in the marvin.brain.springai module. It needs a vector store to work.
 
-Use a docker container to run the Cassandra vector store. There is a docker compose file at project root.
-
-When cassandra is up and running you have to create a keyspace called springframework.
-You can do this by running the following command:
-
-```
-CREATE KEYSPACE springframework WITH REPLICATION = { 'class' : 'SimpleStrategy', 'replication_factor' : 1 };
-```
+Use a docker container to run the Cassandra vector store. There is a docker compose file at project root. Keyspaces and
+tables will be created and updated when the application starts.
 
 When the application has started, open http://localhost:9090 in your browser. You will be redirected to the OAuth2 login page.
 
