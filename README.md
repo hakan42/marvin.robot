@@ -70,7 +70,8 @@ A person record is then added in the personentry table with relation STRANGER. C
 
 There is a swagger ui included on http://localhost:9090/swagger-ui/index.html
 To add environment descriptions, use the /environment endpoint.
-To initialise Marvin, use the POST /initialise endpoint. That will clear it's memory and populate the vector store.
+To initialise Marvin, open http://localhost:9090/initialise in your browser after authenticating. That will clear it's
+memory and populate the vector store.
 
 
 ## Cool things to try
