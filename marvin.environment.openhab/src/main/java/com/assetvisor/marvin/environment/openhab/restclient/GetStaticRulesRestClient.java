@@ -1,14 +1,16 @@
 package com.assetvisor.marvin.environment.openhab.restclient;
 
 import jakarta.annotation.Resource;
-import java.util.List;
-import java.util.Map;
 import org.apache.commons.logging.Log;
 import org.apache.commons.logging.LogFactory;
 import org.springframework.context.annotation.Profile;
+import org.springframework.core.ParameterizedTypeReference;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.HttpClientErrorException;
 import org.springframework.web.client.RestClient;
+
+import java.util.List;
+import java.util.Map;
 
 @Component
 @Profile("environment-openhab")
@@ -24,7 +26,7 @@ public class GetStaticRulesRestClient {
             List<Map<String, Object>> body = openhabRestClient.get()
                 .uri("rules?tags=Marvin&staticDataOnly=true")
                 .retrieve()
-                .body(List.class);
+                .body(LIST_OF_MAP_TYPE);
             List<Map<String, Object>> maps = filterByTagMarvin(body);
             appendRuleInfo(maps);
             return maps;
@@ -45,4 +47,7 @@ public class GetStaticRulesRestClient {
             .filter(rule -> rule.get("tags").toString().contains("Marvin"))
             .toList();
     }
+
+    private static final ParameterizedTypeReference<List<Map<String, Object>>> LIST_OF_MAP_TYPE =
+        new ParameterizedTypeReference<>() {};
 }
